@@ -1,0 +1,120 @@
+<div th:fragment="purchase-form" xmlns:th="http://www.w3.org/1999/xhtml"
+	class="col-md-12">
+	<!-- general form elements-->
+	<div class="card card-primary">
+		<div class="card-header" style="background: #d81b60">
+			<h3 class="card-title" th:text="${formTitle}"></h3>
+		</div>
+		<!-- ./card-header-->
+		<!-- form start-->
+		<form role="form" action="/purchases/editPurchase" method="post"
+			th:id="${fragment}">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<input th:value="${purchase.purchaseId}" class="form-control"
+								type="hidden" name="purchaseId" id="purchaseId">
+							<!--  -->
+							<label for="productId">Product Name</label>
+							<!--  -->
+							<select id='productId' class='form-control productId'>
+								<option th:each="product : ${products}"
+									th:value="${product.productId}"
+									th:text="${product.productName}"
+									th:selected="${product.productId==purchase.productId}"></option>
+							</select>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="billNumber">Bill Number</label>
+									<!--  -->
+									<input th:value="${purchase.billNumber}" class="form-control"
+										type="text" name="billNumber" id="billNumber" />
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="purchaseDate">Purchase Date</label>
+									<!--  -->
+									<input th:value="${purchase.purchaseDate}"
+										class="form-control date" type="date" name="purchaseDate"
+										id="purchaseDate" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="purchaseNotes">Purchase Notes</label>
+							<!--  -->
+							<textarea class='form-control' name="purchaseNotes" rows="5"
+								cols="30" th:field="*{purchase.purchaseNotes}">
+							</textarea>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-2">
+						<div class="form-group">
+							<label for="purchaseQuantity">Purchase Quantity</label>
+							<!--  -->
+							<input th:value="${purchase.purchaseQuantity}"
+								class="form-control purchaseQuantity" type="number"
+								name="purchaseQuantity" id="purchaseQuantity" />
+						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="form-group">
+							<label for="amountBeforeTax">Amount Before Tax</label>
+							<!--  -->
+							<input th:value="${purchase.amountBeforeTax}"
+								class="form-control amountBeforeTax" type="number"
+								name="amountBeforeTax" id="amountBeforeTax" />
+						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="form-group">
+							<label for="gstAmount">Gst Amount</label>
+							<!--  -->
+							<input th:value="${purchase.gstAmount}"
+								class="form-control gstAmount" type="number" name="gstAmount"
+								id="gstAmount" />
+						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="form-group">
+							<label for="discountAmount">Discount Amount</label>
+							<!--  -->
+							<input th:value="${purchase.discountAmount}"
+								class="form-control discountAmount" type="number"
+								name="discountAmount" id="discountAmount" />
+						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="form-group">
+							<label for="payableAmount">Payable Amount</label>
+							<!--  -->
+							<input th:value="${purchase.payableAmount}" class="form-control"
+								type="number" name="payableAmount" id="payableAmount" disabled="disabled"/>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-footer">
+				<button th:if="${fragment == 'createPurchase'}" type="submit"
+					class="btn btn-primary float-right">Submit</button>
+				<button th:if="${fragment == 'editPurchase'}" type="submit"
+					class="btn btn-primary float-right">Update</button>
+				<button th:if="${fragment == 'editPurchase'}" type='button'
+					id="deletePurBtn" class="btn btn-danger float-right"
+					style='margin-right: 15px;'>Delete</button>
+				<button type='button' id="cacel_cp"
+					class="btn btn-olive float-right" style='margin-right: 15px;'>Cancel</button>
+			</div>
+		</form>
+	</div>
+</div>

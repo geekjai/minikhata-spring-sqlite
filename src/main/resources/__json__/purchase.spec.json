@@ -1,0 +1,50 @@
+[
+	{
+		"productId": "1",
+		"billNumber": "TESTBILL01",
+		"purchaseQuantity": "5.0",
+		"purchaseNotes": "Test Data",
+		"amountBeforeTax": "100",
+		"gstAmount": "10",
+		"discountAmount": "0",
+		"payableAmount": "110",
+		"purchaseDate": "2021-03-25",
+		"isAmountSettled": "N"
+	},
+	{
+		"productId": "2",
+		"billNumber": "TESTBILL01",
+		"purchaseQuantity": "30.0",
+		"purchaseNotes": "Test Data",
+		"amountBeforeTax": "120",
+		"gstAmount": "20",
+		"discountAmount": "0",
+		"payableAmount": "140",
+		"purchaseDate": "2021-03-25",
+		"isAmountSettled": "N"
+	},
+	{
+		"productId": "3",
+		"billNumber": "TESTBILL01",
+		"purchaseQuantity": "10.0",
+		"purchaseNotes": "Test Data",
+		"amountBeforeTax": "190",
+		"gstAmount": "19",
+		"discountAmount": "0",
+		"payableAmount": "209",
+		"purchaseDate": "2021-03-25",
+		"isAmountSettled": "N"
+	},
+	{
+		"productId": "1",
+		"billNumber": "TESTBILL02",
+		"purchaseQuantity": "5.0",
+		"purchaseNotes": "Test Data",
+		"amountBeforeTax": "80",
+		"gstAmount": "0",
+		"discountAmount": "0",
+		"payableAmount": "80",
+		"purchaseDate": "2021-03-25",
+		"isAmountSettled": "N"
+	}
+]

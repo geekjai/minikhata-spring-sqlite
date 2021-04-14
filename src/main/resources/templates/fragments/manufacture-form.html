@@ -1,0 +1,128 @@
+<div th:fragment="manufacture-form"
+	xmlns:th="http://www.w3.org/1999/xhtml" class="col-md-12">
+	<div class="card card-primary">
+		<div class="card-header" style="background: #d81b60">
+			<h3 class="card-title" th:text="${formTitle}"></h3>
+		</div>
+		<!-- ./card-header-->
+		<!-- form start-->
+		<form role="form" action="#"
+			th:action="${fragment} == 'createManufacture' ? @{/manufacture/createManufacture/submit} : @{/manufacture/editManufacture/submit}"
+			th:object="${form}" method="post" th:id="${fragment}">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<input hidden="true" th:field="*{manufacture.manufactureId}"
+								id="manufactureId" />
+							<!-- ------ -->
+							<input hidden="true" th:field="*{manufacture.productId}" />
+							<!--  -->
+							<label for="productId">Product Name</label>
+							<!--  -->
+							<select id='productId' class='form-control productId'
+								th:field="*{manufacture.productId}" disabled="disabled">
+								<option th:each="product : ${products}"
+									th:value="${product.productId}"
+									th:text="${product.productName}"
+									th:selected="${product.productId==form.manufacture.productId}"></option>
+							</select>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="manufactureDate">Manufacture Date</label>
+									<!--  -->
+									<input th:field="*{manufacture.manufactureDateUi}"
+										class="form-control date" type="date" name="manufactureDate"
+										id="manufactureDate" />
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="manufactureQuantity">Manufacture Quantity</label>
+									<!--  -->
+									<input th:field="*{manufacture.manufactureQuantity}"
+										class="form-control manufactureQuantity" type="number"
+										name="manufactureQuantity" id="manufactureQuantity" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="manufactureCost">Manufacture Cost</label>
+									<!--  -->
+									<input th:field="*{manufacture.manufactureCost}"
+										class="form-control manufactureCost" type="number"
+										name="manufactureCost" id="manufactureCost"
+										disabled="disabled" />
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<button th:if="${fragment == 'editManufacture'}" type='button'
+										id="calCostManufBtn" class="btn btn-info"
+										style="margin-top: 33px;">Calculate Cost</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="purchaseNotes">Manufacture Notes</label>
+							<!--  -->
+							<textarea class='form-control' name="manufactureNotes" rows="5"
+								cols="30" th:field="*{manufacture.manufactureNotes}">
+							</textarea>
+						</div>
+					</div>
+				</div>
+				<div class="row" style="margin-top: 10px;"></div>
+				<div class="row">
+					<table class="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th></th>
+								<th>Product Name</th>
+								<th>Quantity</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="map, itemStat : ${form.manufactureProductMaps}">
+								<td><input hidden="true"
+									th:name="|manufactureProductMaps[${itemStat.index}].id|"
+									th:value="${map.getId()}" /></td>
+								<td><input hidden="true"
+									th:name="|manufactureProductMaps[${itemStat.index}].productId|"
+									th:value="${map.getProductId()}" /> <select
+									class="form-control"
+									th:name="|manufactureProductMaps[${itemStat.index}].productId|"
+									th:value="${map.getProductId()}" disabled="disabled">
+										<option th:each="product : ${products}"
+											th:value="${product.productId}"
+											th:text="${product.productName}"
+											th:selected="${product.productId==map.productId}"></option>
+								</select></td>
+								<td><input
+									th:name="|manufactureProductMaps[${itemStat.index}].productQuantity|"
+									th:value="${map.getProductQuantity()}" /></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="card-footer">
+				<button th:if="${fragment == 'createManufacture'}" type="submit"
+					class="btn btn-primary float-right">Submit</button>
+				<button th:if="${fragment == 'editManufacture'}" type="submit"
+					class="btn btn-primary float-right">Update</button>
+				<button th:if="${fragment == 'editManufacture'}" type='button'
+					id="deleteManufBtn" class="btn btn-danger float-right"
+					style='margin-right: 15px;'>Delete</button>
+				<button type='button' id="cacelManufForm"
+					class="btn btn-olive float-right" style='margin-right: 15px;'>Cancel</button>
+			</div>
+		</form>
+	</div>
+</div>

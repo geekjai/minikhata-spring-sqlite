@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.w3.org/1999/xhtml"
+	layout:decorate="~{layouts/layout}">
+<body>
+	<div layout:fragment="content" th:switch="${fragment}">
+		<div class="row" th:case="'viewManufactures'">
+			<div th:replace="fragments/manufacture-list :: manufacture-list"></div>
+		</div>
+		<div class="row" th:case="'createManufacture'">
+			<div th:replace="fragments/manufacture-form :: manufacture-form"></div>
+		</div>
+		<div class="row" th:case="'editManufacture'">
+			<div th:replace="fragments/manufacture-form :: manufacture-form"></div>
+		</div>
+	</div>
+
+	<div layout:fragment="script">
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+$(document).ready(function () { 
+	$(function() {
+		var datatable = $('#tblManufactureList').DataTable({
+			"paging": true,
+			"lengthChange": false,
+			"searching": false,
+			"ordering": true,
+			"info": true,
+			"autoWidth": false,
+			"responsive": true,
+			"ajax": {
+				"url": "/api/manufacture/manufactureRecords",
+				"dataSrc": ""
+			},
+			"columns": [
+				{ "data": "manufactureId" },
+				{ "data": "productName" },
+				{ "data": "manufactureQuantity" },
+				{ "data": "manufactureCost" },
+				{ "data": "manufactureDate" },
+				{
+					data: null,
+					className: "dt-center editor-edit",
+					defaultContent: '<i class="fa fa-eye"/>',
+					orderable: false
+				}
+			],
+			"dom": '<"manuftoolbar">frtip'
+		});
+		$("div.manuftoolbar").html('<button id="incenseManuf" type="button" class="btn btn-block btn-info" style="width:165px;">Incense Manufacture</button>');
+		// Edit record
+		$('#tblManufactureList').on('click', 'td.editor-edit', function(e) {
+			e.preventDefault();
+			var rowData = datatable.rows(this).data();
+			window.location.href = '/manufacture/editManufacture/' + rowData[0].manufactureId;
+			//console.log('You clicked this' + rowData[0].purchaseId);
+			//console.log(rowData[0]);
+		});
+		$("#incenseManuf").click(function() {
+			window.location.href = '/manufacture/createIncense';
+		});
+		$("#cacelManufForm").click(function() {
+			window.location.href = '/manufacture/viewManufactures';
+		});
+		$("#calCostManufBtn").click(function() {
+			event.preventDefault();
+			var manufactureId = document.getElementById("manufactureId").value;
+			$.ajax({
+				type: 'get',
+				url: '/api/manufacture/findManufactureCost/' + manufactureId,
+				contentType: "application/json; charset=utf-8",
+				traditional: true,
+				success: function(data) {
+					document.getElementById("manufactureCost").value = data;
+				}
+			});
+		});
+	});
+});
+			/*]]>*/
+		</script>
+	</div>
+</body>
+</html>

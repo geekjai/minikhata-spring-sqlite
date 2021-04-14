@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.w3.org/1999/xhtml"
+	layout:decorate="~{layouts/layout}">
+<body>
+	<div layout:fragment="content" th:switch="${fragment}">
+		<div class="row" th:case="'viewPurchases'">
+			<div th:replace="fragments/purchase-list :: purchase-list"></div>
+		</div>
+		<div class="row" th:case="'createPurchase'">
+			<div th:replace="fragments/purchase-form :: purchase-form"></div>
+		</div>
+		<div class="row" th:case="'editPurchase'">
+			<div th:replace="fragments/purchase-form :: purchase-form"></div>
+		</div>
+	</div>
+
+	<div layout:fragment="script">
+		<script src="/api/minikhata-api.js"></script>
+	</div>
+</body>
+</html>
