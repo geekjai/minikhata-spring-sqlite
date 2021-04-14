@@ -9,7 +9,7 @@ import ig.mini.product.khata.ui.pojo.ManufactureProduct;
 
 public interface ProCommonService {
 
-	public Iterable<ProProduct> findAll();
+	public Iterable<ProProduct> findAllProduct();
 
 	public List<ProPurchase> findPurchasesWithProduct() throws Exception;
 
@@ -30,5 +30,7 @@ public interface ProCommonService {
 	public ManufactureProduct findManufactureByManufactureId(Long manufactureId) throws Exception;
 
 	public Double evaluateManufactureCost(Long manufactureId) throws Exception;
+
+	public void evaluateManufactureCost() throws Exception;
 
 }

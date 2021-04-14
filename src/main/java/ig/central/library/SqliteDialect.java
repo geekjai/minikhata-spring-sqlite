@@ -1,4 +1,4 @@
-package ig.mini.product.khata.db.config;
+package ig.central.library;
 
 import java.sql.Types;
 

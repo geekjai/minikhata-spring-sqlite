@@ -38,7 +38,7 @@ public class CoreUiController {
 		modelAndView.setViewName("purchase");
 		modelAndView.addObject("fragment", "createPurchase");
 		modelAndView.addObject("formTitle", "Create Purchase");
-		modelAndView.addObject("products", proCommonService.findAll());
+		modelAndView.addObject("products", proCommonService.findAllProduct());
 		modelAndView.addObject("purchase", new ProPurchase());
 		return modelAndView;
 	}
@@ -49,7 +49,7 @@ public class CoreUiController {
 		modelAndView.setViewName("purchase");
 		modelAndView.addObject("fragment", "editPurchase");
 		modelAndView.addObject("formTitle", "Edit Purchase");
-		modelAndView.addObject("products", proCommonService.findAll());
+		modelAndView.addObject("products", proCommonService.findAllProduct());
 		modelAndView.addObject("purchase", proCommonService.findByPurchaseId(id));
 		return modelAndView;
 	}
@@ -68,7 +68,7 @@ public class CoreUiController {
 		modelAndView.setViewName("manufacture");
 		modelAndView.addObject("formTitle", "Create Incense Manufacture Record");
 		modelAndView.addObject("fragment", "createManufacture");
-		modelAndView.addObject("products", proCommonService.findAll());
+		modelAndView.addObject("products", proCommonService.findAllProduct());
 
 		ManufactureProduct formPojo = proCommonService.newManufactureIncenseInstance();
 		modelAndView.addObject("form", formPojo);
@@ -93,7 +93,7 @@ public class CoreUiController {
 		modelAndView.setViewName("manufacture");
 		modelAndView.addObject("formTitle", "Edit Manufacture Record");
 		modelAndView.addObject("fragment", "editManufacture");
-		modelAndView.addObject("products", proCommonService.findAll());
+		modelAndView.addObject("products", proCommonService.findAllProduct());
 
 		ManufactureProduct formPojo = proCommonService.findManufactureByManufactureId(id);
 		modelAndView.addObject("form", formPojo);

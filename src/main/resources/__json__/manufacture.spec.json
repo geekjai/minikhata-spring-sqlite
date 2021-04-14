@@ -1,9 +1,11 @@
 {
-    "manufactureId": "1",
-    "manufactureQuantity": "25",
-    "manufactureDate": "2021-03-25",
-    "manufactureNotes": "Great",
-    "products": [
+    "manufacture" : {
+    	"productId": "5",
+    	"manufactureQuantity": "25",
+    	"manufactureDate": "2021-03-25",
+    	"manufactureNotes": "Great"
+    },
+    "manufactureProductMaps": [
         {
             "productId": "1",
             "productQuantity": "6"

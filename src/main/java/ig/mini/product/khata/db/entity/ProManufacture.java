@@ -14,8 +14,8 @@ import javax.persistence.Version;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import ig.mini.product.khata.db.api.FrameworkEntity;
-import ig.mini.product.khata.db.api.TransientColumn;
+import ig.central.library.FrameworkEntity;
+import ig.central.library.TransientColumn;
 
 @Entity
 @Table(name = "pro_manufactures")

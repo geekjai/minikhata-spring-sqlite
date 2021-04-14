@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import ig.mini.product.khata.db.api.FrameworkEntity;
+import ig.central.library.FrameworkEntity;
 import ig.mini.product.khata.db.entity.ProManufacture;
 import ig.mini.product.khata.db.entity.ProPurchase;
 import ig.mini.product.khata.db.view.ProductPurchaseManufacture;

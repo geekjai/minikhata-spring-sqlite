@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import ig.mini.product.khata.db.api.FrameworkEntity;
+import ig.central.library.FrameworkEntity;
 
 @Entity
 @Table(name = "pro_purchase_manufacture_map")

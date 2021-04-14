@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import ig.mini.product.khata.db.api.FrameworkEntity;
+import ig.central.library.FrameworkEntity;
 import ig.mini.product.khata.db.entity.ProManufacture;
 import ig.mini.product.khata.db.entity.ProManufactureProductMap;
 import ig.mini.product.khata.db.entity.ProProduct;
@@ -41,7 +41,7 @@ public class ProCommonServiceImpl implements ProCommonService {
 	private ManufactureProductMapRepository manufactureProductMapRepository;
 
 	@Override
-	public Iterable<ProProduct> findAll() {
+	public Iterable<ProProduct> findAllProduct() {
 
 		return productRepository.findAll();
 	}
@@ -307,6 +307,18 @@ public class ProCommonServiceImpl implements ProCommonService {
 		}
 		List<ProductPurchaseManufacture> purchaseCostList = readProductPurchaseManufCostQty(manufactureId);
 		return evaluateManufactureCost(manufactureId, purchaseCostList);
+	}
+
+	@Override
+	public void evaluateManufactureCost() throws Exception {
+
+		List<ProManufacture> manufactures = manufactureRepository.findAllNullManufactureCost();
+		if (manufactures == null || manufactures.size() == 0) {
+			return;
+		}
+		for (ProManufacture manufacture : manufactures) {
+			evaluateManufactureCost(manufacture.getManufactureId());
+		}
 	}
 
 }

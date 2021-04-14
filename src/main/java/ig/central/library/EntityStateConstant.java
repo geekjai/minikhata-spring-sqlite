@@ -1,4 +1,4 @@
-package ig.mini.product.khata.db.api;
+package ig.central.library;
 
 public class EntityStateConstant {
 

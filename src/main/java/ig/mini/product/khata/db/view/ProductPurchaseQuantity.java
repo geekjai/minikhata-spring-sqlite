@@ -1,7 +1,7 @@
 package ig.mini.product.khata.db.view;
 
-import ig.mini.product.khata.db.api.FrameworkEntity;
-import ig.mini.product.khata.db.api.TransientColumn;
+import ig.central.library.FrameworkEntity;
+import ig.central.library.TransientColumn;
 
 public class ProductPurchaseQuantity extends FrameworkEntity {
 
