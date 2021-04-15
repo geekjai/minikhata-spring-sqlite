@@ -3,11 +3,14 @@ package ig.central.library;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.Column;
+
+import ig.central.library.constant.WhoColumnDataConstant;
 
 public class FrameworkEntity {
 
@@ -181,6 +184,41 @@ public class FrameworkEntity {
 				}
 			}
 		}
+	}
+
+	public static void createWhoColumnData(FrameworkEntity entity, boolean isSeedData)
+			throws IllegalArgumentException, IllegalAccessException {
+
+		if (entity == null) {
+			return;
+		}
+
+		if (isSeedData) {
+			// Using [javax.persistence.Column] JPA and Reflection
+			for (Field field : entity.getClass().getDeclaredFields()) {
+				Column column = field.getAnnotation(Column.class);
+				if (column != null) {
+					if ("created_by".equals(column.name())) {
+						field.setAccessible(true);
+						field.set(entity, WhoColumnDataConstant.SEED_DATA_USER_NAME);
+					} else if ("last_updated_by".equals(column.name())) {
+						field.setAccessible(true);
+						field.set(entity, WhoColumnDataConstant.SEED_DATA_USER_NAME);
+					} else if ("creation_date".equals(column.name()) || "last_update_date".equals(column.name())) {
+						Class<?> classType = field.getType();
+						if (classType.equals(java.sql.Date.class)) {
+							field.setAccessible(true);
+							java.util.Date curr = Calendar.getInstance().getTime();
+							java.sql.Date sqlDate = new java.sql.Date(curr.getTime());
+							field.set(entity, sqlDate);
+						} else if (classType.equals(java.util.Date.class)) {
+							field.setAccessible(true);
+							field.set(entity, Calendar.getInstance().getTime());
+						}
+					}
+				}
+			}
+		} // end logic for updating who columns
 	}
 
 }

@@ -36,6 +36,3 @@ INSERT INTO pro_products(product_id, product_code, product_name, category_id, su
 values(5, "UNSCENTED_INCENSE_STICK", "Unscented Incense Stick", 1, 2);
 INSERT INTO pro_products(product_id, product_code, product_name, category_id, sub_category_id)
 values(6, "SCENTED_INCENSE_STICK", "Scented Incense Stick", 1, 3);
-
-INSERT INTO PERSON(name,message) values("Varun","Hey this is Varun");
-INSERT INTO PERSON(name,message) values("Joe","Hey this is Joe");
