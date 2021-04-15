@@ -16,6 +16,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import ig.central.library.FrameworkEntity;
 import ig.central.library.TransientColumn;
+import ig.central.library.annotation.ManualUpdate;
 
 @Entity
 @Table(name = "pro_manufactures")
@@ -34,6 +35,7 @@ public class ProManufacture extends FrameworkEntity implements Serializable {
 	@Column(name = "manufacture_quantity")
 	private Double manufactureQuantity;
 
+	@ManualUpdate
 	@Column(name = "manufacture_cost")
 	private Double manufactureCost;
 
@@ -48,6 +50,10 @@ public class ProManufacture extends FrameworkEntity implements Serializable {
 
 	@Column(name = "manufacture_notes")
 	private String manufactureNotes;
+
+	@ManualUpdate
+	@Column(name = "is_delete_allowed", columnDefinition = "varchar(3) default 'Y'", nullable = false)
+	private String isDeleteAllowed = "Y";
 
 	@Version
 	@Column(name = "version_id")
@@ -114,11 +120,25 @@ public class ProManufacture extends FrameworkEntity implements Serializable {
 	}
 
 	public java.util.Date getManufactureDateUi() {
+
+		if (manufactureDate != null && manufactureDateUi == null) {
+			java.util.Date utilDate = new java.util.Date(manufactureDate.getTime());
+			setManufactureDateUi(utilDate);
+		}
+
 		return manufactureDateUi;
 	}
 
 	public void setManufactureDateUi(java.util.Date manufactureDateUi) {
 		this.manufactureDateUi = manufactureDateUi;
+	}
+
+	public String getIsDeleteAllowed() {
+		return isDeleteAllowed;
+	}
+
+	public void setIsDeleteAllowed(String isDeleteAllowed) {
+		this.isDeleteAllowed = isDeleteAllowed;
 	}
 
 	public Long getVersionId() {
@@ -127,6 +147,14 @@ public class ProManufacture extends FrameworkEntity implements Serializable {
 
 	public void setVersionId(Long versionId) {
 		this.versionId = versionId;
+	}
+
+	public void processManufactureDate() {
+
+		if (manufactureDate == null && manufactureDateUi != null) {
+			java.sql.Date sqlDate = new java.sql.Date(manufactureDateUi.getTime());
+			setManufactureDate(sqlDate);
+		}
 	}
 
 }

@@ -183,8 +183,8 @@ public class ProCommonServiceImpl implements ProCommonService {
 
 				ProManufactureProductMap curRow = manufactureProductMaps.get(i);
 				if (curRow.getProductId() == element.getProductId()) {
-					Double curQuantity = 0.0;
-					Double remain = element.getInQuantity() - element.getOutQuantity();
+					double curQuantity = 0.0;
+					double remain = element.getInQuantity() - element.getOutQuantity();
 					if (remain >= curRow.getProductQuantity()) {
 						curQuantity = curRow.getProductQuantity();
 						curRow.setProductQuantity(curRow.getProductQuantity() - curQuantity);
@@ -232,6 +232,7 @@ public class ProCommonServiceImpl implements ProCommonService {
 		}
 
 		ProManufacture manufacture = manufactureProduct.getManufacture();
+		manufacture.processManufactureDate();
 		List<ProManufactureProductMap> manufactureProductMaps = manufactureProduct.getManufactureProductMaps();
 		List<Long> productIds = new ArrayList<Long>();
 		for (ProManufactureProductMap productMap : manufactureProductMaps) {
@@ -321,4 +322,56 @@ public class ProCommonServiceImpl implements ProCommonService {
 		}
 	}
 
+	@Override
+	@Transactional
+	public void updateManufacture(ManufactureProduct manufactureProduct) throws Exception {
+
+		if (manufactureProduct == null || manufactureProduct.getManufacture() == null) {
+			return;
+		}
+
+		ProManufacture manufacture = manufactureProduct.getManufacture();
+		manufacture.processManufactureDate();
+		Optional<ProManufacture> optional = manufactureRepository.findById(manufacture.getManufactureId());
+		if (optional.isPresent()) {
+			ProManufacture cachedEntity = optional.get();
+			FrameworkEntity.updateCachedEntity(cachedEntity, manufacture);
+			manufactureRepository.save(cachedEntity);
+		}
+	}
+
+	@Override
+	@Transactional
+	public void deleteManufacture(Long manufactureId) throws Exception {
+
+		Optional<ProManufacture> optional = manufactureRepository.findById(manufactureId);
+		if (optional.isPresent()) {
+			ProManufacture manufactureEntity = optional.get();
+			if (!"Y".equals(manufactureEntity.getIsDeleteAllowed())) {
+				return;
+			}
+			List<ProManufactureProductMap> mpMaps = manufactureProductMapRepository.findByManufactureId(manufactureId);
+			if (mpMaps != null && mpMaps.size() > 0) {
+				manufactureProductMapRepository.deleteAll(mpMaps);
+			}
+			List<ProPurchaseManufactureMap> pmMaps = purchaseManufactureMapRepository
+					.findByManufactureId(manufactureId);
+			if (pmMaps != null && pmMaps.size() > 0) {
+				List<Long> purchaseIds = new ArrayList<Long>();
+				for (ProPurchaseManufactureMap element : pmMaps) {
+					purchaseIds.add(element.getPurchaseId());
+				}
+				List<ProPurchase> purchaseList = purchaseRepository.findByPurchaseIds(purchaseIds);
+				for (ProPurchase element : purchaseList) {
+					element.setIsConsumed("N");
+					purchaseRepository.save(element);
+				}
+				purchaseManufactureMapRepository.deleteAll(pmMaps);
+			}
+
+			manufactureRepository.delete(manufactureEntity);
+		} // end of optional.isPresent()
+	}
+	
+	
 }

@@ -37,7 +37,7 @@ $(document).ready(function () {
 				{ "data": "productName" },
 				{ "data": "manufactureQuantity" },
 				{ "data": "manufactureCost" },
-				{ "data": "manufactureDate" },
+				{ "data": "manufactureDateUi" },
 				{
 					data: null,
 					className: "dt-center editor-edit",
@@ -72,6 +72,19 @@ $(document).ready(function () {
 				traditional: true,
 				success: function(data) {
 					document.getElementById("manufactureCost").value = data;
+				}
+			});
+		});
+		$("#deleteManufBtn").click(function() {
+			event.preventDefault();
+			var manufactureId = document.getElementById("manufactureId").value;
+			$.ajax({
+				type: 'delete',
+				url: '/api/manufacture/deleteManufacture/' + manufactureId,
+				contentType: "application/json; charset=utf-8",
+				traditional: true,
+				success: function(data) {
+					window.location.href = '/manufacture/viewManufactures';
 				}
 			});
 		});

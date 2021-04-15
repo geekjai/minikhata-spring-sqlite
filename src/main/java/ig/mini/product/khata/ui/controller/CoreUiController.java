@@ -103,11 +103,9 @@ public class CoreUiController {
 	@RequestMapping(value = "manufacture/editManufacture/submit", method = RequestMethod.POST)
 	public String editManufactureSubmit(@ModelAttribute ManufactureProduct form) {
 		try {
-			// proCommonService.createManufacture(form);
-			System.out.println("+++++++++++++++++++++++++");
+			proCommonService.updateManufacture(form);
 			return "redirect:/manufacture/viewManufactures";
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "redirect:/manufacture/createIncense";
 		}

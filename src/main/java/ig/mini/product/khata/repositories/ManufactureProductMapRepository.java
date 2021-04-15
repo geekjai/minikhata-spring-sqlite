@@ -14,5 +14,5 @@ public interface ManufactureProductMapRepository extends JpaRepository<ProManufa
 
 	@Query("SELECT mpm FROM ProManufactureProductMap mpm WHERE mpm.manufactureId = :manufactureId")
 	public List<ProManufactureProductMap> findByManufactureId(@Param("manufactureId") Long manufactureId);
-
+	
 }

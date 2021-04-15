@@ -33,4 +33,8 @@ public interface ProCommonService {
 
 	public void evaluateManufactureCost() throws Exception;
 
+	public void updateManufacture(ManufactureProduct manufactureProduct) throws Exception;
+
+	public void deleteManufacture(Long manufactureId) throws Exception;
+
 }

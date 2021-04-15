@@ -106,7 +106,7 @@
 								</select></td>
 								<td><input
 									th:name="|manufactureProductMaps[${itemStat.index}].productQuantity|"
-									th:value="${map.getProductQuantity()}" /></td>
+									th:value="${map.getProductQuantity()}" th:readonly="${fragment == 'editManufacture'}"/></td>
 							</tr>
 						</tbody>
 					</table>
