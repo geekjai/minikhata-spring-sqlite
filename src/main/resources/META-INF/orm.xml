@@ -65,4 +65,24 @@
 		    AND manuf.manufacture_id IN(:bindManufactureIds)
 		</query>
 	</named-native-query>
+	<named-native-query name="findPurchaseInQty">
+		<query>
+			SELECT pmm.* FROM  pro_purchases pur, pro_purchase_manufacture_map pmm
+			WHERE pur.purchase_id = pmm.purchase_id
+			AND pur.product_id = pmm.product_id
+			AND pmm.in_quantity IS NOT null
+			AND pmm.out_quantity IS null
+			AND pur.purchase_id = :bindPurchaseId
+		</query>
+	</named-native-query>
+	<named-native-query name="findManufactureOutQty">
+		<query>
+			SELECT pmm.* FROM  pro_purchases pur, pro_purchase_manufacture_map pmm
+			WHERE pur.purchase_id = pmm.purchase_id
+			AND pur.product_id = pmm.product_id
+			AND pmm.out_quantity IS NOT null
+			AND pmm.in_quantity IS null
+			AND pur.purchase_id = :bindPurchaseId
+		</query>
+	</named-native-query>
 </entity-mappings>

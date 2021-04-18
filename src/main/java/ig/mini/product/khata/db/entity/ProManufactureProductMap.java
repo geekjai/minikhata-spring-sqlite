@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ig.central.library.FrameworkEntity;
+import ig.central.library.annotation.UpdateCacheEntityColumn;
 
 @Entity
 @Table(name = "pro_manufacture_product_map")
@@ -33,6 +34,7 @@ public class ProManufactureProductMap extends FrameworkEntity implements Seriali
 	private Double productQuantity;
 
 	@Version
+	@UpdateCacheEntityColumn
 	@Column(name = "version_id")
 	private Long versionId;
 

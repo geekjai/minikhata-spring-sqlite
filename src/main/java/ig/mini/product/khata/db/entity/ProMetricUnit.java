@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import ig.central.library.annotation.UpdateCacheEntityColumn;
+
 @Entity
 @Table(name = "PRO_METRIC_UNITS")
 public class ProMetricUnit implements Serializable {
@@ -31,6 +33,7 @@ public class ProMetricUnit implements Serializable {
 	private String unitSymbol;
 
 	@Version
+	@UpdateCacheEntityColumn
 	@Column(name = "version_id")
 	private Long versionId;
 

@@ -37,4 +37,6 @@ public interface ProCommonService {
 
 	public void deleteManufacture(Long manufactureId) throws Exception;
 
+	public boolean isPurchaseQuantityUpdateable(Long bindPurchaseId) throws Exception;
+
 }

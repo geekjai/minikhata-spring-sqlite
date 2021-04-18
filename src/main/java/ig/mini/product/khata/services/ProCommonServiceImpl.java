@@ -96,25 +96,56 @@ public class ProCommonServiceImpl implements ProCommonService {
 		purchaseManufactureMapRepository.save(pmmap);
 	}
 
-	@Override
 	@Transactional
+	private void updateProductPurchase(ProPurchase proPurchase, boolean isPurchaseQuantityUpdateable) throws Exception {
+
+		Long purchaseId = proPurchase.getPurchaseId();
+		Optional<ProPurchase> purchase = purchaseRepository.findById(purchaseId);
+		if (purchase.isPresent()) {
+			ProPurchase cachedEntity = purchase.get();
+			FrameworkEntity.updateCachedEntity(cachedEntity, proPurchase);
+			if (isPurchaseQuantityUpdateable) {
+
+				cachedEntity.setPurchaseQuantity(proPurchase.getPurchaseQuantity());
+				cachedEntity.setAmountBeforeTax(proPurchase.getAmountBeforeTax());
+				cachedEntity.setGstAmount(proPurchase.getGstAmount());
+				cachedEntity.setDiscountAmount(proPurchase.getDiscountAmount());
+				cachedEntity.setPayableAmount(proPurchase.getPayableAmount());
+
+				Optional<ProPurchaseManufactureMap> optional = purchaseManufactureMapRepository
+						.findPurchaseInQty(purchaseId);
+				if (optional.isPresent()) {
+					ProPurchaseManufactureMap pmm = optional.get();
+					pmm.setInQuantity(cachedEntity.getPurchaseQuantity());
+					purchaseManufactureMapRepository.save(pmm);
+				}
+			}
+			purchaseRepository.save(cachedEntity);
+		}
+	}
+
+	@Override
 	public void updateProductPurchase(ProPurchase proPurchase) throws Exception {
 
 		Double payableAmount = calculatePayableAmount(proPurchase);
 		proPurchase.setPayableAmount(payableAmount);
-		Optional<ProPurchase> purchase = purchaseRepository.findById(proPurchase.getPurchaseId());
-		if (purchase.isPresent()) {
-			ProPurchase cachedEntity = purchase.get();
-			FrameworkEntity.updateCachedEntity(cachedEntity, proPurchase);
-			purchaseRepository.save(cachedEntity);
-		}
+		boolean isPurchaseQuantityUpdateable = isPurchaseQuantityUpdateable(proPurchase.getPurchaseId());
+
+		updateProductPurchase(proPurchase, isPurchaseQuantityUpdateable);
 	}
 
 	@Override
 	@Transactional
 	public void deleteProductPurchase(Long purchaseId) throws Exception {
 
-		if (purchaseId != null) {
+		// if a manufacture recorded again purchase then deletion not allowed
+		if (purchaseId != null && isPurchaseQuantityUpdateable(purchaseId)) {
+			Optional<ProPurchaseManufactureMap> pmmOptional = purchaseManufactureMapRepository
+					.findPurchaseInQty(purchaseId);
+			if (pmmOptional.isPresent()) {
+				ProPurchaseManufactureMap ce = pmmOptional.get();
+				purchaseManufactureMapRepository.delete(ce);
+			}
 			purchaseRepository.deleteById(purchaseId);
 		}
 	}
@@ -372,6 +403,20 @@ public class ProCommonServiceImpl implements ProCommonService {
 			manufactureRepository.delete(manufactureEntity);
 		} // end of optional.isPresent()
 	}
-	
-	
+
+	@Override
+	public boolean isPurchaseQuantityUpdateable(Long bindPurchaseId) throws Exception {
+
+		if (bindPurchaseId == null) {
+			return true;
+		}
+		// if in quantity is null and out quantity is not null
+		List<ProPurchaseManufactureMap> mapList = coreRepositoryDao.findManufactureOutQty(bindPurchaseId);
+		if (mapList != null && mapList.size() > 0) {
+			return false;
+		}
+
+		return true;
+	}
+
 }

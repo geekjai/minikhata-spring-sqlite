@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface ManualUpdate {
+public @interface UpdateCacheEntityColumn {
 
 	public boolean value() default false;
 

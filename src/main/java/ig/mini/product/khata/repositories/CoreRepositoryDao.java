@@ -4,6 +4,7 @@ import java.util.List;
 
 import ig.mini.product.khata.db.entity.ProManufacture;
 import ig.mini.product.khata.db.entity.ProPurchase;
+import ig.mini.product.khata.db.entity.ProPurchaseManufactureMap;
 import ig.mini.product.khata.db.view.ProductPurchaseManufacture;
 import ig.mini.product.khata.db.view.ProductPurchaseQuantity;
 
@@ -17,5 +18,9 @@ public interface CoreRepositoryDao {
 
 	public List<ProductPurchaseManufacture> findProductPurchaseManufCostQty(List<Long> bindManufactureIds)
 			throws Exception;
+
+	public List<ProPurchaseManufactureMap> findPurchaseInQty(Long bindPurchaseId) throws Exception;
+
+	public List<ProPurchaseManufactureMap> findManufactureOutQty(Long bindPurchaseId) throws Exception;
 
 }

@@ -13,6 +13,7 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import ig.central.library.FrameworkEntity;
+import ig.central.library.annotation.UpdateCacheEntityColumn;
 
 @Entity
 @Table(name = "pro_file_execution_entries")
@@ -48,6 +49,7 @@ public class ProFileExecutionEntry extends FrameworkEntity implements Serializab
 	private Date lastUpdateDate;
 
 	@Version
+	@UpdateCacheEntityColumn
 	@Column(name = "version_id")
 	private Long versionId;
 

@@ -18,7 +18,8 @@
 							<!--  -->
 							<label for="productId">Product Name</label>
 							<!--  -->
-							<select id='productId' class='form-control productId'>
+							<select id='productId' class='form-control productId'
+								th:disabled="${fragment == 'editPurchase'}">
 								<option th:each="product : ${products}"
 									th:value="${product.productId}"
 									th:text="${product.productName}"
@@ -63,7 +64,8 @@
 							<!--  -->
 							<input th:value="${purchase.purchaseQuantity}"
 								class="form-control purchaseQuantity" type="number"
-								name="purchaseQuantity" id="purchaseQuantity" />
+								name="purchaseQuantity" id="purchaseQuantity"
+								th:readonly="${isPurchaseQuantityUpdateable == false}" />
 						</div>
 					</div>
 					<div class="col-md-2">
@@ -72,7 +74,8 @@
 							<!--  -->
 							<input th:value="${purchase.amountBeforeTax}"
 								class="form-control amountBeforeTax" type="number"
-								name="amountBeforeTax" id="amountBeforeTax" />
+								name="amountBeforeTax" id="amountBeforeTax"
+								th:readonly="${isPurchaseQuantityUpdateable == false}" />
 						</div>
 					</div>
 					<div class="col-md-2">
@@ -81,7 +84,8 @@
 							<!--  -->
 							<input th:value="${purchase.gstAmount}"
 								class="form-control gstAmount" type="number" name="gstAmount"
-								id="gstAmount" />
+								id="gstAmount"
+								th:readonly="${isPurchaseQuantityUpdateable == false}" />
 						</div>
 					</div>
 					<div class="col-md-2">
@@ -90,7 +94,8 @@
 							<!--  -->
 							<input th:value="${purchase.discountAmount}"
 								class="form-control discountAmount" type="number"
-								name="discountAmount" id="discountAmount" />
+								name="discountAmount" id="discountAmount"
+								th:readonly="${isPurchaseQuantityUpdateable == false}" />
 						</div>
 					</div>
 					<div class="col-md-2">
@@ -98,7 +103,8 @@
 							<label for="payableAmount">Payable Amount</label>
 							<!--  -->
 							<input th:value="${purchase.payableAmount}" class="form-control"
-								type="number" name="payableAmount" id="payableAmount" disabled="disabled"/>
+								type="number" name="payableAmount" id="payableAmount"
+								disabled="disabled" />
 						</div>
 					</div>
 				</div>
@@ -109,9 +115,11 @@
 					class="btn btn-primary float-right">Submit</button>
 				<button th:if="${fragment == 'editPurchase'}" type="submit"
 					class="btn btn-primary float-right">Update</button>
+				<!-- Delete Button -->
 				<button th:if="${fragment == 'editPurchase'}" type='button'
 					id="deletePurBtn" class="btn btn-danger float-right"
-					style='margin-right: 15px;'>Delete</button>
+					style='margin-right: 15px;'
+					th:disabled="${isPurchaseQuantityUpdateable == false}">Delete</button>
 				<button type='button' id="cacel_cp"
 					class="btn btn-olive float-right" style='margin-right: 15px;'>Cancel</button>
 			</div>

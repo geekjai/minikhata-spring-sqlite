@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import ig.central.library.annotation.UpdateCacheEntityColumn;
+
 @Entity
 @Table(name = "pro_products")
 public class ProProduct implements Serializable {
@@ -49,6 +51,7 @@ public class ProProduct implements Serializable {
 	private Long subCategoryId;
 
 	@Version
+	@UpdateCacheEntityColumn
 	@Column(name = "version_id")
 	private Long versionId;
 

@@ -7,6 +7,7 @@ import java.util.Map;
 import ig.central.library.FrameworkEntity;
 import ig.mini.product.khata.db.entity.ProManufacture;
 import ig.mini.product.khata.db.entity.ProPurchase;
+import ig.mini.product.khata.db.entity.ProPurchaseManufactureMap;
 import ig.mini.product.khata.db.view.ProductPurchaseManufacture;
 import ig.mini.product.khata.db.view.ProductPurchaseQuantity;
 
@@ -69,7 +70,7 @@ public abstract class CoreRepositoryAbstractDao {
 
 		return entityList;
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected final List<ProductPurchaseManufacture> populateProductPurchaseManufactureList(
 			Class<ProductPurchaseManufacture> entityClass, List<Object> data)
@@ -89,5 +90,25 @@ public abstract class CoreRepositoryAbstractDao {
 
 		return entityList;
 	}
-	
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected final List<ProPurchaseManufactureMap> populateProPurchaseManufactureMapList(
+			Class<ProPurchaseManufactureMap> entityClass, List<Object> data)
+			throws InstantiationException, IllegalAccessException {
+
+		List<ProPurchaseManufactureMap> entityList = null;
+		if (data != null) {
+			entityList = new ArrayList<>();
+			for (Object object : data) {
+
+				Map row = (Map) object;
+				ProPurchaseManufactureMap entity = (ProPurchaseManufactureMap) entityClass.newInstance();
+				FrameworkEntity.setFrameworkEntityData(entity, row);
+				entityList.add(entity);
+			}
+		}
+
+		return entityList;
+	}
+
 }

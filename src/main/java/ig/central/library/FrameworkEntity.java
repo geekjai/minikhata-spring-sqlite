@@ -10,7 +10,7 @@ import java.util.Map;
 
 import javax.persistence.Column;
 
-import ig.central.library.annotation.ManualUpdate;
+import ig.central.library.annotation.UpdateCacheEntityColumn;
 import ig.central.library.constant.WhoColumnDataConstant;
 
 public class FrameworkEntity {
@@ -145,12 +145,12 @@ public class FrameworkEntity {
 
 		for (Field field : frameworkEntityDeclaredFields(entity)) {
 			Column column = field.getAnnotation(Column.class);
-			ManualUpdate manualUpdate = field.getAnnotation(ManualUpdate.class);
+			UpdateCacheEntityColumn cacheUpdate = field.getAnnotation(UpdateCacheEntityColumn.class);
 			if (column != null) {
 				if (column.updatable()) {
 					// check central library supported annotation
-					if (manualUpdate != null) {
-						if (!manualUpdate.value()) {
+					if (cacheUpdate != null) {
+						if (!cacheUpdate.value()) {
 							continue;
 						}
 					}

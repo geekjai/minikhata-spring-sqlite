@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ig.central.library.FrameworkEntity;
+import ig.central.library.annotation.UpdateCacheEntityColumn;
 
 @Entity
 @Table(name = "pro_purchase_manufacture_map")
@@ -39,6 +40,7 @@ public class ProPurchaseManufactureMap extends FrameworkEntity implements Serial
 	private Double outQuantity;
 
 	@Version
+	@UpdateCacheEntityColumn
 	@Column(name = "version_id")
 	private Long versionId;
 

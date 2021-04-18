@@ -16,7 +16,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import ig.central.library.FrameworkEntity;
 import ig.central.library.TransientColumn;
-import ig.central.library.annotation.ManualUpdate;
+import ig.central.library.annotation.UpdateCacheEntityColumn;
 
 @Entity
 @Table(name = "pro_manufactures")
@@ -35,7 +35,7 @@ public class ProManufacture extends FrameworkEntity implements Serializable {
 	@Column(name = "manufacture_quantity")
 	private Double manufactureQuantity;
 
-	@ManualUpdate
+	@UpdateCacheEntityColumn
 	@Column(name = "manufacture_cost")
 	private Double manufactureCost;
 
@@ -51,11 +51,12 @@ public class ProManufacture extends FrameworkEntity implements Serializable {
 	@Column(name = "manufacture_notes")
 	private String manufactureNotes;
 
-	@ManualUpdate
+	@UpdateCacheEntityColumn
 	@Column(name = "is_delete_allowed", columnDefinition = "varchar(3) default 'Y'", nullable = false)
 	private String isDeleteAllowed = "Y";
 
 	@Version
+	@UpdateCacheEntityColumn
 	@Column(name = "version_id")
 	private Long versionId;
 

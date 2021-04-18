@@ -19,6 +19,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import ig.central.library.FrameworkEntity;
 import ig.central.library.TransientColumn;
+import ig.central.library.annotation.UpdateCacheEntityColumn;
 
 @Entity
 @Table(name = "pro_purchases")
@@ -34,27 +35,32 @@ public class ProPurchase extends FrameworkEntity implements Serializable {
 	@Column(name = "purchase_id", nullable = false, updatable = false)
 	private Long purchaseId;
 
-	@Column(name = "product_id", nullable = false)
+	@Column(name = "product_id", nullable = false, updatable = false)
 	private Long productId;
 
 	@Column(name = "bill_number", nullable = false)
 	private String billNumber;
 
+	@UpdateCacheEntityColumn
 	@Column(name = "purchase_quantity")
 	private Double purchaseQuantity;
 
 	@Column(name = "purchase_notes")
 	private String purchaseNotes;
 
+	@UpdateCacheEntityColumn
 	@Column(name = "amount_before_tax")
 	private Double amountBeforeTax;
 
+	@UpdateCacheEntityColumn
 	@Column(name = "gst_amount")
 	private Double gstAmount;
 
+	@UpdateCacheEntityColumn
 	@Column(name = "discount_amount")
 	private Double discountAmount;
 
+	@UpdateCacheEntityColumn
 	@Column(name = "payable_amount")
 	private Double payableAmount;
 
@@ -62,9 +68,11 @@ public class ProPurchase extends FrameworkEntity implements Serializable {
 	@Column(name = "purchase_date")
 	private Date purchaseDate;
 
+	@UpdateCacheEntityColumn
 	@Column(name = "is_amount_settled", nullable = false)
 	private String isAmountSettled = "N";
 
+	@UpdateCacheEntityColumn
 	@Column(name = "is_consumed", nullable = false)
 	private String isConsumed = "N";
 
@@ -73,6 +81,7 @@ public class ProPurchase extends FrameworkEntity implements Serializable {
 	private String productName;
 
 	@Version
+	@UpdateCacheEntityColumn
 	@Column(name = "version_id")
 	private Long versionId;
 

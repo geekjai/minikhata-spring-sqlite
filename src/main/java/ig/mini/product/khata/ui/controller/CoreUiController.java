@@ -40,17 +40,19 @@ public class CoreUiController {
 		modelAndView.addObject("formTitle", "Create Purchase");
 		modelAndView.addObject("products", proCommonService.findAllProduct());
 		modelAndView.addObject("purchase", new ProPurchase());
+		modelAndView.addObject("isPurchaseQuantityUpdateable", true);
 		return modelAndView;
 	}
 
 	@RequestMapping("/purchases/editPurchase/{id}")
-	public ModelAndView editPurchase(@PathVariable Long id) {
+	public ModelAndView editPurchase(@PathVariable Long id) throws Exception {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("purchase");
 		modelAndView.addObject("fragment", "editPurchase");
 		modelAndView.addObject("formTitle", "Edit Purchase");
 		modelAndView.addObject("products", proCommonService.findAllProduct());
 		modelAndView.addObject("purchase", proCommonService.findByPurchaseId(id));
+		modelAndView.addObject("isPurchaseQuantityUpdateable", proCommonService.isPurchaseQuantityUpdateable(id));
 		return modelAndView;
 	}
 
