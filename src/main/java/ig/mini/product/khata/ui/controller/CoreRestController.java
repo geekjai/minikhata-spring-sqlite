@@ -121,4 +121,15 @@ public class CoreRestController {
 		}
 	}
 
+	@RequestMapping(value = "/api/manufacture/pushManufactureToPurchase/{manufactureId}", method = RequestMethod.PUT)
+	public ResponseEntity<Object> pushManufactureToPurchase(@PathVariable Long manufactureId) {
+		try {
+			proCommonService.pushManufactureToPurchase(manufactureId);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 }

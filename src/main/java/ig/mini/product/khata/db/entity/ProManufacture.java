@@ -52,6 +52,10 @@ public class ProManufacture extends FrameworkEntity implements Serializable {
 	private String manufactureNotes;
 
 	@UpdateCacheEntityColumn
+	@Column(name = "related_purchase_id")
+	private Long relatedPurchaseId;
+
+	@UpdateCacheEntityColumn
 	@Column(name = "is_delete_allowed", columnDefinition = "varchar(3) default 'Y'", nullable = false)
 	private String isDeleteAllowed = "Y";
 
@@ -132,6 +136,14 @@ public class ProManufacture extends FrameworkEntity implements Serializable {
 
 	public void setManufactureDateUi(java.util.Date manufactureDateUi) {
 		this.manufactureDateUi = manufactureDateUi;
+	}
+
+	public Long getRelatedPurchaseId() {
+		return relatedPurchaseId;
+	}
+
+	public void setRelatedPurchaseId(Long relatedPurchaseId) {
+		this.relatedPurchaseId = relatedPurchaseId;
 	}
 
 	public String getIsDeleteAllowed() {

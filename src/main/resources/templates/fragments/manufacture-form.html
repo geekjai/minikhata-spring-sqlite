@@ -66,6 +66,14 @@
 										style="margin-top: 33px;">Calculate Cost</button>
 								</div>
 							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<button th:if="${fragment == 'editManufacture'}" type='button'
+										id="pushToPurBtn" class="btn btn-info"
+										th:disabled="*{manufacture.relatedPurchaseId != null}">Add
+										to Purchase</button>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -106,7 +114,8 @@
 								</select></td>
 								<td><input
 									th:name="|manufactureProductMaps[${itemStat.index}].productQuantity|"
-									th:value="${map.getProductQuantity()}" th:readonly="${fragment == 'editManufacture'}"/></td>
+									th:value="${map.getProductQuantity()}"
+									th:readonly="${fragment == 'editManufacture'}" /></td>
 							</tr>
 						</tbody>
 					</table>

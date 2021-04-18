@@ -9,9 +9,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import ig.central.library.FrameworkEntity;
+import ig.mini.product.khata.db.content.entity.ProProduct;
+import ig.mini.product.khata.db.content.repository.ProductRepository;
 import ig.mini.product.khata.db.entity.ProManufacture;
 import ig.mini.product.khata.db.entity.ProManufactureProductMap;
-import ig.mini.product.khata.db.entity.ProProduct;
 import ig.mini.product.khata.db.entity.ProPurchase;
 import ig.mini.product.khata.db.entity.ProPurchaseManufactureMap;
 import ig.mini.product.khata.db.view.ProductPurchaseManufacture;
@@ -19,7 +20,6 @@ import ig.mini.product.khata.db.view.ProductPurchaseQuantity;
 import ig.mini.product.khata.repositories.CoreRepositoryDao;
 import ig.mini.product.khata.repositories.ManufactureProductMapRepository;
 import ig.mini.product.khata.repositories.ManufactureRepository;
-import ig.mini.product.khata.repositories.ProductRepository;
 import ig.mini.product.khata.repositories.PurchaseManufactureMapRepository;
 import ig.mini.product.khata.repositories.PurchaseRepository;
 import ig.mini.product.khata.ui.pojo.ManufactureProduct;
@@ -87,6 +87,8 @@ public class ProCommonServiceImpl implements ProCommonService {
 
 		Double payableAmount = calculatePayableAmount(proPurchase);
 		proPurchase.setPayableAmount(payableAmount);
+		// purchased from vendor
+		proPurchase.setPurchaseTypeId(1L);
 		proPurchase = purchaseRepository.save(proPurchase);
 		// create ProPurchaseManufactureMap entry
 		ProPurchaseManufactureMap pmmap = new ProPurchaseManufactureMap();
@@ -417,6 +419,48 @@ public class ProCommonServiceImpl implements ProCommonService {
 		}
 
 		return true;
+	}
+
+	@Transactional
+	public void pushManufactureToPurchase(ProManufacture proManufacture, ProPurchase proPurchase) throws Exception {
+
+		proPurchase.setPurchaseId(null);
+		proPurchase = purchaseRepository.save(proPurchase);
+
+		// create ProPurchaseManufactureMap entry
+		ProPurchaseManufactureMap pmmap = new ProPurchaseManufactureMap();
+		pmmap.setProductId(proPurchase.getProductId());
+		pmmap.setPurchaseId(proPurchase.getPurchaseId());
+		pmmap.setInQuantity(proPurchase.getPurchaseQuantity());
+		purchaseManufactureMapRepository.save(pmmap);
+
+		proManufacture.setRelatedPurchaseId(proPurchase.getPurchaseId());
+		proManufacture.setIsDeleteAllowed("N");
+		manufactureRepository.save(proManufacture);
+	}
+
+	@Override
+	public void pushManufactureToPurchase(Long manufactureId) throws Exception {
+
+		if (manufactureId == null) {
+			return;
+		}
+		Optional<ProManufacture> optional = manufactureRepository.findById(manufactureId);
+		if (optional.isPresent()) {
+			ProManufacture manufacture = optional.get();
+			if (manufacture.getManufactureQuantity() == null || manufacture.getManufactureQuantity() <= 0.0) {
+				return;
+			}
+			if (manufacture.getManufactureCost() == null || manufacture.getManufactureCost() <= 0.0) {
+				return;
+			}
+			if (manufacture.getRelatedPurchaseId() != null) {
+				return;
+			}
+			ProPurchase proPurchase = ProPurchase.newInstanceUsingProManufacture(manufacture);
+			pushManufactureToPurchase(manufacture, proPurchase);
+		}
+
 	}
 
 }

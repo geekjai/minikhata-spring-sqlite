@@ -36,3 +36,8 @@ INSERT INTO pro_products(product_id, product_code, product_name, category_id, su
 values(5, "UNSCENTED_INCENSE_STICK", "Unscented Incense Stick", 1, 2);
 INSERT INTO pro_products(product_id, product_code, product_name, category_id, sub_category_id)
 values(6, "SCENTED_INCENSE_STICK", "Scented Incense Stick", 1, 3);
+
+INSERT INTO pro_purchase_types(purchase_type_id, purchase_type_code, description)
+values(1, "VENDOR", "Purchased directly from market vendor.");
+INSERT INTO pro_purchase_types(purchase_type_id, purchase_type_code, description)
+values(2, "MANUFACTURE", "Manufacture in own Company.");

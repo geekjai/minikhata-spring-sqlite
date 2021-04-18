@@ -1,4 +1,4 @@
-package ig.mini.product.khata.db.entity;
+package ig.mini.product.khata.db.content.entity;
 
 import java.io.Serializable;
 
@@ -16,9 +16,6 @@ import ig.central.library.annotation.UpdateCacheEntityColumn;
 @Table(name = "pro_products")
 public class ProProduct implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6158379670388337846L;
 
 	@Id
@@ -52,8 +49,8 @@ public class ProProduct implements Serializable {
 
 	@Version
 	@UpdateCacheEntityColumn
-	@Column(name = "version_id")
-	private Long versionId;
+	@Column(name = "version_id", columnDefinition = "integer default 0")
+	private int versionId;
 
 	public Long getProductId() {
 		return productId;
@@ -127,11 +124,11 @@ public class ProProduct implements Serializable {
 		this.subCategoryId = subCategoryId;
 	}
 
-	public Long getVersionId() {
+	public int getVersionId() {
 		return versionId;
 	}
 
-	public void setVersionId(Long versionId) {
+	public void setVersionId(int versionId) {
 		this.versionId = versionId;
 	}
 

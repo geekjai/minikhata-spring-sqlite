@@ -88,6 +88,19 @@ $(document).ready(function () {
 				}
 			});
 		});
+		$("#pushToPurBtn").click(function() {
+			event.preventDefault();
+			var manufactureId = document.getElementById("manufactureId").value;
+			$.ajax({
+				type: 'put',
+				url: '/api/manufacture/pushManufactureToPurchase/' + manufactureId,
+				contentType: "application/json; charset=utf-8",
+				traditional: true,
+				success: function(data) {
+					//window.location.href = '/manufacture/viewManufactures';
+				}
+			});
+		});
 	});
 });
 			/*]]>*/

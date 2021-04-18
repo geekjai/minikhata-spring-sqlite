@@ -2,8 +2,8 @@ package ig.mini.product.khata.services;
 
 import java.util.List;
 
+import ig.mini.product.khata.db.content.entity.ProProduct;
 import ig.mini.product.khata.db.entity.ProManufacture;
-import ig.mini.product.khata.db.entity.ProProduct;
 import ig.mini.product.khata.db.entity.ProPurchase;
 import ig.mini.product.khata.ui.pojo.ManufactureProduct;
 
@@ -38,5 +38,7 @@ public interface ProCommonService {
 	public void deleteManufacture(Long manufactureId) throws Exception;
 
 	public boolean isPurchaseQuantityUpdateable(Long bindPurchaseId) throws Exception;
+
+	public void pushManufactureToPurchase(Long manufactureId) throws Exception;
 
 }

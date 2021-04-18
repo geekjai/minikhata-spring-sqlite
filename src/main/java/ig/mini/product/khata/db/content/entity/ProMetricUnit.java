@@ -1,4 +1,4 @@
-package ig.mini.product.khata.db.entity;
+package ig.mini.product.khata.db.content.entity;
 
 import java.io.Serializable;
 
@@ -35,7 +35,7 @@ public class ProMetricUnit implements Serializable {
 	@Version
 	@UpdateCacheEntityColumn
 	@Column(name = "version_id")
-	private Long versionId;
+	private int versionId;
 
 	public Long getMetricId() {
 		return metricId;
@@ -69,11 +69,11 @@ public class ProMetricUnit implements Serializable {
 		this.unitSymbol = unitSymbol;
 	}
 
-	public Long getVersionId() {
+	public int getVersionId() {
 		return versionId;
 	}
 
-	public void setVersionId(Long versionId) {
+	public void setVersionId(int versionId) {
 		this.versionId = versionId;
 	}
 

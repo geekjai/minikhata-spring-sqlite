@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Map;
 
 import javax.persistence.Column;
@@ -34,6 +35,9 @@ public class ProPurchase extends FrameworkEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "purchase_id", nullable = false, updatable = false)
 	private Long purchaseId;
+
+	@Column(name = "purchase_type_id", nullable = false, updatable = false, columnDefinition = "bigint default 1")
+	private Long purchaseTypeId;
 
 	@Column(name = "product_id", nullable = false, updatable = false)
 	private Long productId;
@@ -83,7 +87,7 @@ public class ProPurchase extends FrameworkEntity implements Serializable {
 	@Version
 	@UpdateCacheEntityColumn
 	@Column(name = "version_id")
-	private Long versionId;
+	private int versionId;
 
 	public String getProductName() {
 		return productName;
@@ -99,6 +103,14 @@ public class ProPurchase extends FrameworkEntity implements Serializable {
 
 	public void setPurchaseId(Long purchaseId) {
 		this.purchaseId = purchaseId;
+	}
+
+	public Long getPurchaseTypeId() {
+		return purchaseTypeId;
+	}
+
+	public void setPurchaseTypeId(Long purchaseTypeId) {
+		this.purchaseTypeId = purchaseTypeId;
 	}
 
 	public Long getProductId() {
@@ -189,11 +201,11 @@ public class ProPurchase extends FrameworkEntity implements Serializable {
 		this.isConsumed = isConsumed;
 	}
 
-	public Long getVersionId() {
+	public int getVersionId() {
 		return versionId;
 	}
 
-	public void setVersionId(Long versionId) {
+	public void setVersionId(int versionId) {
 		this.versionId = versionId;
 	}
 
@@ -277,6 +289,29 @@ public class ProPurchase extends FrameworkEntity implements Serializable {
 			}
 		}
 
+		return proPurchase;
+	}
+
+	public static ProPurchase newInstanceUsingProManufacture(ProManufacture proManufacture) {
+
+		ProPurchase proPurchase = null;
+		if (proManufacture == null) {
+			return proPurchase;
+		}
+		proPurchase = new ProPurchase();
+		proPurchase.setBillNumber("Manufacture" + proManufacture.getManufactureId());
+		proPurchase.setProductId(proManufacture.getProductId());
+		proPurchase.setPurchaseDate(new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+		proPurchase.setPurchaseNotes(proManufacture.getManufactureNotes());
+
+		proPurchase.setPurchaseQuantity(proManufacture.getManufactureQuantity());
+
+		proPurchase.setAmountBeforeTax(proManufacture.getManufactureCost());
+		proPurchase.setGstAmount(0.0);
+		proPurchase.setDiscountAmount(0.0);
+		proPurchase.setPayableAmount(proManufacture.getManufactureCost());
+
+		proPurchase.setPurchaseTypeId(2L);
 		return proPurchase;
 	}
 
