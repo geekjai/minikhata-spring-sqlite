@@ -1,0 +1,123 @@
+<div th:fragment="sell-form" xmlns:th="http://www.w3.org/1999/xhtml"
+	class="col-md-12">
+	<div class="card card-primary">
+		<div class="card-header" style="background: #d81b60">
+			<h3 class="card-title" th:text="${formTitle}"></h3>
+		</div>
+		<!-- ./card-header-->
+		<!-- form start-->
+		<form role="form" action="#"
+			th:action="${fragment} == 'createSell' ? @{/sell/createSell/submit} : @{/sell/editSell/submit}"
+			th:object="${form}" method="post" th:id="${fragment}">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="sellDate">Sell Date</label>
+									<!--  -->
+									<input th:field="*{sell.sellDateUi}" class="form-control date"
+										type="date" name="sellDate" id="sellDate" />
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="isAmountSettled">Amount Settled</label>
+									<!--  -->
+									<input th:field="*{sell.isAmountSettled}" class="form-control"
+										name="isAmountSettled" id="isAmountSettled" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="sellNotes">Sell Notes</label>
+							<!--  -->
+							<textarea class='form-control' name="sellNotes" rows="5"
+								cols="30" th:field="*{sell.sellNotes}">
+							</textarea>
+						</div>
+					</div>
+				</div>
+				<!-- end of row -->
+				<div class="row" style="margin-bottom: 10px;">
+					<button th:if="${fragment == 'createSell'}" type="submit"
+						class="btn btn-info" name="addProduct" id="addProduct">Add
+						Product</button>
+
+				</div>
+				<div class="row">
+					<table class="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th style="width: 3px;"></th>
+								<th>Name</th>
+								<th>Quantity</th>
+								<th>Amount Before Tax</th>
+								<th>GST</th>
+								<th>Discount</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="map, itemStat : *{sellProductMaps}">
+								<td>
+									<!-- --- --> <input hidden="true"
+									th:field="*{sellProductMaps[__${itemStat.index}__].id}" />
+								</td>
+								<td>
+									<!-- --- <input hidden="true"
+									th:field="*{sellProductMaps[__${itemStat.index}__].productId}" />
+									--> <!-- --- --> <select class="form-control"
+									th:name="|sellProductMaps[${itemStat.index}].productId|"
+									th:value="${map.getProductId()}"
+									th:disabled="${fragment == 'editSell'}">
+										<option th:each="product : ${form.products}"
+											th:value="${product.productId}"
+											th:text="${product.productName}"
+											th:selected="${product.productId==map.productId}"></option>
+								</select>
+								</td>
+								<td>
+									<!-- --- --> <input
+									th:field="*{sellProductMaps[__${itemStat.index}__].sellQuantity}"
+									th:readonly="${fragment == 'editSell'}" />
+								</td>
+								<td>
+									<!-- --- --> <input
+									th:field="*{sellProductMaps[__${itemStat.index}__].amountBeforeTax}"
+									th:readonly="${fragment == 'editSell'}" />
+								</td>
+								<td>
+									<!-- --- --> <input
+									th:field="*{sellProductMaps[__${itemStat.index}__].gstAmount}"
+									th:readonly="${fragment == 'editSell'}" />
+								</td>
+								<td>
+									<!-- --- --> <input
+									th:field="*{sellProductMaps[__${itemStat.index}__].discountAmount}"
+									th:readonly="${fragment == 'editSell'}" />
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<!-- end of card body -->
+
+			<div class="card-footer">
+				<button th:if="${fragment == 'createSell'}" type="submit"
+					class="btn btn-primary float-right">Submit</button>
+			</div>
+		</form>
+	</div>
+
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(document).ready(function() {
+			$(document).scrollTop($(document).height());
+		});
+		/*]]>*/
+	</script>
+</div>

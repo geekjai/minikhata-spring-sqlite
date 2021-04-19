@@ -28,6 +28,10 @@
   $leftNav.append(
     "<li class='nav-item d-none d-sm-inline-block'><a href='/manufacture/viewManufactures' class='nav-link'>Manufacture</a></li>"
   )
+  //Sell
+  $leftNav.append(
+    "<li class='nav-item d-none d-sm-inline-block'><a href='/sell/viewSells' class='nav-link'>Sell</a></li>"
+  )
   var $rightNav = $('<ul />', {
     class: 'navbar-nav ml-auto'
   })

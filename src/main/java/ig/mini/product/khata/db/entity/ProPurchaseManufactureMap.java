@@ -13,6 +13,7 @@ import javax.persistence.Version;
 import ig.central.library.FrameworkEntity;
 import ig.central.library.annotation.UpdateCacheEntityColumn;
 
+@Deprecated
 @Entity
 @Table(name = "pro_purchase_manufacture_map")
 public class ProPurchaseManufactureMap extends FrameworkEntity implements Serializable {
@@ -42,7 +43,7 @@ public class ProPurchaseManufactureMap extends FrameworkEntity implements Serial
 	@Version
 	@UpdateCacheEntityColumn
 	@Column(name = "version_id")
-	private Long versionId;
+	private int versionId;
 
 	public Long getId() {
 		return id;
@@ -92,11 +93,11 @@ public class ProPurchaseManufactureMap extends FrameworkEntity implements Serial
 		this.outQuantity = outQuantity;
 	}
 
-	public Long getVersionId() {
+	public int getVersionId() {
 		return versionId;
 	}
 
-	public void setVersionId(Long versionId) {
+	public void setVersionId(int versionId) {
 		this.versionId = versionId;
 	}
 

@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.w3.org/1999/xhtml"
+	layout:decorate="~{layouts/layout}">
+<body>
+	<div layout:fragment="content" th:switch="${fragment}">
+		<div class="row" th:case="'viewSells'">
+			<div th:replace="fragments/sell-list :: sell-list"></div>
+		</div>
+		<div class="row" th:case="'createSell'">
+			<div th:replace="fragments/sell-form :: sell-form"></div>
+		</div>
+		<div class="row" th:case="'editSell'">
+			<div th:replace="fragments/sell-form :: sell-form"></div>
+		</div>
+		<div class="modal fade" id="manufModel" role="dialog">
+			<div class="modal-dialog modal-dialog-centered">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Message</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<p id="manufModelText"></p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div layout:fragment="script">
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+$(document).ready(function () { 
+	$(function() {
+		var datatable = $('#tblSellList').DataTable({
+			"paging": true,
+			"lengthChange": false,
+			"searching": false,
+			"ordering": true,
+			"info": true,
+			"autoWidth": false,
+			"responsive": true,
+			"ajax": {
+				"url": "/api/sell/sellRecords",
+				"dataSrc": ""
+			},
+			"columns": [
+				{ "data": "sellId" },
+				{ "data": "sellDate" },
+				{ "data": "isAmountSettled" },
+				{
+					data: null,
+					className: "dt-center editor-edit",
+					defaultContent: '<i class="fa fa-eye"/>',
+					orderable: false
+				}
+			],
+			"dom": '<"selltoolbar">frtip'
+		});
+		$("div.selltoolbar").html('<button id="createSellBtn" type="button" class="btn btn-block btn-info" style="width:100px;">Create Sell</button>');
+		$("#createSellBtn").click(function() {
+			window.location.href = '/sell/createSell';
+		});
+		//
+	});
+});
+			/*]]>*/
+		</script>
+	</div>
+</body>
+</html>

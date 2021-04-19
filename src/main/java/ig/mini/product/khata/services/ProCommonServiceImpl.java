@@ -15,6 +15,9 @@ import ig.mini.product.khata.db.entity.ProManufacture;
 import ig.mini.product.khata.db.entity.ProManufactureProductMap;
 import ig.mini.product.khata.db.entity.ProPurchase;
 import ig.mini.product.khata.db.entity.ProPurchaseManufactureMap;
+import ig.mini.product.khata.db.prime.entity.ProSell;
+import ig.mini.product.khata.db.prime.repository.SellProductMapRepository;
+import ig.mini.product.khata.db.prime.repository.SellRepository;
 import ig.mini.product.khata.db.view.ProductPurchaseManufacture;
 import ig.mini.product.khata.db.view.ProductPurchaseQuantity;
 import ig.mini.product.khata.repositories.CoreRepositoryDao;
@@ -39,6 +42,10 @@ public class ProCommonServiceImpl implements ProCommonService {
 	private PurchaseManufactureMapRepository purchaseManufactureMapRepository;
 	@Autowired
 	private ManufactureProductMapRepository manufactureProductMapRepository;
+	@Autowired
+	private SellRepository sellRepository;
+	@Autowired
+	private SellProductMapRepository sellProductMapRepository;
 
 	@Override
 	public Iterable<ProProduct> findAllProduct() {
@@ -461,6 +468,12 @@ public class ProCommonServiceImpl implements ProCommonService {
 			pushManufactureToPurchase(manufacture, proPurchase);
 		}
 
+	}
+
+	@Override
+	public List<ProSell> findSells() throws Exception {
+
+		return sellRepository.findByAllSells();
 	}
 
 }
