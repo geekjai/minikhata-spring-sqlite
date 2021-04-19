@@ -15,4 +15,7 @@ public interface CustomerRepository extends JpaRepository<ProCustomer, Long> {
 	@Query("SELECT e FROM ProCustomer e WHERE e.customerId = :customerId")
 	public Optional<ProCustomer> findByCustomerId(@Param("customerId") Long customerId);
 
+	@Query("SELECT e FROM ProCustomer e")
+	public Iterable<ProCustomer> findAllCustomers();
+
 }

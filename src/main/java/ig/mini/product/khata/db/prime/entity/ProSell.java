@@ -18,7 +18,7 @@ import ig.central.library.FrameworkEntity;
 import ig.central.library.TransientColumn;
 import ig.central.library.annotation.UpdateCacheEntityColumn;
 
-//TODO.. customer_id, payment_mode 
+//TODO.. payment_mode 
 @Entity
 @Table(name = "pro_sells")
 public class ProSell extends FrameworkEntity implements Serializable {
@@ -29,6 +29,9 @@ public class ProSell extends FrameworkEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "sell_id", nullable = false, updatable = false)
 	private Long sellId;
+
+	@Column(name = "customer_id", nullable = false, updatable = false)
+	private Long customerId;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "sell_date")
@@ -73,6 +76,14 @@ public class ProSell extends FrameworkEntity implements Serializable {
 
 	public void setSellId(Long sellId) {
 		this.sellId = sellId;
+	}
+
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
 	}
 
 	public Date getSellDate() {

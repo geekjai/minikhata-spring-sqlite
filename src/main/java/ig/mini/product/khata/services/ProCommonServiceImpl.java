@@ -491,4 +491,10 @@ public class ProCommonServiceImpl implements ProCommonService {
 		proCustomer = customerRepository.save(proCustomer);
 	}
 
+	@Override
+	public Iterable<ProCustomer> findAllCustomers() throws Exception {
+
+		return customerRepository.findAllCustomers();
+	}
+
 }

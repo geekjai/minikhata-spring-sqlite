@@ -47,4 +47,6 @@ public interface ProCommonService {
 
 	public void createCustomer(ProCustomer proCustomer) throws Exception;
 
+	public Iterable<ProCustomer> findAllCustomers() throws Exception;
+
 }

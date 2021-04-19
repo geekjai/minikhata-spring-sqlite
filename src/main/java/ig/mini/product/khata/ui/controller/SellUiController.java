@@ -25,32 +25,40 @@ public class SellUiController {
 		return modelAndView;
 	}
 
-	private ModelAndView createSellModelAndView() {
+	private ModelAndView createSellModelAndView(SellForm sellForm) throws Exception {
 
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("sell");
 		modelAndView.addObject("fragment", "createSell");
 		modelAndView.addObject("formTitle", "Create New Sell");
+		if (sellForm != null) {
+			sellForm.setProducts(proCommonService.findAllProduct());
+			sellForm.setCustomers(proCommonService.findAllCustomers());
+		}
 		return modelAndView;
 	}
 
 	@RequestMapping("/sell/createSell")
 	public ModelAndView createSell() {
 
-		ModelAndView modelAndView = createSellModelAndView();
 		// form data
 		SellForm formPojo = new SellForm();
-		formPojo.setProducts(proCommonService.findAllProduct());
-		modelAndView.addObject("form", formPojo);
+		ModelAndView modelAndView = null;
+		try {
+			modelAndView = createSellModelAndView(formPojo);
+			modelAndView.addObject("form", formPojo);
+			return modelAndView;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return modelAndView;
+		}
 
-		return modelAndView;
 	}
 
 	@RequestMapping(value = "/sell/createSell/submit", params = { "addProduct" }, method = RequestMethod.POST)
 	public ModelAndView createManufactureSubmit(@ModelAttribute SellForm form) {
 		try {
-			ModelAndView modelAndView = createSellModelAndView();
-			form.setProducts(proCommonService.findAllProduct());
+			ModelAndView modelAndView = createSellModelAndView(form);
 			form.getSellProductMaps().add(new ProSellProductMap());
 			modelAndView.addObject("form", form);
 			return modelAndView;

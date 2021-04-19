@@ -12,6 +12,23 @@
 			<div class="card-body">
 				<div class="row">
 					<div class="col-md-6">
+						<div class="form-group">
+							<input hidden="true" th:field="*{sell.sellId}" id="sellId" />
+							<!-- ------ -->
+							<input hidden="true" th:field="*{sell.customerId}"
+								th:if="${fragment == 'editSell'}" />
+							<!--  -->
+							<label for="customerId">Customer Name</label>
+							<!--  -->
+							<select id='customerId' class='form-control customerId'
+								th:field="*{sell.customerId}"
+								th:disabled="${fragment == 'editSell'}">
+								<option th:each="customer : ${form.customers}"
+									th:value="${customer.customerId}"
+									th:text="${customer.customerName}"
+									th:selected="${customer.customerId==form.sell.customerId}"></option>
+							</select>
+						</div>
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
