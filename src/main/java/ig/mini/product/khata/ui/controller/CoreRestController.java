@@ -19,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 import ig.mini.product.khata.db.entity.ProManufacture;
 import ig.mini.product.khata.db.entity.ProPurchase;
 import ig.mini.product.khata.services.ProCommonService;
+import ig.mini.product.khata.ui.pojo.CommonResponseEntity;
 
 @RestController
 public class CoreRestController {
@@ -99,10 +100,14 @@ public class CoreRestController {
 
 	@RequestMapping(value = "/api/manufacture/findManufactureCost/{manufactureId}", method = RequestMethod.GET)
 	public ResponseEntity<Object> findManufactureCost(@PathVariable Long manufactureId) {
-		Double manufactureCost = null;
+		CommonResponseEntity response = new CommonResponseEntity();
 		try {
+			Double manufactureCost = null;
 			manufactureCost = proCommonService.evaluateManufactureCost(manufactureId);
-			return new ResponseEntity<>(manufactureCost, HttpStatus.OK);
+			String message = "Manufacturing cost is updated successfully!!";
+			response.setManufactureCost(manufactureCost);
+			response.setResponseMessage(message);
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

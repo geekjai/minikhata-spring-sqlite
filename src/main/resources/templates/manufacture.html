@@ -13,6 +13,25 @@
 		<div class="row" th:case="'editManufacture'">
 			<div th:replace="fragments/manufacture-form :: manufacture-form"></div>
 		</div>
+		<div class="modal fade" id="manufModel" role="dialog">
+			<div class="modal-dialog modal-dialog-centered">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Message</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<p id="manufModelText"></p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
 	</div>
 
 	<div layout:fragment="script">
@@ -71,7 +90,10 @@ $(document).ready(function () {
 				contentType: "application/json; charset=utf-8",
 				traditional: true,
 				success: function(data) {
-					document.getElementById("manufactureCost").value = data;
+					document.getElementById("manufactureCost").value = data.manufactureCost;
+					var text = data.responseMessage;
+					$('#manufModelText').text(text);
+					$("#manufModel").modal();
 				}
 			});
 		});
@@ -98,6 +120,7 @@ $(document).ready(function () {
 				traditional: true,
 				success: function(data) {
 					//window.location.href = '/manufacture/viewManufactures';
+					$("#manufModel").modal();
 				}
 			});
 		});
