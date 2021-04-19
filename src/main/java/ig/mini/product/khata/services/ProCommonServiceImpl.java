@@ -15,7 +15,9 @@ import ig.mini.product.khata.db.entity.ProManufacture;
 import ig.mini.product.khata.db.entity.ProManufactureProductMap;
 import ig.mini.product.khata.db.entity.ProPurchase;
 import ig.mini.product.khata.db.entity.ProPurchaseManufactureMap;
+import ig.mini.product.khata.db.prime.entity.ProCustomer;
 import ig.mini.product.khata.db.prime.entity.ProSell;
+import ig.mini.product.khata.db.prime.repository.CustomerRepository;
 import ig.mini.product.khata.db.prime.repository.SellProductMapRepository;
 import ig.mini.product.khata.db.prime.repository.SellRepository;
 import ig.mini.product.khata.db.view.ProductPurchaseManufacture;
@@ -46,6 +48,8 @@ public class ProCommonServiceImpl implements ProCommonService {
 	private SellRepository sellRepository;
 	@Autowired
 	private SellProductMapRepository sellProductMapRepository;
+	@Autowired
+	private CustomerRepository customerRepository;
 
 	@Override
 	public Iterable<ProProduct> findAllProduct() {
@@ -474,6 +478,17 @@ public class ProCommonServiceImpl implements ProCommonService {
 	public List<ProSell> findSells() throws Exception {
 
 		return sellRepository.findByAllSells();
+	}
+
+	@Override
+	@Transactional
+	public void createCustomer(ProCustomer proCustomer) throws Exception {
+
+		if (proCustomer.getIsSeedData() == null) {
+			proCustomer.setIsSeedData(false);
+		}
+		FrameworkEntity.createWhoColumnData(proCustomer, proCustomer.getIsSeedData());
+		proCustomer = customerRepository.save(proCustomer);
 	}
 
 }

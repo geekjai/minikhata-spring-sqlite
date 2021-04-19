@@ -27,6 +27,7 @@ public class ApplicationConfiguration implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
+		CommandLineTestRunner.createCustomer(proSetupService, proCommonService);
 		CommandLineTestRunner.createProductPurchase(proSetupService, proCommonService);
 		CommandLineTestRunner.createManufacture(proSetupService, proCommonService);
 		System.out.println("Initial Setup Completed!!");
