@@ -1,4 +1,4 @@
-package ig.mini.product.khata.services;
+package ig.mini.product.khata.service.common;
 
 import ig.mini.product.khata.db.setup.entity.ProFileExecutionEntry;
 

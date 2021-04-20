@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ig.mini.product.khata.db.prime.entity.ProSell;
-import ig.mini.product.khata.services.ProCommonService;
+import ig.mini.product.khata.service.common.ProCommonService;
 
 @RestController
 public class SellRestController {

@@ -9,8 +9,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ig.mini.product.khata.db.prime.entity.ProCustomer;
 import ig.mini.product.khata.db.prime.entity.ProPurchase;
 import ig.mini.product.khata.db.setup.entity.ProFileExecutionEntry;
-import ig.mini.product.khata.services.ProCommonService;
-import ig.mini.product.khata.services.ProSetupService;
+import ig.mini.product.khata.service.common.ProCommonService;
+import ig.mini.product.khata.service.common.ProSetupService;
 import ig.mini.product.khata.ui.pojo.ManufactureProduct;
 
 public class CommandLineTestRunner {

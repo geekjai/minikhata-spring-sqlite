@@ -18,7 +18,7 @@ import com.google.gson.reflect.TypeToken;
 
 import ig.mini.product.khata.db.prime.entity.ProManufacture;
 import ig.mini.product.khata.db.prime.entity.ProPurchase;
-import ig.mini.product.khata.services.ProCommonService;
+import ig.mini.product.khata.service.common.ProCommonService;
 import ig.mini.product.khata.ui.pojo.CommonResponseEntity;
 
 @RestController

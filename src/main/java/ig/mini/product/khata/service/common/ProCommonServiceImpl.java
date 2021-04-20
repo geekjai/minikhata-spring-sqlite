@@ -1,4 +1,4 @@
-package ig.mini.product.khata.services;
+package ig.mini.product.khata.service.common;
 
 import java.util.ArrayList;
 import java.util.List;

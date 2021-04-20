@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import ig.mini.product.khata.db.prime.entity.ProPurchase;
-import ig.mini.product.khata.services.ProCommonService;
+import ig.mini.product.khata.service.common.ProCommonService;
 import ig.mini.product.khata.ui.pojo.ManufactureProduct;
 import ig.mini.product.khata.ui.pojo.User;
 
