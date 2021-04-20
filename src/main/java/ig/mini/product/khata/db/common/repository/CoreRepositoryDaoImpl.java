@@ -106,24 +106,6 @@ public class CoreRepositoryDaoImpl extends CoreRepositoryAbstractDao implements 
 	}
 
 	@Override
-	public List<ProPurchaseManufactureMap> findManufactureOutQty(Long bindPurchaseId) throws Exception {
-
-		if (bindPurchaseId == null) {
-			return null;
-		}
-
-		Query query = entityManager.createNamedQuery("findManufactureOutQty").unwrap(org.hibernate.query.Query.class)
-				.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-		query.setParameter("bindPurchaseId", bindPurchaseId);
-
-		@SuppressWarnings("unchecked")
-		List<Object> objResults = query.getResultList();
-		List<ProPurchaseManufactureMap> results = populateProPurchaseManufactureMapList(ProPurchaseManufactureMap.class,
-				objResults);
-		return results;
-	}
-
-	@Override
 	public List<StockQuantity> findStockQuantity(List<Long> bindProducts) throws Exception {
 
 		if (bindProducts == null || bindProducts.size() == 0) {

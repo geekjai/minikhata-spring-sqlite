@@ -26,12 +26,6 @@ public class ProductPurchaseManufacture extends FrameworkEntity {
 	@TransientColumn(name = "payable_amount")
 	private Double payableAmount;
 
-	@TransientColumn(name = "in_quantity")
-	private Double inQuantity;
-
-	@TransientColumn(name = "out_quantity")
-	private Double outQuantity;
-
 	@TransientColumn(name = "manufacture_quantity")
 	private Double manufactureQuantity;
 
@@ -89,22 +83,6 @@ public class ProductPurchaseManufacture extends FrameworkEntity {
 
 	public void setPayableAmount(Double payableAmount) {
 		this.payableAmount = payableAmount;
-	}
-
-	public Double getInQuantity() {
-		return inQuantity;
-	}
-
-	public void setInQuantity(Double inQuantity) {
-		this.inQuantity = inQuantity;
-	}
-
-	public Double getOutQuantity() {
-		return outQuantity;
-	}
-
-	public void setOutQuantity(Double outQuantity) {
-		this.outQuantity = outQuantity;
 	}
 
 	public Double getManufactureQuantity() {

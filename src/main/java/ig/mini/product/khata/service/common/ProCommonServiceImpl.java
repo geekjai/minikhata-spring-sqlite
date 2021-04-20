@@ -2,6 +2,7 @@ package ig.mini.product.khata.service.common;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +17,19 @@ import ig.mini.product.khata.db.prime.entity.ProCustomer;
 import ig.mini.product.khata.db.prime.entity.ProManufacture;
 import ig.mini.product.khata.db.prime.entity.ProManufactureProductMap;
 import ig.mini.product.khata.db.prime.entity.ProPurchase;
-import ig.mini.product.khata.db.prime.entity.ProPurchaseManufactureMap;
 import ig.mini.product.khata.db.prime.entity.ProSell;
 import ig.mini.product.khata.db.prime.entity.ProStock;
 import ig.mini.product.khata.db.prime.repository.CustomerRepository;
 import ig.mini.product.khata.db.prime.repository.ManufactureProductMapRepository;
 import ig.mini.product.khata.db.prime.repository.ManufactureRepository;
-import ig.mini.product.khata.db.prime.repository.PurchaseManufactureMapRepository;
 import ig.mini.product.khata.db.prime.repository.PurchaseRepository;
 import ig.mini.product.khata.db.prime.repository.SellProductMapRepository;
 import ig.mini.product.khata.db.prime.repository.SellRepository;
 import ig.mini.product.khata.db.prime.repository.StockRepository;
+import ig.mini.product.khata.db.prime.view.ManufactureWrapper;
 import ig.mini.product.khata.db.prime.view.ProductPurchaseManufacture;
-import ig.mini.product.khata.db.prime.view.ProductPurchaseQuantity;
+import ig.mini.product.khata.db.prime.view.StockQuantity;
+import ig.mini.product.khata.service.util.CommonServiceUtil;
 import ig.mini.product.khata.ui.pojo.ManufactureProduct;
 
 @Repository("proCommonService")
@@ -42,8 +43,6 @@ public class ProCommonServiceImpl implements ProCommonService {
 	private PurchaseRepository purchaseRepository;
 	@Autowired
 	private ManufactureRepository manufactureRepository;
-	@Autowired
-	private PurchaseManufactureMapRepository purchaseManufactureMapRepository;
 	@Autowired
 	private ManufactureProductMapRepository manufactureProductMapRepository;
 	@Autowired
@@ -112,13 +111,6 @@ public class ProCommonServiceImpl implements ProCommonService {
 		stock.setPurchaseId(proPurchase.getPurchaseId());
 		stock.setPurchaseQuantity(proPurchase.getPurchaseQuantity());
 		stockRepository.save(stock);
-
-		// create ProPurchaseManufactureMap entry
-		ProPurchaseManufactureMap pmmap = new ProPurchaseManufactureMap();
-		pmmap.setProductId(proPurchase.getProductId());
-		pmmap.setPurchaseId(proPurchase.getPurchaseId());
-		pmmap.setInQuantity(proPurchase.getPurchaseQuantity());
-		purchaseManufactureMapRepository.save(pmmap);
 	}
 
 	@Transactional
@@ -137,12 +129,11 @@ public class ProCommonServiceImpl implements ProCommonService {
 				cachedEntity.setDiscountAmount(proPurchase.getDiscountAmount());
 				cachedEntity.setPayableAmount(proPurchase.getPayableAmount());
 
-				Optional<ProPurchaseManufactureMap> optional = purchaseManufactureMapRepository
-						.findPurchaseInQty(purchaseId);
+				Optional<ProStock> optional = stockRepository.findPurchaseRecordByPurchaseId(purchaseId);
 				if (optional.isPresent()) {
-					ProPurchaseManufactureMap pmm = optional.get();
-					pmm.setInQuantity(cachedEntity.getPurchaseQuantity());
-					purchaseManufactureMapRepository.save(pmm);
+					ProStock stock = optional.get();
+					stock.setPurchaseQuantity(cachedEntity.getPurchaseQuantity());
+					stockRepository.save(stock);
 				}
 			}
 			purchaseRepository.save(cachedEntity);
@@ -165,11 +156,10 @@ public class ProCommonServiceImpl implements ProCommonService {
 
 		// if a manufacture recorded again purchase then deletion not allowed
 		if (purchaseId != null && isPurchaseQuantityUpdateable(purchaseId)) {
-			Optional<ProPurchaseManufactureMap> pmmOptional = purchaseManufactureMapRepository
-					.findPurchaseInQty(purchaseId);
-			if (pmmOptional.isPresent()) {
-				ProPurchaseManufactureMap ce = pmmOptional.get();
-				purchaseManufactureMapRepository.delete(ce);
+			Optional<ProStock> stOptional = stockRepository.findPurchaseRecordByPurchaseId(purchaseId);
+			if (stOptional.isPresent()) {
+				ProStock stock = stOptional.get();
+				stockRepository.delete(stock);
 			}
 			purchaseRepository.deleteById(purchaseId);
 		}
@@ -204,21 +194,22 @@ public class ProCommonServiceImpl implements ProCommonService {
 		return lManufactureProduct;
 	}
 
-	private List<ProductPurchaseQuantity> readProductPurchaseQuantity(List<Long> productIds) throws Exception {
+	private Map<Long, List<StockQuantity>> readStockQuantity(List<Long> productIds) throws Exception {
 
-		List<ProductPurchaseQuantity> purchaseQuantities = coreRepositoryDao.findProductPurchaseQuantity(productIds);
-		return purchaseQuantities;
+		Map<Long, List<StockQuantity>> stockQuantities = coreRepositoryDao.findStockQuantityProductIdMap(productIds);
+		return stockQuantities;
 	}
 
 	@Transactional
 	private void executeCreateManufacture(ProManufacture manufacture,
-			List<ProManufactureProductMap> manufactureProductMaps, List<ProductPurchaseQuantity> purchaseQuantities) {
+			List<ProManufactureProductMap> manufactureProductMaps, Map<Long, List<StockQuantity>> stockQuantities) {
+		// 1. Create entry in manufacture table
 		if (manufacture.getProductId() == null) {
 			return;
 		}
 		manufacture.setManufactureCost(null);
 		manufacture = manufactureRepository.save(manufacture);
-
+		// 2. Create entry inside ProManufactureProductMap...product-manufacture mapping
 		for (ProManufactureProductMap productMap : manufactureProductMaps) {
 			if (productMap.getProductId() != null && productMap.getProductQuantity() != null
 					&& productMap.getProductQuantity() > 0) {
@@ -227,56 +218,20 @@ public class ProCommonServiceImpl implements ProCommonService {
 			}
 		}
 
-		List<Long> consumedPurchaseList = new ArrayList<Long>();
-		List<ProPurchaseManufactureMap> purchaseManufactureMaps = new ArrayList<ProPurchaseManufactureMap>();
+		ManufactureWrapper wrapper = CommonServiceUtil.processStock(manufacture.getManufactureId(),
+				manufactureProductMaps, stockQuantities);
 
-		for (ProductPurchaseQuantity element : purchaseQuantities) {
-			Double xfactor = element.getInQuantity() - element.getOutQuantity();
-			if (xfactor <= 0) {
-				return;
-			}
-			for (int i = 0; i < manufactureProductMaps.size(); i++) {
-
-				ProManufactureProductMap curRow = manufactureProductMaps.get(i);
-				if (curRow.getProductId() == element.getProductId()) {
-					double curQuantity = 0.0;
-					double remain = element.getInQuantity() - element.getOutQuantity();
-					if (remain >= curRow.getProductQuantity()) {
-						curQuantity = curRow.getProductQuantity();
-						curRow.setProductQuantity(curRow.getProductQuantity() - curQuantity);
-					} else {
-						curQuantity = remain;
-						curRow.setProductQuantity(curRow.getProductQuantity() - curQuantity);
-					}
-
-					ProPurchaseManufactureMap purchaseManufactureMap = new ProPurchaseManufactureMap();
-					purchaseManufactureMap.setManufactureId(manufacture.getManufactureId());
-					purchaseManufactureMap.setProductId(curRow.getProductId());
-					purchaseManufactureMap.setPurchaseId(element.getPurchaseId());
-					purchaseManufactureMap.setOutQuantity(curQuantity);
-
-					purchaseManufactureMaps.add(purchaseManufactureMap);
-					if (curQuantity == remain) {
-						consumedPurchaseList.add(element.getPurchaseId());
-					}
-					if (curRow.getProductQuantity() <= 0) {
-						manufactureProductMaps.remove(i);
-						break;
-					}
-				}
-			}
-		} // end of building purchaseManufactureMaps and consumedPurchaseList
-
-		for (ProPurchaseManufactureMap purchaseManufactureMap : purchaseManufactureMaps) {
-			purchaseManufactureMapRepository.save(purchaseManufactureMap);
+		for (ProStock proStock : wrapper.getStockList()) {
+			stockRepository.save(proStock);
 		}
 
 		// purchaseRepository.setIsConsumedToY(consumedPurchaseList);
-		List<ProPurchase> purchases = purchaseRepository.findByPurchaseIds(consumedPurchaseList);
+		List<ProPurchase> purchases = purchaseRepository.findByPurchaseIds(wrapper.getConsumedPurchaseList());
 		for (ProPurchase purchase : purchases) {
 			purchase.setIsConsumed("Y");
 			purchaseRepository.save(purchase);
 		}
+
 	}
 
 	@Override
@@ -297,8 +252,9 @@ public class ProCommonServiceImpl implements ProCommonService {
 				productIds.add(productMap.getProductId());
 			}
 		}
-		List<ProductPurchaseQuantity> purchaseQuantities = readProductPurchaseQuantity(productIds);
-		executeCreateManufacture(manufacture, manufactureProductMaps, purchaseQuantities);
+
+		Map<Long, List<StockQuantity>> stockQuantities = readStockQuantity(productIds);
+		executeCreateManufacture(manufacture, manufactureProductMaps, stockQuantities);
 	}
 
 	@Override
@@ -333,9 +289,10 @@ public class ProCommonServiceImpl implements ProCommonService {
 		for (ProductPurchaseManufacture element : purchaseCostList) {
 			Double payableAmount = element.getPayableAmount() != null ? element.getPayableAmount() : 0.0;
 			Double purchaseQuantity = element.getPurchaseQuantity() != null ? element.getPurchaseQuantity() : 0.0;
-			Double outQuantity = element.getOutQuantity() != null ? element.getOutQuantity() : 0.0;
+			Double manufactureQuantity = element.getManufactureQuantity() != null ? element.getManufactureQuantity()
+					: 0.0;
 
-			Double manufCost = (payableAmount / purchaseQuantity) * outQuantity;
+			Double manufCost = (payableAmount / purchaseQuantity) * manufactureQuantity;
 			totalManufCost = totalManufCost + manufCost;
 		}
 
@@ -410,11 +367,11 @@ public class ProCommonServiceImpl implements ProCommonService {
 			if (mpMaps != null && mpMaps.size() > 0) {
 				manufactureProductMapRepository.deleteAll(mpMaps);
 			}
-			List<ProPurchaseManufactureMap> pmMaps = purchaseManufactureMapRepository
-					.findByManufactureId(manufactureId);
-			if (pmMaps != null && pmMaps.size() > 0) {
+
+			List<ProStock> stocks = stockRepository.findByManufactureId(manufactureId);
+			if (stocks != null && stocks.size() > 0) {
 				List<Long> purchaseIds = new ArrayList<Long>();
-				for (ProPurchaseManufactureMap element : pmMaps) {
+				for (ProStock element : stocks) {
 					purchaseIds.add(element.getPurchaseId());
 				}
 				List<ProPurchase> purchaseList = purchaseRepository.findByPurchaseIds(purchaseIds);
@@ -422,7 +379,7 @@ public class ProCommonServiceImpl implements ProCommonService {
 					element.setIsConsumed("N");
 					purchaseRepository.save(element);
 				}
-				purchaseManufactureMapRepository.deleteAll(pmMaps);
+				stockRepository.deleteAll(stocks);
 			}
 
 			manufactureRepository.delete(manufactureEntity);
@@ -435,9 +392,10 @@ public class ProCommonServiceImpl implements ProCommonService {
 		if (bindPurchaseId == null) {
 			return true;
 		}
-		// if in quantity is null and out quantity is not null
-		List<ProPurchaseManufactureMap> mapList = coreRepositoryDao.findManufactureOutQty(bindPurchaseId);
-		if (mapList != null && mapList.size() > 0) {
+
+		// sellId is not null OR manufactureId is not null
+		List<ProStock> stocks = stockRepository.findInUsePurchasesByPurchaseId(bindPurchaseId);
+		if (stocks != null && stocks.size() > 0) {
 			return false;
 		}
 
@@ -450,12 +408,11 @@ public class ProCommonServiceImpl implements ProCommonService {
 		proPurchase.setPurchaseId(null);
 		proPurchase = purchaseRepository.save(proPurchase);
 
-		// create ProPurchaseManufactureMap entry
-		ProPurchaseManufactureMap pmmap = new ProPurchaseManufactureMap();
-		pmmap.setProductId(proPurchase.getProductId());
-		pmmap.setPurchaseId(proPurchase.getPurchaseId());
-		pmmap.setInQuantity(proPurchase.getPurchaseQuantity());
-		purchaseManufactureMapRepository.save(pmmap);
+		ProStock stock = new ProStock();
+		stock.setProductId(proPurchase.getProductId());
+		stock.setPurchaseId(proPurchase.getPurchaseId());
+		stock.setPurchaseQuantity(proPurchase.getPurchaseQuantity());
+		stockRepository.save(stock);
 
 		proManufacture.setRelatedPurchaseId(proPurchase.getPurchaseId());
 		proManufacture.setIsDeleteAllowed("N");

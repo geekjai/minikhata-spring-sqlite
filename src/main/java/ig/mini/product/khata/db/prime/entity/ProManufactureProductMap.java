@@ -36,7 +36,7 @@ public class ProManufactureProductMap extends FrameworkEntity implements Seriali
 	@Version
 	@UpdateCacheEntityColumn
 	@Column(name = "version_id")
-	private Long versionId;
+	private int versionId;
 
 	public Long getId() {
 		return id;
@@ -70,11 +70,11 @@ public class ProManufactureProductMap extends FrameworkEntity implements Seriali
 		this.productQuantity = productQuantity;
 	}
 
-	public Long getVersionId() {
+	public int getVersionId() {
 		return versionId;
 	}
 
-	public void setVersionId(Long versionId) {
+	public void setVersionId(int versionId) {
 		this.versionId = versionId;
 	}
 

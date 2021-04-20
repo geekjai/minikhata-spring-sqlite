@@ -62,7 +62,7 @@ public class ProManufacture extends FrameworkEntity implements Serializable {
 	@Version
 	@UpdateCacheEntityColumn
 	@Column(name = "version_id")
-	private Long versionId;
+	private int versionId;
 
 	@Transient
 	@TransientColumn(name = "product_name")
@@ -154,11 +154,11 @@ public class ProManufacture extends FrameworkEntity implements Serializable {
 		this.isDeleteAllowed = isDeleteAllowed;
 	}
 
-	public Long getVersionId() {
+	public int getVersionId() {
 		return versionId;
 	}
 
-	public void setVersionId(Long versionId) {
+	public void setVersionId(int versionId) {
 		this.versionId = versionId;
 	}
 

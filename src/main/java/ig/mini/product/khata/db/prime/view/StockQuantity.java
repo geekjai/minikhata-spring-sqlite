@@ -18,7 +18,7 @@ public class StockQuantity extends FrameworkEntity {
 	private Double manufactureQuantity;
 
 	@TransientColumn(name = "sell_quantity")
-	private Double selltQuantity;
+	private Double sellQuantity;
 
 	public Long getPurchaseId() {
 		return purchaseId;
@@ -52,12 +52,12 @@ public class StockQuantity extends FrameworkEntity {
 		this.manufactureQuantity = manufactureQuantity;
 	}
 
-	public Double getSelltQuantity() {
-		return selltQuantity;
+	public Double getSellQuantity() {
+		return sellQuantity;
 	}
 
-	public void setSelltQuantity(Double selltQuantity) {
-		this.selltQuantity = selltQuantity;
+	public void setSellQuantity(Double selltQuantity) {
+		this.sellQuantity = selltQuantity;
 	}
 
 }

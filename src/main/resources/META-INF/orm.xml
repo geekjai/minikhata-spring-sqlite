@@ -49,19 +49,18 @@
 			    pur.gst_amount AS gst_amount,
 			    pur.discount_amount AS discount_amount,
 			    pur.payable_amount AS payable_amount,
-			    ppmm.in_quantity AS in_quantity,
-			    ppmm.out_quantity AS out_quantity,
-			    pmm.product_quantity AS manufacture_quantity
+			    stock.manufacture_quantity AS manufacture_quantity
 			    FROM pro_purchases pur,
-			    pro_purchase_manufacture_map ppmm,
+			    pro_stocks stock,
 			    pro_manufactures manuf,
 			    pro_manufacture_product_map pmm
-		    WHERE ppmm.product_id = pur.product_id
-		    AND ppmm.purchase_id = pur.purchase_id
-		    AND ppmm.manufacture_id = manuf.manufacture_id
-		    AND pmm.manufacture_id = ppmm.manufacture_id
-		    AND pmm.product_id = ppmm.product_id
+		    WHERE stock.product_id = pur.product_id
+		    AND stock.purchase_id = pur.purchase_id
+		    AND stock.manufacture_id = manuf.manufacture_id
+		    AND pmm.manufacture_id = stock.manufacture_id
+		    AND pmm.product_id = stock.product_id
 		    AND pmm.manufacture_id = manuf.manufacture_id
+		    AND stock.purchase_quantity IS NULL
 		    AND manuf.manufacture_id IN(:bindManufactureIds)
 		</query>
 	</named-native-query>

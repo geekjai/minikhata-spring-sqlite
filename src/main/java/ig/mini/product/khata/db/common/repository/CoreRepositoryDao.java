@@ -24,8 +24,6 @@ public interface CoreRepositoryDao {
 
 	public List<ProPurchaseManufactureMap> findPurchaseInQty(Long bindPurchaseId) throws Exception;
 
-	public List<ProPurchaseManufactureMap> findManufactureOutQty(Long bindPurchaseId) throws Exception;
-
 	public List<StockQuantity> findStockQuantity(List<Long> bindProducts) throws Exception;
 
 	public Map<Long, List<StockQuantity>> findStockQuantityProductIdMap(List<Long> bindProducts) throws Exception;

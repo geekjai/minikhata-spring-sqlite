@@ -6,11 +6,11 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import ig.mini.product.khata.db.prime.entity.ProPurchaseManufactureMap;
 
-@Repository("purchaseManufactureMapRepository")
+//@Repository("purchaseManufactureMapRepository")
+@SuppressWarnings("deprecation")
 public interface PurchaseManufactureMapRepository extends JpaRepository<ProPurchaseManufactureMap, Long> {
 
 	@Query("SELECT e FROM ProPurchaseManufactureMap e WHERE e.manufactureId = :manufactureId")
