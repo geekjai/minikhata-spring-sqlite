@@ -1,4 +1,4 @@
-package ig.mini.product.khata.repositories;
+package ig.mini.product.khata.db.prime.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import ig.mini.product.khata.db.entity.ProManufacture;
+import ig.mini.product.khata.db.prime.entity.ProManufacture;
 
 @Repository("manufactureRepository")
 public interface ManufactureRepository extends JpaRepository<ProManufacture, Long> {

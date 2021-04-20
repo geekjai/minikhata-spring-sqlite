@@ -1,4 +1,4 @@
-package ig.mini.product.khata.repositories;
+package ig.mini.product.khata.db.prime.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import ig.mini.product.khata.db.entity.ProPurchase;
+import ig.mini.product.khata.db.prime.entity.ProPurchase;
 
 @Repository("purchaseRepository")
 public interface PurchaseRepository extends JpaRepository<ProPurchase, Long> {

@@ -1,16 +1,18 @@
-package ig.mini.product.khata.repositories;
+package ig.mini.product.khata.db.common.repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import ig.central.library.FrameworkEntity;
-import ig.mini.product.khata.db.entity.ProManufacture;
-import ig.mini.product.khata.db.entity.ProPurchase;
-import ig.mini.product.khata.db.entity.ProPurchaseManufactureMap;
-import ig.mini.product.khata.db.view.ProductPurchaseManufacture;
-import ig.mini.product.khata.db.view.ProductPurchaseQuantity;
+import ig.mini.product.khata.db.prime.entity.ProManufacture;
+import ig.mini.product.khata.db.prime.entity.ProPurchase;
+import ig.mini.product.khata.db.prime.entity.ProPurchaseManufactureMap;
+import ig.mini.product.khata.db.prime.view.ProductPurchaseManufacture;
+import ig.mini.product.khata.db.prime.view.ProductPurchaseQuantity;
+import ig.mini.product.khata.db.prime.view.StockQuantity;
 
+@SuppressWarnings("deprecation")
 public abstract class CoreRepositoryAbstractDao {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -103,6 +105,25 @@ public abstract class CoreRepositoryAbstractDao {
 
 				Map row = (Map) object;
 				ProPurchaseManufactureMap entity = (ProPurchaseManufactureMap) entityClass.newInstance();
+				FrameworkEntity.setFrameworkEntityData(entity, row);
+				entityList.add(entity);
+			}
+		}
+
+		return entityList;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected final List<StockQuantity> populateStockQuantityList(Class<StockQuantity> entityClass, List<Object> data)
+			throws InstantiationException, IllegalAccessException {
+
+		List<StockQuantity> entityList = null;
+		if (data != null) {
+			entityList = new ArrayList<>();
+			for (Object object : data) {
+
+				Map row = (Map) object;
+				StockQuantity entity = (StockQuantity) entityClass.newInstance();
 				FrameworkEntity.setFrameworkEntityData(entity, row);
 				entityList.add(entity);
 			}

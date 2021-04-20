@@ -85,4 +85,20 @@
 			AND pur.purchase_id = :bindPurchaseId
 		</query>
 	</named-native-query>
+	<named-native-query name="findStockQuantity">
+		<query>
+			SELECT 
+			    pur.purchase_id AS purchase_id, 
+			    pur.product_id AS product_id,
+			    sum(stock.purchase_quantity) AS purchase_quantity, 
+			    coalesce(sum(stock.manufacture_quantity), 0) AS manufacture_quantity, 
+			    coalesce(sum(stock.sell_quantity), 0) AS sell_quantity
+			FROM pro_purchases pur, pro_stocks stock
+			WHERE pur.product_id = stock.product_id
+			AND pur.purchase_id = stock.purchase_id
+			AND pur.is_consumed = 'N'
+			AND pur.product_id IN(:bindProducts)
+			GROUP BY pur.purchase_id, pur.product_id
+		</query>
+	</named-native-query>
 </entity-mappings>

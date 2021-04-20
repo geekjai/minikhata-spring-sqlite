@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import ig.mini.product.khata.db.entity.ProManufacture;
-import ig.mini.product.khata.db.entity.ProManufactureProductMap;
+import ig.mini.product.khata.db.prime.entity.ProManufacture;
+import ig.mini.product.khata.db.prime.entity.ProManufactureProductMap;
 
 public class ManufactureProduct {
 

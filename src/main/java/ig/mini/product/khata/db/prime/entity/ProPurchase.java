@@ -1,4 +1,4 @@
-package ig.mini.product.khata.db.entity;
+package ig.mini.product.khata.db.prime.entity;
 
 import java.io.Serializable;
 import java.sql.Date;

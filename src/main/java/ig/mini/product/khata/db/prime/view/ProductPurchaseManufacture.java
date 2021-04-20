@@ -1,4 +1,4 @@
-package ig.mini.product.khata.db.view;
+package ig.mini.product.khata.db.prime.view;
 
 import ig.central.library.FrameworkEntity;
 import ig.central.library.TransientColumn;

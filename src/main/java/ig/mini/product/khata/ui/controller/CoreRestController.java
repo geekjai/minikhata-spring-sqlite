@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import ig.mini.product.khata.db.entity.ProManufacture;
-import ig.mini.product.khata.db.entity.ProPurchase;
+import ig.mini.product.khata.db.prime.entity.ProManufacture;
+import ig.mini.product.khata.db.prime.entity.ProPurchase;
 import ig.mini.product.khata.services.ProCommonService;
 import ig.mini.product.khata.ui.pojo.CommonResponseEntity;
 

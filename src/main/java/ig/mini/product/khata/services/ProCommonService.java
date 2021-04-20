@@ -3,9 +3,9 @@ package ig.mini.product.khata.services;
 import java.util.List;
 
 import ig.mini.product.khata.db.content.entity.ProProduct;
-import ig.mini.product.khata.db.entity.ProManufacture;
-import ig.mini.product.khata.db.entity.ProPurchase;
 import ig.mini.product.khata.db.prime.entity.ProCustomer;
+import ig.mini.product.khata.db.prime.entity.ProManufacture;
+import ig.mini.product.khata.db.prime.entity.ProPurchase;
 import ig.mini.product.khata.db.prime.entity.ProSell;
 import ig.mini.product.khata.ui.pojo.ManufactureProduct;
 

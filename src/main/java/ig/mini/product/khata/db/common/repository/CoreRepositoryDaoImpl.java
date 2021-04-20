@@ -1,6 +1,9 @@
-package ig.mini.product.khata.repositories;
+package ig.mini.product.khata.db.common.repository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -9,13 +12,15 @@ import javax.persistence.Query;
 import org.hibernate.Criteria;
 import org.springframework.stereotype.Repository;
 
-import ig.mini.product.khata.db.entity.ProManufacture;
-import ig.mini.product.khata.db.entity.ProPurchase;
-import ig.mini.product.khata.db.entity.ProPurchaseManufactureMap;
-import ig.mini.product.khata.db.view.ProductPurchaseManufacture;
-import ig.mini.product.khata.db.view.ProductPurchaseQuantity;
+import ig.mini.product.khata.db.prime.entity.ProManufacture;
+import ig.mini.product.khata.db.prime.entity.ProPurchase;
+import ig.mini.product.khata.db.prime.entity.ProPurchaseManufactureMap;
+import ig.mini.product.khata.db.prime.view.ProductPurchaseManufacture;
+import ig.mini.product.khata.db.prime.view.ProductPurchaseQuantity;
+import ig.mini.product.khata.db.prime.view.StockQuantity;
 
 @Repository("coreRepositoryDao")
+@SuppressWarnings("deprecation")
 public class CoreRepositoryDaoImpl extends CoreRepositoryAbstractDao implements CoreRepositoryDao {
 
 	@PersistenceContext
@@ -24,7 +29,6 @@ public class CoreRepositoryDaoImpl extends CoreRepositoryAbstractDao implements 
 	@Override
 	public List<ProPurchase> findPurchasesWithProduct() throws Exception {
 
-		@SuppressWarnings("deprecation")
 		Query query = entityManager.createNamedQuery("ProPurchase.findAllWithProduct")
 				.unwrap(org.hibernate.query.Query.class).setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 
@@ -37,7 +41,6 @@ public class CoreRepositoryDaoImpl extends CoreRepositoryAbstractDao implements 
 	@Override
 	public List<ProManufacture> findManufacturesWithProduct() throws Exception {
 
-		@SuppressWarnings("deprecation")
 		Query query = entityManager.createNamedQuery("ProManufacture.findAllWithProduct")
 				.unwrap(org.hibernate.query.Query.class).setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 
@@ -53,7 +56,7 @@ public class CoreRepositoryDaoImpl extends CoreRepositoryAbstractDao implements 
 		if (bindProducts == null) {
 			return null;
 		}
-		@SuppressWarnings("deprecation")
+
 		Query query = entityManager.createNamedQuery("findProductPurchaseQuantity")
 				.unwrap(org.hibernate.query.Query.class).setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		query.setParameter("bindProducts", bindProducts);
@@ -72,7 +75,7 @@ public class CoreRepositoryDaoImpl extends CoreRepositoryAbstractDao implements 
 		if (bindManufactureIds == null) {
 			return null;
 		}
-		@SuppressWarnings("deprecation")
+
 		Query query = entityManager.createNamedQuery("findProductPurchaseManufCostQty")
 				.unwrap(org.hibernate.query.Query.class).setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		query.setParameter("bindManufactureIds", bindManufactureIds);
@@ -90,7 +93,7 @@ public class CoreRepositoryDaoImpl extends CoreRepositoryAbstractDao implements 
 		if (bindPurchaseId == null) {
 			return null;
 		}
-		@SuppressWarnings("deprecation")
+
 		Query query = entityManager.createNamedQuery("findPurchaseInQty").unwrap(org.hibernate.query.Query.class)
 				.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		query.setParameter("bindPurchaseId", bindPurchaseId);
@@ -108,7 +111,7 @@ public class CoreRepositoryDaoImpl extends CoreRepositoryAbstractDao implements 
 		if (bindPurchaseId == null) {
 			return null;
 		}
-		@SuppressWarnings("deprecation")
+
 		Query query = entityManager.createNamedQuery("findManufactureOutQty").unwrap(org.hibernate.query.Query.class)
 				.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
 		query.setParameter("bindPurchaseId", bindPurchaseId);
@@ -118,6 +121,49 @@ public class CoreRepositoryDaoImpl extends CoreRepositoryAbstractDao implements 
 		List<ProPurchaseManufactureMap> results = populateProPurchaseManufactureMapList(ProPurchaseManufactureMap.class,
 				objResults);
 		return results;
+	}
+
+	@Override
+	public List<StockQuantity> findStockQuantity(List<Long> bindProducts) throws Exception {
+
+		if (bindProducts == null || bindProducts.size() == 0) {
+			return null;
+		}
+
+		Query query = entityManager.createNamedQuery("findStockQuantity").unwrap(org.hibernate.query.Query.class)
+				.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		query.setParameter("bindProducts", bindProducts);
+
+		@SuppressWarnings("unchecked")
+		List<Object> objResults = query.getResultList();
+		List<StockQuantity> results = populateStockQuantityList(StockQuantity.class, objResults);
+		return results;
+	}
+
+	@Override
+	public Map<Long, List<StockQuantity>> findStockQuantityProductIdMap(List<Long> bindProducts) throws Exception {
+
+		if (bindProducts == null || bindProducts.size() == 0) {
+			return null;
+		}
+
+		Map<Long, List<StockQuantity>> stockMap = new HashMap<Long, List<StockQuantity>>();
+		List<StockQuantity> stockQuantities = findStockQuantity(bindProducts);
+		if (stockQuantities != null && stockQuantities.size() > 0) {
+			for (StockQuantity stockQuantity : stockQuantities) {
+				Long productId = stockQuantity.getProductId();
+				if (stockMap.containsKey(productId)) {
+					List<StockQuantity> list = stockMap.get(productId);
+					list.add(stockQuantity);
+				} else {
+					List<StockQuantity> list = new ArrayList<StockQuantity>();
+					list.add(stockQuantity);
+					stockMap.put(productId, list);
+				}
+			}
+		}
+
+		return stockMap;
 	}
 
 }

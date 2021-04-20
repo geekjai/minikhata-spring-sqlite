@@ -9,24 +9,26 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import ig.central.library.FrameworkEntity;
+import ig.mini.product.khata.db.common.repository.CoreRepositoryDao;
 import ig.mini.product.khata.db.content.entity.ProProduct;
 import ig.mini.product.khata.db.content.repository.ProductRepository;
-import ig.mini.product.khata.db.entity.ProManufacture;
-import ig.mini.product.khata.db.entity.ProManufactureProductMap;
-import ig.mini.product.khata.db.entity.ProPurchase;
-import ig.mini.product.khata.db.entity.ProPurchaseManufactureMap;
 import ig.mini.product.khata.db.prime.entity.ProCustomer;
+import ig.mini.product.khata.db.prime.entity.ProManufacture;
+import ig.mini.product.khata.db.prime.entity.ProManufactureProductMap;
+import ig.mini.product.khata.db.prime.entity.ProPurchase;
+import ig.mini.product.khata.db.prime.entity.ProPurchaseManufactureMap;
 import ig.mini.product.khata.db.prime.entity.ProSell;
+import ig.mini.product.khata.db.prime.entity.ProStock;
 import ig.mini.product.khata.db.prime.repository.CustomerRepository;
+import ig.mini.product.khata.db.prime.repository.ManufactureProductMapRepository;
+import ig.mini.product.khata.db.prime.repository.ManufactureRepository;
+import ig.mini.product.khata.db.prime.repository.PurchaseManufactureMapRepository;
+import ig.mini.product.khata.db.prime.repository.PurchaseRepository;
 import ig.mini.product.khata.db.prime.repository.SellProductMapRepository;
 import ig.mini.product.khata.db.prime.repository.SellRepository;
-import ig.mini.product.khata.db.view.ProductPurchaseManufacture;
-import ig.mini.product.khata.db.view.ProductPurchaseQuantity;
-import ig.mini.product.khata.repositories.CoreRepositoryDao;
-import ig.mini.product.khata.repositories.ManufactureProductMapRepository;
-import ig.mini.product.khata.repositories.ManufactureRepository;
-import ig.mini.product.khata.repositories.PurchaseManufactureMapRepository;
-import ig.mini.product.khata.repositories.PurchaseRepository;
+import ig.mini.product.khata.db.prime.repository.StockRepository;
+import ig.mini.product.khata.db.prime.view.ProductPurchaseManufacture;
+import ig.mini.product.khata.db.prime.view.ProductPurchaseQuantity;
 import ig.mini.product.khata.ui.pojo.ManufactureProduct;
 
 @Repository("proCommonService")
@@ -50,6 +52,8 @@ public class ProCommonServiceImpl implements ProCommonService {
 	private SellProductMapRepository sellProductMapRepository;
 	@Autowired
 	private CustomerRepository customerRepository;
+	@Autowired
+	private StockRepository stockRepository;
 
 	@Override
 	public Iterable<ProProduct> findAllProduct() {
@@ -101,6 +105,14 @@ public class ProCommonServiceImpl implements ProCommonService {
 		// purchased from vendor
 		proPurchase.setPurchaseTypeId(1L);
 		proPurchase = purchaseRepository.save(proPurchase);
+
+		// now create entry inside stock;
+		ProStock stock = new ProStock();
+		stock.setProductId(proPurchase.getProductId());
+		stock.setPurchaseId(proPurchase.getPurchaseId());
+		stock.setPurchaseQuantity(proPurchase.getPurchaseQuantity());
+		stockRepository.save(stock);
+
 		// create ProPurchaseManufactureMap entry
 		ProPurchaseManufactureMap pmmap = new ProPurchaseManufactureMap();
 		pmmap.setProductId(proPurchase.getProductId());

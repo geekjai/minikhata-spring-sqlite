@@ -6,8 +6,8 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ig.mini.product.khata.db.entity.ProPurchase;
 import ig.mini.product.khata.db.prime.entity.ProCustomer;
+import ig.mini.product.khata.db.prime.entity.ProPurchase;
 import ig.mini.product.khata.db.setup.entity.ProFileExecutionEntry;
 import ig.mini.product.khata.services.ProCommonService;
 import ig.mini.product.khata.services.ProSetupService;
