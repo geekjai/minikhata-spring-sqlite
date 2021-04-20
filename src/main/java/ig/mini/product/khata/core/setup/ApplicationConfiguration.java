@@ -30,6 +30,7 @@ public class ApplicationConfiguration implements CommandLineRunner {
 		CommandLineTestRunner.createCustomer(proSetupService, proCommonService);
 		CommandLineTestRunner.createProductPurchase(proSetupService, proCommonService);
 		CommandLineTestRunner.createManufacture(proSetupService, proCommonService);
+		CommandLineTestRunner.createSell(proSetupService, proCommonService);
 		System.out.println("Initial Setup Completed!!");
 	}
 

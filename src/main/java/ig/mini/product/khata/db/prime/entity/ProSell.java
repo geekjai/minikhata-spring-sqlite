@@ -70,6 +70,9 @@ public class ProSell extends FrameworkEntity implements Serializable {
 	@TransientColumn(name = "sell_date")
 	private java.util.Date sellDateUi;
 
+	@Transient
+	private Boolean isSeedData;
+
 	public Long getSellId() {
 		return sellId;
 	}
@@ -156,6 +159,22 @@ public class ProSell extends FrameworkEntity implements Serializable {
 
 	public void setSellDateUi(java.util.Date sellDateUi) {
 		this.sellDateUi = sellDateUi;
+	}
+
+	public Boolean getIsSeedData() {
+		return isSeedData;
+	}
+
+	public void setIsSeedData(Boolean isSeedData) {
+		this.isSeedData = isSeedData;
+	}
+
+	public void processSellDate() {
+
+		if (sellDate == null && sellDateUi != null) {
+			java.sql.Date sqlDate = new java.sql.Date(sellDateUi.getTime());
+			setSellDate(sqlDate);
+		}
 	}
 
 }

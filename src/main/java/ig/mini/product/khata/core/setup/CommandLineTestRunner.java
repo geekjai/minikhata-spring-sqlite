@@ -12,12 +12,14 @@ import ig.mini.product.khata.db.setup.entity.ProFileExecutionEntry;
 import ig.mini.product.khata.service.common.ProCommonService;
 import ig.mini.product.khata.service.common.ProSetupService;
 import ig.mini.product.khata.ui.pojo.ManufactureProduct;
+import ig.mini.product.khata.ui.pojo.SellForm;
 
 public class CommandLineTestRunner {
 
 	private static final Long CreateProductPurchase = 500L;
 	private static final Long CreateManufacture = 501L;
 	private static final Long CreateCustomer = 502L;
+	private static final Long CreateSell = 503L;
 
 	public static void createCustomer(ProSetupService proSetupService, ProCommonService proCommonService)
 			throws Exception {
@@ -59,6 +61,7 @@ public class CommandLineTestRunner {
 		ManufactureProduct manufactureProduct = mapper.readValue(inputStream, typeReference);
 		proCommonService.createManufacture(manufactureProduct);
 		proCommonService.evaluateManufactureCost();
+		proCommonService.pushManufactureToPurchase();
 
 		entry = new ProFileExecutionEntry();
 		entry.setExecutionId(CreateManufacture);
@@ -87,6 +90,28 @@ public class CommandLineTestRunner {
 		entry = new ProFileExecutionEntry();
 		entry.setExecutionId(CreateProductPurchase);
 		entry.setFilePath("classpath:/__json__/purchase.spec.json");
+		entry.setIsSeedData(true);
+		proSetupService.createFileExecutionEntry(entry);
+	}
+
+	public static void createSell(ProSetupService proSetupService, ProCommonService proCommonService) throws Exception {
+		ProFileExecutionEntry entry = proSetupService.findByExecutionId(CreateSell);
+		if (entry != null) {
+			return;
+		}
+		// read json and write to db
+		ObjectMapper mapper = new ObjectMapper();
+		TypeReference<SellForm> typeReference = new TypeReference<SellForm>() {
+		};
+		InputStream inputStream = TypeReference.class.getResourceAsStream("/__json__/sell.spec.json");
+
+		SellForm sellForm = mapper.readValue(inputStream, typeReference);
+		sellForm.getSell().setIsSeedData(true);
+		proCommonService.createSell(sellForm);
+
+		entry = new ProFileExecutionEntry();
+		entry.setExecutionId(CreateSell);
+		entry.setFilePath("classpath:/__json__/sell.spec.json");
 		entry.setIsSeedData(true);
 		proSetupService.createFileExecutionEntry(entry);
 	}

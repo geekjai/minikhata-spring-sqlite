@@ -18,6 +18,7 @@ import ig.mini.product.khata.db.prime.entity.ProManufacture;
 import ig.mini.product.khata.db.prime.entity.ProManufactureProductMap;
 import ig.mini.product.khata.db.prime.entity.ProPurchase;
 import ig.mini.product.khata.db.prime.entity.ProSell;
+import ig.mini.product.khata.db.prime.entity.ProSellProductMap;
 import ig.mini.product.khata.db.prime.entity.ProStock;
 import ig.mini.product.khata.db.prime.repository.CustomerRepository;
 import ig.mini.product.khata.db.prime.repository.ManufactureProductMapRepository;
@@ -28,9 +29,11 @@ import ig.mini.product.khata.db.prime.repository.SellRepository;
 import ig.mini.product.khata.db.prime.repository.StockRepository;
 import ig.mini.product.khata.db.prime.view.ManufactureWrapper;
 import ig.mini.product.khata.db.prime.view.ProductPurchaseManufacture;
+import ig.mini.product.khata.db.prime.view.SellWrapper;
 import ig.mini.product.khata.db.prime.view.StockQuantity;
 import ig.mini.product.khata.service.util.CommonServiceUtil;
 import ig.mini.product.khata.ui.pojo.ManufactureProduct;
+import ig.mini.product.khata.ui.pojo.SellForm;
 
 @Repository("proCommonService")
 public class ProCommonServiceImpl implements ProCommonService {
@@ -202,7 +205,8 @@ public class ProCommonServiceImpl implements ProCommonService {
 
 	@Transactional
 	private void executeCreateManufacture(ProManufacture manufacture,
-			List<ProManufactureProductMap> manufactureProductMaps, Map<Long, List<StockQuantity>> stockQuantities) {
+			List<ProManufactureProductMap> manufactureProductMaps, Map<Long, List<StockQuantity>> stockQuantities)
+			throws Exception {
 		// 1. Create entry in manufacture table
 		if (manufacture.getProductId() == null) {
 			return;
@@ -218,7 +222,7 @@ public class ProCommonServiceImpl implements ProCommonService {
 			}
 		}
 
-		ManufactureWrapper wrapper = CommonServiceUtil.processStock(manufacture.getManufactureId(),
+		ManufactureWrapper wrapper = CommonServiceUtil.processManufactureStock(manufacture.getManufactureId(),
 				manufactureProductMaps, stockQuantities);
 
 		for (ProStock proStock : wrapper.getStockList()) {
@@ -444,6 +448,21 @@ public class ProCommonServiceImpl implements ProCommonService {
 	}
 
 	@Override
+	public void pushManufactureToPurchase() throws Exception {
+
+		List<ProManufacture> manufactures = manufactureRepository.findAll();
+		if (manufactures != null && manufactures.size() > 0) {
+			for (ProManufacture manufacture : manufactures) {
+				if (manufacture.getRelatedPurchaseId() == null) {
+					if (manufacture.getManufactureCost() != null && manufacture.getManufactureQuantity() != null) {
+						this.pushManufactureToPurchase(manufacture.getManufactureId());
+					}
+				}
+			}
+		}
+	}
+
+	@Override
 	public List<ProSell> findSells() throws Exception {
 
 		return sellRepository.findByAllSells();
@@ -464,6 +483,65 @@ public class ProCommonServiceImpl implements ProCommonService {
 	public Iterable<ProCustomer> findAllCustomers() throws Exception {
 
 		return customerRepository.findAllCustomers();
+	}
+
+	@Transactional
+	private void executeCreateSell(ProSell sell, List<ProSellProductMap> sellProductMaps,
+			Map<Long, List<StockQuantity>> stockQuantities) throws Exception {
+		// 1. Create entry in sell table
+		if (sell == null) {
+			return;
+		}
+		if (sell.getIsSeedData() == null) {
+			sell.setIsSeedData(false);
+		}
+		FrameworkEntity.createWhoColumnData(sell, sell.getIsSeedData());
+		sell = sellRepository.save(sell);
+
+		// 2. Create entry inside ProManufactureProductMap...product-manufacture mapping
+		for (ProSellProductMap productMap : sellProductMaps) {
+			if (productMap.getProductId() != null && productMap.getSellQuantity() != null
+					&& productMap.getSellQuantity() > 0) {
+				productMap.setSellId(sell.getSellId());
+				sellProductMapRepository.save(productMap);
+			}
+		}
+
+		SellWrapper wrapper = CommonServiceUtil.processSellStock(sell.getSellId(), sellProductMaps, stockQuantities);
+
+		for (ProStock proStock : wrapper.getStockList()) {
+			stockRepository.save(proStock);
+		}
+
+		// purchaseRepository.setIsConsumedToY(consumedPurchaseList);
+		List<ProPurchase> purchases = purchaseRepository.findByPurchaseIds(wrapper.getConsumedPurchaseList());
+		for (ProPurchase purchase : purchases) {
+			purchase.setIsConsumed("Y");
+			purchaseRepository.save(purchase);
+		}
+
+	}
+
+	@Override
+	public void createSell(SellForm sellForm) throws Exception {
+
+		if (sellForm == null || sellForm.getSell() == null || sellForm.getSellProductMaps() == null) {
+			return;
+		}
+
+		ProSell sell = sellForm.getSell();
+		sell.processSellDate();
+		List<ProSellProductMap> sellProductMaps = sellForm.getSellProductMaps();
+		List<Long> productIds = new ArrayList<Long>();
+		for (ProSellProductMap productMap : sellProductMaps) {
+			if (productMap.getProductId() != null && productMap.getSellQuantity() != null
+					&& productMap.getSellQuantity() > 0) {
+				productIds.add(productMap.getProductId());
+			}
+		}
+
+		Map<Long, List<StockQuantity>> stockQuantities = readStockQuantity(productIds);
+		executeCreateSell(sell, sellProductMaps, stockQuantities);
 	}
 
 }

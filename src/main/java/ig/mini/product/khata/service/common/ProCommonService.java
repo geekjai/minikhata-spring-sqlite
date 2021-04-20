@@ -8,6 +8,7 @@ import ig.mini.product.khata.db.prime.entity.ProManufacture;
 import ig.mini.product.khata.db.prime.entity.ProPurchase;
 import ig.mini.product.khata.db.prime.entity.ProSell;
 import ig.mini.product.khata.ui.pojo.ManufactureProduct;
+import ig.mini.product.khata.ui.pojo.SellForm;
 
 public interface ProCommonService {
 
@@ -43,10 +44,14 @@ public interface ProCommonService {
 
 	public void pushManufactureToPurchase(Long manufactureId) throws Exception;
 
+	public void pushManufactureToPurchase() throws Exception;
+
 	public List<ProSell> findSells() throws Exception;
 
 	public void createCustomer(ProCustomer proCustomer) throws Exception;
 
 	public Iterable<ProCustomer> findAllCustomers() throws Exception;
+
+	public void createSell(SellForm sellForm) throws Exception;
 
 }

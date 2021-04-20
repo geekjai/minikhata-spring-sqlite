@@ -1,0 +1,25 @@
+{
+	"sell": {
+		"customerId": "2",
+		"sellDate": "2021-03-25",
+		"sellNotes": "Great Sell"
+	},
+	"sellProductMaps": [
+		{
+			"productId": "1",
+			"sellQuantity": "4",
+			"amountBeforeTax": "80",
+			"gstAmount": "10",
+			"discountAmount": "0",
+			"payableAmount": "90"
+		},
+		{
+			"productId": "5",
+			"sellQuantity": "10",
+			"amountBeforeTax": "120",
+			"gstAmount": "10",
+			"discountAmount": "0",
+			"payableAmount": "130"
+		}
+	]
+}
