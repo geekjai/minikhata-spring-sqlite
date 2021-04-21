@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import ig.mini.product.khata.db.prime.entity.ProPurchase;
+import ig.mini.product.khata.db.prime.entity.ProSellProductMap;
 import ig.mini.product.khata.service.common.ProCommonService;
 import ig.mini.product.khata.ui.pojo.ManufactureProduct;
-import ig.mini.product.khata.ui.pojo.User;
+import ig.mini.product.khata.ui.pojo.SellForm;
 
 @Controller
 public class CoreUiController {
@@ -113,11 +114,85 @@ public class CoreUiController {
 		}
 	}
 
-	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public ModelAndView save(@ModelAttribute User user) {
+	@RequestMapping("/sell/viewSells")
+	public ModelAndView viewSells() {
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("user-data");
-		modelAndView.addObject("user", user);
+		modelAndView.setViewName("sell");
+		modelAndView.addObject("fragment", "viewSells");
 		return modelAndView;
 	}
+
+	private ModelAndView createSellModelAndView(SellForm sellForm) throws Exception {
+
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("sell");
+		modelAndView.addObject("fragment", "createSell");
+		modelAndView.addObject("formTitle", "Create New Sell");
+		if (sellForm != null) {
+			sellForm.setProducts(proCommonService.findAllProduct());
+			sellForm.setCustomers(proCommonService.findAllCustomers());
+		}
+		return modelAndView;
+	}
+
+	@RequestMapping("/sell/createSell")
+	public ModelAndView createSell() {
+
+		// form data
+		SellForm formPojo = new SellForm();
+		ModelAndView modelAndView = null;
+		try {
+			modelAndView = createSellModelAndView(formPojo);
+			modelAndView.addObject("form", formPojo);
+			return modelAndView;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return modelAndView;
+		}
+
+	}
+
+	@RequestMapping(value = "/sell/createSell/submit", params = { "addProduct" }, method = RequestMethod.POST)
+	public ModelAndView createSellSubmitAddProduct(@ModelAttribute SellForm sellForm) {
+		try {
+			ModelAndView modelAndView = createSellModelAndView(sellForm);
+			sellForm.getSellProductMaps().add(new ProSellProductMap());
+			modelAndView.addObject("form", sellForm);
+			return modelAndView;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@RequestMapping(value = "/sell/createSell/submit", params = { "deleteProduct" }, method = RequestMethod.POST)
+	public ModelAndView createSellSubmitDeleteProduct(@ModelAttribute SellForm sellForm) {
+		try {
+			ModelAndView modelAndView = createSellModelAndView(sellForm);
+			Long index = sellForm.getDeletedProductIndex();
+			if (index != null && index >= 0) {
+				if (index < sellForm.getSellProductMaps().size()) {
+					sellForm.getSellProductMaps().remove(index.intValue());
+				}
+			}
+			modelAndView.addObject("form", sellForm);
+			return modelAndView;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@RequestMapping(value = "/sell/createSell/submit", method = RequestMethod.POST)
+	public String createSellSubmit(@ModelAttribute SellForm sellForm) {
+		try {
+			proCommonService.createSell(sellForm);
+			return "redirect:/sell/viewSells";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "redirect:/sell/createSell";
+		}
+	}
+
 }

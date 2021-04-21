@@ -75,6 +75,7 @@
 								<th>Amount Before Tax</th>
 								<th>GST</th>
 								<th>Discount</th>
+								<th style="width: 3px;" th:if="${fragment == 'createSell'}"></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -116,9 +117,17 @@
 									th:field="*{sellProductMaps[__${itemStat.index}__].discountAmount}"
 									th:readonly="${fragment == 'editSell'}" />
 								</td>
+								<td th:if="${fragment == 'createSell'}">
+									<button type="submit" class="btn btn-danger delItem"
+										aria-label="Delete Item" name="deleteProduct">
+										<span class="fa fa-trash fa-md" aria-hidden="true"></span>
+									</button>
+								</td>
 							</tr>
 						</tbody>
 					</table>
+					<input hidden="true" th:field="*{deletedProductIndex}"
+						id="deletedProductIndex" />
 				</div>
 			</div>
 			<!-- end of card body -->
@@ -134,6 +143,12 @@
 		/*<![CDATA[*/
 		$(document).ready(function() {
 			$(document).scrollTop($(document).height());
+			//
+			$(".delItem").click(function() {
+				var index = $(this).parent().parent().index();
+				$("#deletedProductIndex").val(index);
+				//alert(index);
+			});
 		});
 		/*]]>*/
 	</script>

@@ -15,6 +15,8 @@ public class SellForm {
 	@JsonProperty("sell")
 	private ProSell sell;
 
+	private Long deletedProductIndex;
+
 	@JsonProperty("sellProductMaps")
 	private List<ProSellProductMap> sellProductMaps;
 
@@ -58,6 +60,14 @@ public class SellForm {
 
 	public void setCustomers(Iterable<ProCustomer> customers) {
 		this.customers = customers;
+	}
+
+	public Long getDeletedProductIndex() {
+		return deletedProductIndex;
+	}
+
+	public void setDeletedProductIndex(Long deletedProductIndex) {
+		this.deletedProductIndex = deletedProductIndex;
 	}
 
 }
