@@ -20,7 +20,7 @@ public class ProStock extends FrameworkEntity implements Serializable {
 	private static final long serialVersionUID = -4369564141152188301L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "stock_id", nullable = false, updatable = false)
 	private Long stockId;
 

@@ -25,7 +25,7 @@ public class ProManufacture extends FrameworkEntity implements Serializable {
 	private static final long serialVersionUID = 2623473953010212903L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "manufacture_id", nullable = false, updatable = false)
 	private Long manufactureId;
 

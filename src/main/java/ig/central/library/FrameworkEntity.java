@@ -200,32 +200,38 @@ public class FrameworkEntity {
 			return;
 		}
 
-		if (isSeedData) {
-			// Using [javax.persistence.Column] JPA and Reflection
-			for (Field field : entity.getClass().getDeclaredFields()) {
-				Column column = field.getAnnotation(Column.class);
-				if (column != null) {
-					if ("created_by".equals(column.name())) {
-						field.setAccessible(true);
+		// Using [javax.persistence.Column] JPA and Reflection
+		for (Field field : entity.getClass().getDeclaredFields()) {
+			Column column = field.getAnnotation(Column.class);
+			if (column != null) {
+				if ("created_by".equals(column.name())) {
+					field.setAccessible(true);
+					if (isSeedData) {
 						field.set(entity, WhoColumnDataConstant.SEED_DATA_USER_NAME);
-					} else if ("last_updated_by".equals(column.name())) {
-						field.setAccessible(true);
+					} else {
+						field.set(entity, "Test User");
+					}
+				} else if ("last_updated_by".equals(column.name())) {
+					field.setAccessible(true);
+					if (isSeedData) {
 						field.set(entity, WhoColumnDataConstant.SEED_DATA_USER_NAME);
-					} else if ("creation_date".equals(column.name()) || "last_update_date".equals(column.name())) {
-						Class<?> classType = field.getType();
-						if (classType.equals(java.sql.Date.class)) {
-							field.setAccessible(true);
-							java.util.Date curr = Calendar.getInstance().getTime();
-							java.sql.Date sqlDate = new java.sql.Date(curr.getTime());
-							field.set(entity, sqlDate);
-						} else if (classType.equals(java.util.Date.class)) {
-							field.setAccessible(true);
-							field.set(entity, Calendar.getInstance().getTime());
-						}
+					} else {
+						field.set(entity, "Test User");
+					}
+				} else if ("creation_date".equals(column.name()) || "last_update_date".equals(column.name())) {
+					Class<?> classType = field.getType();
+					if (classType.equals(java.sql.Date.class)) {
+						field.setAccessible(true);
+						java.util.Date curr = Calendar.getInstance().getTime();
+						java.sql.Date sqlDate = new java.sql.Date(curr.getTime());
+						field.set(entity, sqlDate);
+					} else if (classType.equals(java.util.Date.class)) {
+						field.setAccessible(true);
+						field.set(entity, Calendar.getInstance().getTime());
 					}
 				}
 			}
-		} // end logic for updating who columns
+		}
 	}
 
 }

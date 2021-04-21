@@ -26,7 +26,7 @@ public class ProSell extends FrameworkEntity implements Serializable {
 	private static final long serialVersionUID = -5791670870890184848L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "sell_id", nullable = false, updatable = false)
 	private Long sellId;
 

@@ -17,7 +17,8 @@ import ig.mini.product.khata.service.common.ProSetupService;
 @Configuration
 public class ApplicationConfiguration implements CommandLineRunner {
 
-	private static final Long DataSourceInitializer_SeedData = 100L;
+	private static final Long DataSourceInitializer_CreateSchema = 100L;
+	private static final Long DataSourceInitializer_SeedData = 101L;
 
 	@Autowired
 	private ProSetupService proSetupService;
@@ -37,18 +38,31 @@ public class ApplicationConfiguration implements CommandLineRunner {
 	@Bean
 	DataSourceInitializer dataSourceInitializer(final DataSource dataSource) throws Exception {
 
-		boolean createEntry = false;
+		boolean createSchema = false;
+		boolean seedData = false;
 		ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
-		ProFileExecutionEntry entry = proSetupService.findByExecutionId(DataSourceInitializer_SeedData);
-
+		ProFileExecutionEntry entry = proSetupService.findByExecutionId(DataSourceInitializer_CreateSchema);
 		if (entry == null) {
-			createEntry = true;
+			createSchema = true;
+			resourceDatabasePopulator.addScript(new ClassPathResource("/META-INF/sql-script/create-schema.sql"));
+		}
+
+		entry = proSetupService.findByExecutionId(DataSourceInitializer_SeedData);
+		if (entry == null) {
+			seedData = true;
 			resourceDatabasePopulator.addScript(new ClassPathResource("/META-INF/sql-script/SeedData.sql"));
 		}
 		DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
 		dataSourceInitializer.setDataSource(dataSource);
 		dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);
-		if (createEntry) {
+		if (createSchema) {
+			entry = new ProFileExecutionEntry();
+			entry.setExecutionId(DataSourceInitializer_CreateSchema);
+			entry.setFilePath("classpath:/META-INF/sql-script/create-schema.sql");
+			entry.setIsSeedData(true);
+			proSetupService.createFileExecutionEntry(entry);
+		}
+		if (seedData) {
 			entry = new ProFileExecutionEntry();
 			entry.setExecutionId(DataSourceInitializer_SeedData);
 			entry.setFilePath("classpath:/META-INF/sql-script/SeedData.sql");

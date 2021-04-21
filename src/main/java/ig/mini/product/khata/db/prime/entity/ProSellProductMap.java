@@ -22,7 +22,7 @@ public class ProSellProductMap extends FrameworkEntity implements Serializable {
 	private static final long serialVersionUID = -4873550272982747872L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false, updatable = false)
 	private Long id;
 

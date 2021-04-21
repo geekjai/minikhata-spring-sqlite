@@ -20,7 +20,7 @@ public class ProManufactureProductMap extends FrameworkEntity implements Seriali
 	private static final long serialVersionUID = 4703784168970284223L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false, updatable = false)
 	private Long id;
 

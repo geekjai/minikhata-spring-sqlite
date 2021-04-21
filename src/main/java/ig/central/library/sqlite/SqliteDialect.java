@@ -1,4 +1,4 @@
-package ig.central.library;
+package ig.central.library.sqlite;
 
 import java.sql.Types;
 
@@ -6,6 +6,7 @@ import org.hibernate.dialect.Dialect;
 import org.hibernate.dialect.function.SQLFunctionTemplate;
 import org.hibernate.dialect.function.StandardSQLFunction;
 import org.hibernate.dialect.function.VarArgsSQLFunction;
+import org.hibernate.dialect.identity.IdentityColumnSupport;
 import org.hibernate.type.StringType;
 
 /**
@@ -57,7 +58,12 @@ public class SqliteDialect extends Dialect {
 
 	public String getIdentityColumnString() {
 		// return "integer primary key autoincrement";
-		return "bigint";
+		return "integer";
+	}
+
+	@Override
+	public IdentityColumnSupport getIdentityColumnSupport() {
+		return new SqliteIdentityColumnSupport();
 	}
 
 	public String getIdentitySelectString() {
@@ -141,4 +147,5 @@ public class SqliteDialect extends Dialect {
 	public boolean supportsCascadeDelete() {
 		return false;
 	}
+
 }

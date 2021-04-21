@@ -485,7 +485,6 @@ public class ProCommonServiceImpl implements ProCommonService {
 		return customerRepository.findAllCustomers();
 	}
 
-	@Transactional
 	private void executeCreateSell(ProSell sell, List<ProSellProductMap> sellProductMaps,
 			Map<Long, List<StockQuantity>> stockQuantities) throws Exception {
 		// 1. Create entry in sell table
@@ -523,6 +522,7 @@ public class ProCommonServiceImpl implements ProCommonService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void createSell(SellForm sellForm) throws Exception {
 
 		if (sellForm == null || sellForm.getSell() == null || sellForm.getSellProductMaps() == null) {

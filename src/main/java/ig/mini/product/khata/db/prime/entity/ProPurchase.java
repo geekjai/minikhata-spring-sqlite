@@ -32,7 +32,7 @@ public class ProPurchase extends FrameworkEntity implements Serializable {
 	private static final long serialVersionUID = -985801797123962687L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "purchase_id", nullable = false, updatable = false)
 	private Long purchaseId;
 
