@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository;
 
 import ig.mini.product.khata.db.prime.entity.ProManufacture;
 import ig.mini.product.khata.db.prime.entity.ProPurchase;
-import ig.mini.product.khata.db.prime.entity.ProPurchaseManufactureMap;
 import ig.mini.product.khata.db.prime.view.ProductPurchaseManufacture;
 import ig.mini.product.khata.db.prime.view.ProductPurchaseQuantity;
 import ig.mini.product.khata.db.prime.view.StockQuantity;
@@ -84,24 +83,6 @@ public class CoreRepositoryDaoImpl extends CoreRepositoryAbstractDao implements 
 		List<Object> objResults = query.getResultList();
 		List<ProductPurchaseManufacture> results = populateProductPurchaseManufactureList(
 				ProductPurchaseManufacture.class, objResults);
-		return results;
-	}
-
-	@Override
-	public List<ProPurchaseManufactureMap> findPurchaseInQty(Long bindPurchaseId) throws Exception {
-
-		if (bindPurchaseId == null) {
-			return null;
-		}
-
-		Query query = entityManager.createNamedQuery("findPurchaseInQty").unwrap(org.hibernate.query.Query.class)
-				.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-		query.setParameter("bindPurchaseId", bindPurchaseId);
-
-		@SuppressWarnings("unchecked")
-		List<Object> objResults = query.getResultList();
-		List<ProPurchaseManufactureMap> results = populateProPurchaseManufactureMapList(ProPurchaseManufactureMap.class,
-				objResults);
 		return results;
 	}
 
