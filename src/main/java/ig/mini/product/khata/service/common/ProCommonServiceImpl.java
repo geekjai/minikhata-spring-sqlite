@@ -213,16 +213,18 @@ public class ProCommonServiceImpl implements ProCommonService {
 		manufacture.setManufactureCost(null);
 		manufacture = manufactureRepository.save(manufacture);
 		// 2. Create entry inside ProManufactureProductMap...product-manufacture mapping
+		List<ProManufactureProductMap> clonedProManufactureProductMaps = new ArrayList<ProManufactureProductMap>();
 		for (ProManufactureProductMap productMap : manufactureProductMaps) {
 			if (productMap.getProductId() != null && productMap.getProductQuantity() != null
 					&& productMap.getProductQuantity() > 0) {
 				productMap.setManufactureId(manufacture.getManufactureId());
 				manufactureProductMapRepository.save(productMap);
+				clonedProManufactureProductMaps.add((ProManufactureProductMap) productMap.clone());
 			}
 		}
 
 		ManufactureWrapper wrapper = CommonServiceUtil.processManufactureStock(manufacture.getManufactureId(),
-				manufactureProductMaps, stockQuantities);
+				clonedProManufactureProductMaps, stockQuantities);
 
 		for (ProStock proStock : wrapper.getStockList()) {
 			stockRepository.save(proStock);
@@ -498,15 +500,18 @@ public class ProCommonServiceImpl implements ProCommonService {
 		sell = sellRepository.save(sell);
 
 		// 2. Create entry inside ProManufactureProductMap...product-manufacture mapping
+		List<ProSellProductMap> clonedSellProductMaps = new ArrayList<ProSellProductMap>();
 		for (ProSellProductMap productMap : sellProductMaps) {
 			if (productMap.getProductId() != null && productMap.getSellQuantity() != null
 					&& productMap.getSellQuantity() > 0) {
 				productMap.setSellId(sell.getSellId());
 				sellProductMapRepository.save(productMap);
+				clonedSellProductMaps.add((ProSellProductMap) productMap.clone());
 			}
 		}
 
-		SellWrapper wrapper = CommonServiceUtil.processSellStock(sell.getSellId(), sellProductMaps, stockQuantities);
+		SellWrapper wrapper = CommonServiceUtil.processSellStock(sell.getSellId(), clonedSellProductMaps,
+				stockQuantities);
 
 		for (ProStock proStock : wrapper.getStockList()) {
 			stockRepository.save(proStock);
@@ -542,6 +547,20 @@ public class ProCommonServiceImpl implements ProCommonService {
 
 		Map<Long, List<StockQuantity>> stockQuantities = readStockQuantity(productIds);
 		executeCreateSell(sell, sellProductMaps, stockQuantities);
+	}
+
+	@Override
+	public SellForm findSellBySellId(Long sellId) throws Exception {
+
+		SellForm sellForm = new SellForm();
+
+		Optional<ProSell> sellOptional = sellRepository.findById(sellId);
+		if (sellOptional.isPresent()) {
+			sellForm.setSell(sellOptional.get());
+		}
+
+		sellForm.setSellProductMaps(sellProductMapRepository.findBySellId(sellId));
+		return sellForm;
 	}
 
 }

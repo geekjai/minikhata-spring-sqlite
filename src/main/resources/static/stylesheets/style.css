@@ -1,3 +1,6 @@
+.tblRowEdit {
+	cursor: pointer;
+}
 .btn-olive {
     color: #ffffff;
     background-color: #3d9970;

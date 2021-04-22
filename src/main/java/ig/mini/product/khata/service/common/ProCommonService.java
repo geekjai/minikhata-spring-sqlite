@@ -54,4 +54,6 @@ public interface ProCommonService {
 
 	public void createSell(SellForm sellForm) throws Exception;
 
+	public SellForm findSellBySellId(Long sellId) throws Exception;
+
 }

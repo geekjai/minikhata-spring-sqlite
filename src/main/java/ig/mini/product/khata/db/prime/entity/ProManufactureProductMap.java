@@ -15,7 +15,7 @@ import ig.central.library.annotation.UpdateCacheEntityColumn;
 
 @Entity
 @Table(name = "pro_manufacture_product_map")
-public class ProManufactureProductMap extends FrameworkEntity implements Serializable {
+public class ProManufactureProductMap extends FrameworkEntity implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 4703784168970284223L;
 
@@ -76,6 +76,11 @@ public class ProManufactureProductMap extends FrameworkEntity implements Seriali
 
 	public void setVersionId(int versionId) {
 		this.versionId = versionId;
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 
 }

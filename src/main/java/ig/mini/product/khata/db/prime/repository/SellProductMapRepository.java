@@ -1,6 +1,6 @@
 package ig.mini.product.khata.db.prime.repository;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +13,6 @@ import ig.mini.product.khata.db.prime.entity.ProSellProductMap;
 public interface SellProductMapRepository extends JpaRepository<ProSellProductMap, Long> {
 
 	@Query("SELECT e FROM ProSellProductMap e WHERE e.sellId = :sellId")
-	public Optional<ProSellProductMap> findBySellId(@Param("sellId") Long sellId);
+	public List<ProSellProductMap> findBySellId(@Param("sellId") Long sellId);
 
 }

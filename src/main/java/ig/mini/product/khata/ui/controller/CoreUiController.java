@@ -195,4 +195,27 @@ public class CoreUiController {
 		}
 	}
 
+	private ModelAndView editSellModelAndView(SellForm sellForm) throws Exception {
+
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("sell");
+		modelAndView.addObject("fragment", "editSell");
+		modelAndView.addObject("formTitle", "Edit Sell");
+		if (sellForm != null) {
+			sellForm.setProducts(proCommonService.findAllProduct());
+			sellForm.setCustomers(proCommonService.findAllCustomers());
+		}
+		return modelAndView;
+	}
+
+	@RequestMapping("/sell/editSell/{id}")
+	public ModelAndView editSell(@PathVariable Long id) throws Exception {
+
+		SellForm sellForm = proCommonService.findSellBySellId(id);
+		ModelAndView modelAndView = editSellModelAndView(sellForm);
+
+		modelAndView.addObject("form", sellForm);
+		return modelAndView;
+	}
+
 }

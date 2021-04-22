@@ -13,10 +13,54 @@
 						<th>Sell Id</th>
 						<th>Sell Date</th>
 						<th>Is Amount Settled</th>
-						<th></th>
+						<th style="width: 25px;"></th>
 					</tr>
 				</thead>
 			</table>
 		</div>
 	</div>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+$(document).ready(function () { 
+	$(function() {
+		var datatable = $('#tblSellList').DataTable({
+			"paging": true,
+			"lengthChange": false,
+			"searching": false,
+			"ordering": true,
+			"info": true,
+			"autoWidth": false,
+			"responsive": true,
+			"ajax": {
+				"url": "/api/sell/sellRecords",
+				"dataSrc": ""
+			},
+			"columns": [
+				{ "data": "sellId" },
+				{ "data": "sellDate" },
+				{ "data": "isAmountSettled" },
+				{
+					data: null,
+					className: "dt-center editor-edit",
+					defaultContent: '<i class="fa fa-edit tblRowEdit"/>',
+					orderable: false
+				}
+			],
+			"dom": '<"selltoolbar">frtip'
+		});
+		$("div.selltoolbar").html('<button id="createSellBtn" type="button" class="btn btn-block btn-info" style="width:100px;">Create Sell</button>');
+		$("#createSellBtn").click(function() {
+			window.location.href = '/sell/createSell';
+		});
+		$('#tblSellList').on('click', 'td.editor-edit', function(e) {
+			e.preventDefault();
+			var rowData = datatable.rows(this).data();
+			window.location.href = '/sell/editSell/' + rowData[0].sellId;
+			//console.log('You clicked this' + rowData[0].purchaseId);
+			//console.log(rowData[0]);
+		});
+	});
+});
+		/*]]>*/
+	</script>
 </div>
