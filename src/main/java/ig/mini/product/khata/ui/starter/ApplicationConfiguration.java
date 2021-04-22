@@ -1,4 +1,4 @@
-package ig.mini.product.khata.core.setup;
+package ig.mini.product.khata.ui.starter;
 
 import javax.sql.DataSource;
 
@@ -13,6 +13,7 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import ig.mini.product.khata.db.setup.entity.ProFileExecutionEntry;
 import ig.mini.product.khata.service.common.ProCommonService;
 import ig.mini.product.khata.service.common.ProSetupService;
+
 
 @Configuration
 public class ApplicationConfiguration implements CommandLineRunner {

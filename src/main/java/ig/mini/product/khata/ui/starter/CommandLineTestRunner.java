@@ -1,4 +1,4 @@
-package ig.mini.product.khata.core.setup;
+package ig.mini.product.khata.ui.starter;
 
 import java.io.InputStream;
 import java.util.List;
