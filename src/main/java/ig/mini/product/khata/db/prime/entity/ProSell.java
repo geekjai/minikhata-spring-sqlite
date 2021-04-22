@@ -154,6 +154,12 @@ public class ProSell extends FrameworkEntity implements Serializable {
 	}
 
 	public java.util.Date getSellDateUi() {
+
+		if (sellDate != null && sellDateUi == null) {
+			java.util.Date utilDate = new java.util.Date(sellDate.getTime());
+			setSellDateUi(utilDate);
+		}
+
 		return sellDateUi;
 	}
 

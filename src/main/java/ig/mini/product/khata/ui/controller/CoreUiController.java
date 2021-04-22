@@ -103,7 +103,7 @@ public class CoreUiController {
 		return modelAndView;
 	}
 
-	@RequestMapping(value = "manufacture/editManufacture/submit", method = RequestMethod.POST)
+	@RequestMapping(value = "/manufacture/editManufacture/submit", method = RequestMethod.POST)
 	public String editManufactureSubmit(@ModelAttribute ManufactureProduct form) {
 		try {
 			proCommonService.updateManufacture(form);
@@ -216,6 +216,17 @@ public class CoreUiController {
 
 		modelAndView.addObject("form", sellForm);
 		return modelAndView;
+	}
+
+	@RequestMapping(value = "/sell/editSell/submit", method = RequestMethod.POST)
+	public String editSellSubmit(@ModelAttribute SellForm form) {
+		try {
+			proCommonService.updateSell(form);
+			return "redirect:/sell/viewSells";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "redirect:/sell/editSell/" + form.getSell().getSellId();
+		}
 	}
 
 }

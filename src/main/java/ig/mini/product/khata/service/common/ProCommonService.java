@@ -56,4 +56,6 @@ public interface ProCommonService {
 
 	public SellForm findSellBySellId(Long sellId) throws Exception;
 
+	public void updateSell(SellForm sellForm) throws Exception;
+
 }

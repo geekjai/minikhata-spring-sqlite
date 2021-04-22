@@ -563,4 +563,22 @@ public class ProCommonServiceImpl implements ProCommonService {
 		return sellForm;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateSell(SellForm sellForm) throws Exception {
+
+		if (sellForm == null || sellForm.getSell() == null) {
+			return;
+		}
+
+		ProSell sell = sellForm.getSell();
+		sell.processSellDate();
+		Optional<ProSell> optional = sellRepository.findById(sell.getSellId());
+		if (optional.isPresent()) {
+			ProSell cachedEntity = optional.get();
+			FrameworkEntity.updateCachedEntity(cachedEntity, sell);
+			sellRepository.save(cachedEntity);
+		}
+	}
+
 }

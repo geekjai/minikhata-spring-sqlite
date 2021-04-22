@@ -15,10 +15,10 @@
 						<div class="form-group">
 							<input hidden="true" th:field="*{sell.sellId}" id="sellId" />
 							<!-- ------ -->
+							<label for="customerId">Customer Name</label>
+							<!--  -->
 							<input hidden="true" th:field="*{sell.customerId}"
 								th:if="${fragment == 'editSell'}" />
-							<!--  -->
-							<label for="customerId">Customer Name</label>
 							<!--  -->
 							<select id='customerId' class='form-control customerId'
 								th:field="*{sell.customerId}"
@@ -85,9 +85,10 @@
 									th:field="*{sellProductMaps[__${itemStat.index}__].id}" />
 								</td>
 								<td>
-									<!-- --- <input hidden="true"
-									th:field="*{sellProductMaps[__${itemStat.index}__].productId}" />
-									--> <!-- --- --> <select class="form-control"
+									<!-- ---- --> <input hidden="true"
+									th:field="*{sellProductMaps[__${itemStat.index}__].productId}"
+									th:if="${fragment == 'editSell'}" /> <!-- ------------------ -->
+									<select class="form-control"
 									th:name="|sellProductMaps[${itemStat.index}].productId|"
 									th:value="${map.getProductId()}"
 									th:disabled="${fragment == 'editSell'}">
@@ -135,6 +136,13 @@
 			<div class="card-footer">
 				<button th:if="${fragment == 'createSell'}" type="submit"
 					class="btn btn-primary float-right">Submit</button>
+				<button th:if="${fragment == 'editSell'}" type="submit"
+					class="btn btn-primary float-right">Update</button>
+				<button th:if="${fragment == 'editSell'}" type='button'
+					id="deleteSellBtn" class="btn btn-danger float-right"
+					style='margin-right: 15px;'>Delete</button>
+				<button type='button' id="cacelSellForm"
+					class="btn btn-olive float-right" style='margin-right: 15px;'>Cancel</button>
 			</div>
 		</form>
 	</div>
@@ -148,6 +156,9 @@
 				var index = $(this).parent().parent().index();
 				$("#deletedProductIndex").val(index);
 				//alert(index);
+			});
+			$("#cacelSellForm").click(function() {
+				window.location.href = '/sell/viewSells';
 			});
 		});
 		/*]]>*/
