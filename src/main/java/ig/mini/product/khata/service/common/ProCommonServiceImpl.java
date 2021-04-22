@@ -203,7 +203,6 @@ public class ProCommonServiceImpl implements ProCommonService {
 		return stockQuantities;
 	}
 
-	@Transactional
 	private void executeCreateManufacture(ProManufacture manufacture,
 			List<ProManufactureProductMap> manufactureProductMaps, Map<Long, List<StockQuantity>> stockQuantities)
 			throws Exception {
@@ -239,6 +238,7 @@ public class ProCommonServiceImpl implements ProCommonService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void createManufacture(ManufactureProduct manufactureProduct) throws Exception {
 
 		if (manufactureProduct == null || manufactureProduct.getManufacture() == null
@@ -286,7 +286,6 @@ public class ProCommonServiceImpl implements ProCommonService {
 		return list;
 	}
 
-	@Transactional
 	private Double evaluateManufactureCost(Long manufactureId, List<ProductPurchaseManufacture> purchaseCostList) {
 
 		Double totalManufCost = 0.0;
@@ -311,6 +310,7 @@ public class ProCommonServiceImpl implements ProCommonService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public Double evaluateManufactureCost(Long manufactureId) throws Exception {
 
 		if (manufactureId == null) {
@@ -340,7 +340,7 @@ public class ProCommonServiceImpl implements ProCommonService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void updateManufacture(ManufactureProduct manufactureProduct) throws Exception {
 
 		if (manufactureProduct == null || manufactureProduct.getManufacture() == null) {
@@ -358,7 +358,7 @@ public class ProCommonServiceImpl implements ProCommonService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void deleteManufacture(Long manufactureId) throws Exception {
 
 		Optional<ProManufacture> optional = manufactureRepository.findById(manufactureId);
@@ -406,7 +406,6 @@ public class ProCommonServiceImpl implements ProCommonService {
 		return true;
 	}
 
-	@Transactional
 	public void pushManufactureToPurchase(ProManufacture proManufacture, ProPurchase proPurchase) throws Exception {
 
 		proPurchase.setPurchaseId(null);
@@ -424,6 +423,7 @@ public class ProCommonServiceImpl implements ProCommonService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void pushManufactureToPurchase(Long manufactureId) throws Exception {
 
 		if (manufactureId == null) {

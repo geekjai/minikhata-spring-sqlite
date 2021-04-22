@@ -22,7 +22,7 @@ public class ProCustomer extends FrameworkEntity implements Serializable {
 	private static final long serialVersionUID = -7430001114907935297L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "customer_id", nullable = false, updatable = false)
 	private Long customerId;
 
