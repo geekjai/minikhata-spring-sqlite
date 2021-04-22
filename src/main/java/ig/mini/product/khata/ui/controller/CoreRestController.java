@@ -18,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 
 import ig.mini.product.khata.db.prime.entity.ProManufacture;
 import ig.mini.product.khata.db.prime.entity.ProPurchase;
+import ig.mini.product.khata.db.prime.entity.ProSell;
 import ig.mini.product.khata.service.common.ProCommonService;
 import ig.mini.product.khata.ui.pojo.CommonResponseEntity;
 
@@ -130,6 +131,29 @@ public class CoreRestController {
 	public ResponseEntity<Object> pushManufactureToPurchase(@PathVariable Long manufactureId) {
 		try {
 			proCommonService.pushManufactureToPurchase(manufactureId);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@RequestMapping(value = "/api/sell/sellRecords")
+	public ResponseEntity<Object> sellRecords() {
+		List<ProSell> sells = null;
+		try {
+			sells = proCommonService.findSells();
+			return new ResponseEntity<>(sells, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@RequestMapping(value = "/api/sell/deleteSell/{sellId}", method = RequestMethod.DELETE)
+	public ResponseEntity<Object> deleteSell(@PathVariable Long sellId) {
+		try {
+			proCommonService.deleteSell(sellId);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -41,8 +41,12 @@ public class ProSell extends FrameworkEntity implements Serializable {
 	private String sellNotes;
 
 	@UpdateCacheEntityColumn
-	@Column(name = "is_amount_settled", nullable = false)
+	@Column(name = "is_amount_settled", columnDefinition = "varchar(3) default 'N'", nullable = false)
 	private String isAmountSettled = "N";
+
+	@UpdateCacheEntityColumn
+	@Column(name = "is_delete_allowed", columnDefinition = "varchar(3) default 'Y'", nullable = false)
+	private String isDeleteAllowed = "Y";
 
 	@Column(name = "created_by", columnDefinition = "VARCHAR(60) NOT NULL DEFAULT 'SEED_DATA_FROM_APPLICATION'", updatable = false, nullable = false)
 	private String createdBy;
@@ -111,6 +115,14 @@ public class ProSell extends FrameworkEntity implements Serializable {
 
 	public void setIsAmountSettled(String isAmountSettled) {
 		this.isAmountSettled = isAmountSettled;
+	}
+
+	public String getIsDeleteAllowed() {
+		return isDeleteAllowed;
+	}
+
+	public void setIsDeleteAllowed(String isDeleteAllowed) {
+		this.isDeleteAllowed = isDeleteAllowed;
 	}
 
 	public String getCreatedBy() {

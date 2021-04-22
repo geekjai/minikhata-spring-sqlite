@@ -58,4 +58,6 @@ public interface ProCommonService {
 
 	public void updateSell(SellForm sellForm) throws Exception;
 
+	public void deleteSell(Long sellId) throws Exception;
+
 }

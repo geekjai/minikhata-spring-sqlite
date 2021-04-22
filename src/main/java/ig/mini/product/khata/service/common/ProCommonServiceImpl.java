@@ -581,4 +581,37 @@ public class ProCommonServiceImpl implements ProCommonService {
 		}
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void deleteSell(Long sellId) throws Exception {
+
+		Optional<ProSell> optional = sellRepository.findById(sellId);
+		if (optional.isPresent()) {
+			ProSell sellEntity = optional.get();
+			if (!"Y".equals(sellEntity.getIsDeleteAllowed())) {
+				return;
+			}
+			List<ProSellProductMap> sellProductMaps = sellProductMapRepository.findBySellId(sellId);
+			if (sellProductMaps != null && sellProductMaps.size() > 0) {
+				sellProductMapRepository.deleteAll(sellProductMaps);
+			}
+
+			List<ProStock> stocks = stockRepository.findBySellId(sellId);
+			if (stocks != null && stocks.size() > 0) {
+				List<Long> purchaseIds = new ArrayList<Long>();
+				for (ProStock element : stocks) {
+					purchaseIds.add(element.getPurchaseId());
+				}
+				List<ProPurchase> purchaseList = purchaseRepository.findByPurchaseIds(purchaseIds);
+				for (ProPurchase element : purchaseList) {
+					element.setIsConsumed("N");
+					purchaseRepository.save(element);
+				}
+				stockRepository.deleteAll(stocks);
+			}
+
+			sellRepository.delete(sellEntity);
+		} // end of optional.isPresent()
+	}
+
 }

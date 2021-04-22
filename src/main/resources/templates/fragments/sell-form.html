@@ -146,7 +146,6 @@
 			</div>
 		</form>
 	</div>
-
 	<script th:inline="javascript">
 		/*<![CDATA[*/
 		$(document).ready(function() {
@@ -159,6 +158,20 @@
 			});
 			$("#cacelSellForm").click(function() {
 				window.location.href = '/sell/viewSells';
+			});
+			$("#deleteSellBtn").click(function() {
+				//
+				event.preventDefault();
+				var sellId = document.getElementById("sellId").value;
+				$.ajax({
+					type : 'delete',
+					url : '/api/sell/deleteSell/' + sellId,
+					contentType : "application/json; charset=utf-8",
+					traditional : true,
+					success : function(data) {
+						window.location.href = '/sell/viewSells';
+					}
+				});
 			});
 		});
 		/*]]>*/

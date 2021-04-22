@@ -80,7 +80,18 @@ CREATE TABLE IF NOT EXISTS pro_purchase_types (purchase_type_id integer not null
 
 -- Dumping structure for table sqlitesample.pro_sells
 DROP TABLE IF EXISTS "pro_sells";
-CREATE TABLE IF NOT EXISTS pro_sells (sell_id integer not null primary key autoincrement, created_by VARCHAR(60) NOT NULL DEFAULT 'SEED_DATA_FROM_APPLICATION' not null, creation_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP not null, customer_id bigint not null, is_amount_settled varchar not null, last_update_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP not null, last_updated_by VARCHAR(60) NOT NULL DEFAULT 'SEED_DATA_FROM_APPLICATION' not null, sell_date date, sell_notes varchar, version_id integer);
+CREATE TABLE IF NOT EXISTS pro_sells (
+	sell_id integer not null primary key autoincrement, 
+	customer_id bigint not null,   
+	sell_date date, 
+	sell_notes varchar, 
+	is_amount_settled varchar(3) default 'N' not null,
+	is_delete_allowed varchar(3) default 'Y' not null,
+	created_by VARCHAR(60) NOT NULL DEFAULT 'SEED_DATA_FROM_APPLICATION' not null, 
+	creation_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP not null, 
+	last_update_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP not null, 
+	last_updated_by VARCHAR(60) NOT NULL DEFAULT 'SEED_DATA_FROM_APPLICATION' not null,
+	version_id integer);
 
 -- Data exporting was unselected.
 

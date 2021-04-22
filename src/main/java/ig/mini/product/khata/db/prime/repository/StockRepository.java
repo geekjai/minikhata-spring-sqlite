@@ -25,4 +25,7 @@ public interface StockRepository extends JpaRepository<ProStock, Long> {
 	@Query("SELECT e FROM ProStock e WHERE e.purchaseId = :purchaseId AND (e.manufactureId is null AND e.sellId is null)")
 	public Optional<ProStock> findPurchaseRecordByPurchaseId(@Param("purchaseId") Long purchaseId);
 
+	@Query("SELECT e FROM ProStock e WHERE e.sellId = :sellId")
+	public List<ProStock> findBySellId(@Param("sellId") Long sellId);
+
 }
