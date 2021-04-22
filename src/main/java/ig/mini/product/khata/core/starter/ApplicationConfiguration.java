@@ -1,4 +1,4 @@
-package ig.mini.product.khata.ui.starter;
+package ig.mini.product.khata.core.starter;
 
 import javax.sql.DataSource;
 
