@@ -25,4 +25,52 @@
 			</table>
 		</div>
 	</div>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+$(document).ready(function() {
+	var datatable = $('#tblPurchaseList').DataTable({
+		"paging": true,
+		"lengthChange": false,
+		"searching": false,
+		"ordering": true,
+		"info": true,
+		"autoWidth": false,
+		"responsive": true,
+		"ajax": {
+			"url": "/api/purchases/purchaseRecords",
+			"dataSrc": ""
+		},
+		"columns": [
+			{ "data": "purchaseId" },
+			{ "data": "productName" },
+			{ "data": "billNumber" },
+			{ "data": "purchaseQuantity" },
+			{ "data": "amountBeforeTax" },
+			{ "data": "gstAmount" },
+			{ "data": "discountAmount" },
+			{ "data": "payableAmount" },
+			{
+				data: null,
+				className: "dt-center editor-edit",
+				defaultContent: '<i class="fa fa-edit"/>',
+				orderable: false
+			}
+		],
+		"dom": '<"toolbar">frtip'
+	});
+	$("div.toolbar").html('<button id="createPur" type="button" class="btn btn-block btn-info" style="width:80px;">Create</button>');
+	// Edit record
+	$('#tblPurchaseList').on('click', 'td.editor-edit', function(e) {
+		e.preventDefault();
+		var rowData = datatable.rows(this).data();
+		window.location.href = '/purchases/editPurchase/' + rowData[0].purchaseId;
+		//console.log('You clicked this' + rowData[0].purchaseId);
+		//console.log(rowData[0]);
+	});
+	$("#createPur").click(function() {
+		window.location.href = '/purchases/createPurchase';
+	});
+});
+		/*]]>*/
+	</script>
 </div>

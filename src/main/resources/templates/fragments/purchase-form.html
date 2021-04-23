@@ -7,23 +7,25 @@
 		</div>
 		<!-- ./card-header-->
 		<!-- form start-->
-		<form role="form" action="/purchases/editPurchase" method="post"
-			th:id="${fragment}">
+		<form role="form" action="#"
+			th:action="${fragment} == 'createPurchase' ? @{/purchase/createPurchase/submit} : @{/purchase/editPurchase/submit}"
+			th:object="${form}" method="post" th:id="${fragment}">
 			<div class="card-body">
 				<div class="row">
 					<div class="col-md-6">
 						<div class="form-group">
-							<input th:value="${purchase.purchaseId}" class="form-control"
+							<input th:field="*{purchase.purchaseId}" class="form-control"
 								type="hidden" name="purchaseId" id="purchaseId">
 							<!--  -->
 							<label for="productId">Product Name</label>
 							<!--  -->
 							<select id='productId' class='form-control productId'
-								th:disabled="${fragment == 'editPurchase'}">
+								th:disabled="${fragment == 'editPurchase'}"
+								th:field="*{purchase.productId}">
 								<option th:each="product : ${products}"
 									th:value="${product.productId}"
 									th:text="${product.productName}"
-									th:selected="${product.productId==purchase.productId}"></option>
+									th:selected="${product.productId==form.purchase.productId}"></option>
 							</select>
 						</div>
 						<div class="row">
@@ -31,7 +33,7 @@
 								<div class="form-group">
 									<label for="billNumber">Bill Number</label>
 									<!--  -->
-									<input th:value="${purchase.billNumber}" class="form-control"
+									<input th:field="*{purchase.billNumber}" class="form-control"
 										type="text" name="billNumber" id="billNumber" />
 								</div>
 							</div>
@@ -39,7 +41,7 @@
 								<div class="form-group">
 									<label for="purchaseDate">Purchase Date</label>
 									<!--  -->
-									<input th:value="${purchase.purchaseDate}"
+									<input th:field="*{purchase.purchaseDate}"
 										class="form-control date" type="date" name="purchaseDate"
 										id="purchaseDate" />
 								</div>
@@ -62,7 +64,7 @@
 						<div class="form-group">
 							<label for="purchaseQuantity">Purchase Quantity</label>
 							<!--  -->
-							<input th:value="${purchase.purchaseQuantity}"
+							<input th:field="*{purchase.purchaseQuantity}"
 								class="form-control purchaseQuantity" type="number"
 								name="purchaseQuantity" id="purchaseQuantity"
 								th:readonly="${isPurchaseQuantityUpdateable == false}" />
@@ -72,7 +74,7 @@
 						<div class="form-group">
 							<label for="amountBeforeTax">Amount Before Tax</label>
 							<!--  -->
-							<input th:value="${purchase.amountBeforeTax}"
+							<input th:field="*{purchase.amountBeforeTax}"
 								class="form-control amountBeforeTax" type="number"
 								name="amountBeforeTax" id="amountBeforeTax"
 								th:readonly="${isPurchaseQuantityUpdateable == false}" />
@@ -82,7 +84,7 @@
 						<div class="form-group">
 							<label for="gstAmount">Gst Amount</label>
 							<!--  -->
-							<input th:value="${purchase.gstAmount}"
+							<input th:field="*{purchase.gstAmount}"
 								class="form-control gstAmount" type="number" name="gstAmount"
 								id="gstAmount"
 								th:readonly="${isPurchaseQuantityUpdateable == false}" />
@@ -92,7 +94,7 @@
 						<div class="form-group">
 							<label for="discountAmount">Discount Amount</label>
 							<!--  -->
-							<input th:value="${purchase.discountAmount}"
+							<input th:field="*{purchase.discountAmount}"
 								class="form-control discountAmount" type="number"
 								name="discountAmount" id="discountAmount"
 								th:readonly="${isPurchaseQuantityUpdateable == false}" />
@@ -102,7 +104,7 @@
 						<div class="form-group">
 							<label for="payableAmount">Payable Amount</label>
 							<!--  -->
-							<input th:value="${purchase.payableAmount}" class="form-control"
+							<input th:field="*{purchase.payableAmount}" class="form-control"
 								type="number" name="payableAmount" id="payableAmount"
 								disabled="disabled" />
 						</div>
@@ -125,4 +127,51 @@
 			</div>
 		</form>
 	</div>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+$(document).ready(function() {
+	function calculatePayableAmount() {
+
+		var payableAmount = 0;
+		var amountBeforeTax = $('#amountBeforeTax').val();
+		var gstAmount = $('#gstAmount').val();
+		var discountAmount = $('#discountAmount').val();
+
+		if (!amountBeforeTax.trim() == false && !isNaN(amountBeforeTax))
+			payableAmount = payableAmount + parseFloat(amountBeforeTax);
+		if (!gstAmount.trim() == false && !isNaN(gstAmount))
+			payableAmount = payableAmount + parseFloat(gstAmount);
+		if (!discountAmount.trim() == false && !isNaN(discountAmount))
+			payableAmount = payableAmount - parseFloat(discountAmount);
+
+		$('#payableAmount').val(payableAmount);
+	}
+	$(".amountBeforeTax").change(function() {
+		calculatePayableAmount();
+	});
+	$(".gstAmount").change(function() {
+		calculatePayableAmount();
+	});
+	$(".discountAmount").change(function() {
+		calculatePayableAmount();
+	});
+	$("#cacel_cp").click(function() {
+		window.location.href = '/purchases/viewPurchases';
+	});
+	$("#deletePurBtn").click(function(event) {
+		event.preventDefault();
+		const purchaseId = document.getElementById("purchaseId").value;
+		$.ajax({
+			type: 'delete',
+			url: '/api/purchases/deletePurchase/' + purchaseId,
+			contentType: "application/json; charset=utf-8",
+			traditional: true,
+			success: function(data) {
+				window.location.href = '/purchases/viewPurchases';
+			}
+		});
+	});
+});
+		/*]]>*/
+	</script>
 </div>

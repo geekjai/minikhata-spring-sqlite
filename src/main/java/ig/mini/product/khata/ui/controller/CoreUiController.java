@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import ig.mini.product.khata.db.prime.entity.ProPurchase;
 import ig.mini.product.khata.db.prime.entity.ProSellProductMap;
+import ig.mini.product.khata.service.common.DashboardService;
 import ig.mini.product.khata.service.common.ProCommonService;
+import ig.mini.product.khata.ui.pojo.DashboardUI;
 import ig.mini.product.khata.ui.pojo.ManufactureProduct;
+import ig.mini.product.khata.ui.pojo.PurchaseForm;
 import ig.mini.product.khata.ui.pojo.SellForm;
 
 @Controller
@@ -19,10 +21,18 @@ public class CoreUiController {
 
 	@Autowired
 	private ProCommonService proCommonService;
+	@Autowired
+	private DashboardService dashboardService;
 
 	@RequestMapping("/")
-	public String index() {
-		return "index";
+	public ModelAndView index() throws Exception {
+
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("index");
+		DashboardUI dashboardUI = new DashboardUI();
+		dashboardUI.setDashboardView(dashboardService.fetchDashboardView());
+		modelAndView.addObject("ui", dashboardUI);
+		return modelAndView;
 	}
 
 	@RequestMapping("/purchases/viewPurchases")
@@ -40,9 +50,21 @@ public class CoreUiController {
 		modelAndView.addObject("fragment", "createPurchase");
 		modelAndView.addObject("formTitle", "Create Purchase");
 		modelAndView.addObject("products", proCommonService.findAllProduct());
-		modelAndView.addObject("purchase", new ProPurchase());
+		modelAndView.addObject("form", new PurchaseForm());
 		modelAndView.addObject("isPurchaseQuantityUpdateable", true);
 		return modelAndView;
+	}
+
+	@RequestMapping(value = "/purchase/createPurchase/submit", method = RequestMethod.POST)
+	public String createPurchaseSubmit(@ModelAttribute PurchaseForm purchaseForm) {
+		try {
+			proCommonService.createProductPurchase(purchaseForm.getPurchase());
+			return "redirect:/purchases/viewPurchases";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "redirect:/purchases/createPurchase";
+		}
 	}
 
 	@RequestMapping("/purchases/editPurchase/{id}")
@@ -52,9 +74,23 @@ public class CoreUiController {
 		modelAndView.addObject("fragment", "editPurchase");
 		modelAndView.addObject("formTitle", "Edit Purchase");
 		modelAndView.addObject("products", proCommonService.findAllProduct());
-		modelAndView.addObject("purchase", proCommonService.findByPurchaseId(id));
+		PurchaseForm form = new PurchaseForm();
+		form.setPurchase(proCommonService.findByPurchaseId(id));
+		modelAndView.addObject("form", form);
 		modelAndView.addObject("isPurchaseQuantityUpdateable", proCommonService.isPurchaseQuantityUpdateable(id));
 		return modelAndView;
+	}
+
+	@RequestMapping(value = "/purchase/editPurchase/submit", method = RequestMethod.POST)
+	public String editPurchaseSubmit(@ModelAttribute PurchaseForm purchaseForm) {
+		try {
+			proCommonService.updateProductPurchase(purchaseForm.getPurchase());
+			return "redirect:/purchases/viewPurchases";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "redirect:/purchases/editPurchase/" + purchaseForm.getPurchase().getPurchaseId();
+		}
 	}
 
 	@RequestMapping("/manufacture/viewManufactures")

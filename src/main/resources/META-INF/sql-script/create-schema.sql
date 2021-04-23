@@ -62,7 +62,22 @@ CREATE TABLE IF NOT EXISTS pro_products (product_id integer not null primary key
 
 -- Dumping structure for table sqlitesample.pro_purchases
 DROP TABLE IF EXISTS "pro_purchases";
-CREATE TABLE IF NOT EXISTS pro_purchases (purchase_id integer not null primary key autoincrement, amount_before_tax double, bill_number varchar not null, discount_amount double, gst_amount double, is_amount_settled varchar not null, is_consumed varchar not null, payable_amount double, product_id bigint not null, purchase_date date, purchase_notes varchar, purchase_quantity double, purchase_type_id bigint default 1 not null, version_id integer);
+CREATE TABLE IF NOT EXISTS pro_purchases (
+	purchase_id integer not null primary key autoincrement, 
+	purchase_type_id bigint default 1 not null, 
+	bill_number varchar not null, 
+	purchase_date date not null, 
+	product_id bigint not null, 
+	amount_before_tax double,
+	gst_amount double, 
+	discount_amount double, 
+	payable_amount double, 
+	purchase_notes varchar, 
+	purchase_quantity double, 
+	is_amount_settled varchar not null, 
+	is_consumed varchar not null, 
+	version_id integer
+);
 
 -- Data exporting was unselected.
 

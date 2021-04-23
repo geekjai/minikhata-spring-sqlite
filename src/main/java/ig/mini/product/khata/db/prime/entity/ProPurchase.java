@@ -1,10 +1,10 @@
 package ig.mini.product.khata.db.prime.entity;
 
 import java.io.Serializable;
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 import javax.persistence.Column;
@@ -13,6 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
@@ -68,7 +70,8 @@ public class ProPurchase extends FrameworkEntity implements Serializable {
 	@Column(name = "payable_amount")
 	private Double payableAmount;
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
 	@Column(name = "purchase_date")
 	private Date purchaseDate;
 
@@ -278,8 +281,7 @@ public class ProPurchase extends FrameworkEntity implements Serializable {
 					java.util.Date date;
 					try {
 						date = new SimpleDateFormat("yyyy-MM-dd").parse((String) obj);
-						Date sqlDate = new Date(date.getTime());
-						proPurchase.setPurchaseDate(sqlDate);
+						proPurchase.setPurchaseDate(date);
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}

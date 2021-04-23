@@ -1,20 +1,27 @@
 <!DOCTYPE HTML>
 <html xmlns:layout="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.w3.org/1999/xhtml"
 	layout:decorate="~{layouts/layout}">
 <body>
-	<div layout:fragment="content" class="container">
+	<div layout:fragment="content">
 
-		<div class="jumbotron">
-			<h1>Navbar example</h1>
-			<p>This example is a quick exercise to illustrate how the
-				default, static navbar and fixed to top navbar work. It includes the
-				responsive CSS and HTML, so it also adapts to your viewport and
-				device.</p>
-			<p>
-				<a class="btn btn-lg btn-primary" href="../../components/#navbar"
-					role="button">View navbar docs &raquo;</a>
-			</p>
+		<div class="jumbotron" style="padding-top: 10px; padding-bottom: 0px;">
+			<div class="row">
+				<div
+					th:replace="components/info-card :: simple(title='Total Customer', count=${ui.dashboardView.customerCount}, iconClass='fas fa-user', bgClass='bg-primary')"></div>
+				<div
+					th:replace="components/info-card :: simple(title='Total Product', count=${ui.dashboardView.productCount}, iconClass='fas fa-th-list', bgClass='bg-danger')"></div>
+				<div
+					th:replace="components/info-card :: simple(title='Sell Count', count=${ui.dashboardView.sellCount}, iconClass='fas fa-shopping-cart', bgClass='bg-success')"></div>
+				<div
+					th:replace="components/info-card :: simple(title='Available Product', count=${ui.dashboardView.availableProduct}, iconClass='fas fa-box', bgClass='bg-info')"></div>
+			</div>
 		</div>
+
+		<div th:replace="components/sales-chart :: sale"></div>
+	</div>
+	<div layout:fragment="script">
+		<script src="/plugins/chart.js/Chart.min.js"></script>
 	</div>
 </body>
 </html>

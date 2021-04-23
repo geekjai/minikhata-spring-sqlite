@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import ig.mini.product.khata.db.prime.entity.ProManufacture;
 import ig.mini.product.khata.db.prime.entity.ProPurchase;
+import ig.mini.product.khata.db.prime.view.DashboardView;
 import ig.mini.product.khata.db.prime.view.ProductPurchaseManufacture;
 import ig.mini.product.khata.db.prime.view.ProductPurchaseQuantity;
 import ig.mini.product.khata.db.prime.view.StockQuantity;
@@ -127,6 +128,22 @@ public class CoreRepositoryDaoImpl extends CoreRepositoryAbstractDao implements 
 		}
 
 		return stockMap;
+	}
+
+	@Override
+	public DashboardView populateDashboardView() throws Exception {
+
+		Query query = entityManager.createNamedQuery("populateDashboardView").unwrap(org.hibernate.query.Query.class)
+				.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+
+		@SuppressWarnings("unchecked")
+		List<Object> objResults = query.getResultList();
+		List<DashboardView> results = populateDashboardViewList(DashboardView.class, objResults);
+		if (results != null && results.size() == 1) {
+			return results.get(0);
+		}
+
+		return null;
 	}
 
 }

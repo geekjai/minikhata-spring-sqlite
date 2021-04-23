@@ -1,0 +1,32 @@
+<div th:fragment="simple" xmlns:th="http://www.w3.org/1999/xhtml"
+	class="col-12 col-sm-6 col-md-3">
+	<div class="info-box">
+		<span th:class="'info-box-icon ' + ${bgClass} + ' elevation-2'"><i
+			th:class="${iconClass}"></i></span>
+
+		<div class="info-box-content">
+			<span class="info-box-text" th:text="${title}" style="font-size: 18px;"></span>
+			<!-- --- -->
+			<span class="info-box-number" th:text="${count}"> </span>
+		</div>
+		<!-- /.info-box-content -->
+	</div>
+	<!-- /.info-box -->
+</div>
+
+<div th:fragment="advance" xmlns:th="http://www.w3.org/1999/xhtml"
+	class="col-lg-3 col-6">
+	<!-- small box -->
+	<div class="small-box bg-info">
+		<div class="inner">
+			<h3>150</h3>
+
+			<p>New Orders</p>
+		</div>
+		<div class="icon">
+			<i class="ion ion-bag"></i>
+		</div>
+		<a href="#" class="small-box-footer">More info <i
+			class="fas fa-arrow-circle-right"></i></a>
+	</div>
+</div>

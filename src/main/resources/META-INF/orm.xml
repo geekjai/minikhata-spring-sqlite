@@ -100,4 +100,16 @@
 			GROUP BY pur.purchase_id, pur.product_id
 		</query>
 	</named-native-query>
+	<named-native-query name="populateDashboardView">
+		<query>
+			SELECT
+				(SELECT COUNT(*) FROM pro_customers) customer_count,
+				(SELECT COUNT(*) FROM pro_products) product_count,
+				(SELECT COUNT(*) FROM pro_sells) sell_count,
+				(SELECT COUNT(*) FROM (
+				  SELECT * from pro_purchases pur, pro_products prod
+				  WHERE pur.product_id = prod.product_id AND pur.is_consumed = 'N'
+				  GROUP BY prod.product_id) ) available_product
+		</query>
+	</named-native-query>
 </entity-mappings>
