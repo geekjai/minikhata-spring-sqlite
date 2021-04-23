@@ -26,12 +26,40 @@ public class CoreRestController {
 	@Autowired
 	private DashboardService dashboardService;
 
-	@RequestMapping(value = "/api/dashboard/saleRecord")
+	@RequestMapping(value = "/api/dashboard/findPurManufCostData")
 	public ResponseEntity<Object> findPurManufCostData() {
 
 		SaleChartUI saleChartUI = null;
 		try {
 			saleChartUI = dashboardService.findPurManufCostData();
+			return new ResponseEntity<>(saleChartUI, HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@RequestMapping(value = "/api/dashboard/findPurSellCostData")
+	public ResponseEntity<Object> findPurSellCostData() {
+
+		SaleChartUI saleChartUI = null;
+		try {
+			saleChartUI = dashboardService.findPurSellCostData();
+			return new ResponseEntity<>(saleChartUI, HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@RequestMapping(value = "/api/dashboard/findManufSellCostData")
+	public ResponseEntity<Object> findManufSellCostData() {
+
+		SaleChartUI saleChartUI = null;
+		try {
+			saleChartUI = dashboardService.findManufSellCostData();
 			return new ResponseEntity<>(saleChartUI, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

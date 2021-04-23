@@ -30,4 +30,10 @@ public interface CoreRepositoryDao {
 
 	public List<SaleChartView> findPurManufCostData() throws Exception;
 
+	public List<SaleChartView> findPurSellCostData() throws Exception;
+
+	public List<SaleChartView> findManufSellCostData() throws Exception;
+	
+	public List<SaleChartView> findTotalCostSummary() throws Exception;
+	
 }

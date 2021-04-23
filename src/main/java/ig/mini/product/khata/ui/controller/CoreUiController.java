@@ -31,6 +31,7 @@ public class CoreUiController {
 		modelAndView.setViewName("index");
 		DashboardUI dashboardUI = new DashboardUI();
 		dashboardUI.setDashboardView(dashboardService.fetchDashboardView());
+		dashboardUI.setSaleChartView(dashboardService.findTotalCostSummary());
 		modelAndView.addObject("ui", dashboardUI);
 		return modelAndView;
 	}

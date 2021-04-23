@@ -160,4 +160,43 @@ public class CoreRepositoryDaoImpl extends CoreRepositoryAbstractDao implements 
 		return results;
 	}
 
+	@Override
+	public List<SaleChartView> findPurSellCostData() throws Exception {
+
+		Query query = entityManager.createNamedQuery("findPurSellCostData").unwrap(org.hibernate.query.Query.class)
+				.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+
+		@SuppressWarnings("unchecked")
+		List<Object> objResults = query.getResultList();
+		List<SaleChartView> results = populateSaleChartViewList(SaleChartView.class, objResults);
+
+		return results;
+	}
+
+	@Override
+	public List<SaleChartView> findManufSellCostData() throws Exception {
+
+		Query query = entityManager.createNamedQuery("findManufSellCostData").unwrap(org.hibernate.query.Query.class)
+				.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+
+		@SuppressWarnings("unchecked")
+		List<Object> objResults = query.getResultList();
+		List<SaleChartView> results = populateSaleChartViewList(SaleChartView.class, objResults);
+
+		return results;
+	}
+
+	@Override
+	public List<SaleChartView> findTotalCostSummary() throws Exception {
+
+		Query query = entityManager.createNamedQuery("findTotalCostSummary").unwrap(org.hibernate.query.Query.class)
+				.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+
+		@SuppressWarnings("unchecked")
+		List<Object> objResults = query.getResultList();
+		List<SaleChartView> results = populateSaleChartViewList(SaleChartView.class, objResults);
+
+		return results;
+	}
+
 }

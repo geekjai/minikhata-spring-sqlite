@@ -23,6 +23,15 @@ public class SaleChartView extends FrameworkEntity {
 	@TransientColumn(name = "manufacture_year")
 	private String manufactureYear;
 
+	@TransientColumn(name = "sell_cost")
+	private Double sellCost;
+
+	@TransientColumn(name = "sell_month")
+	private String sellMonth;
+
+	@TransientColumn(name = "sell_year")
+	private String sellYear;
+
 	public Double getPurchaseAmount() {
 		return purchaseAmount;
 	}
@@ -69,6 +78,30 @@ public class SaleChartView extends FrameworkEntity {
 
 	public void setManufactureYear(String manufactureYear) {
 		this.manufactureYear = manufactureYear;
+	}
+
+	public Double getSellCost() {
+		return sellCost;
+	}
+
+	public void setSellCost(Double sellCost) {
+		this.sellCost = sellCost;
+	}
+
+	public String getSellMonth() {
+		return sellMonth;
+	}
+
+	public void setSellMonth(String sellMonth) {
+		this.sellMonth = sellMonth;
+	}
+
+	public String getSellYear() {
+		return sellYear;
+	}
+
+	public void setSellYear(String sellYear) {
+		this.sellYear = sellYear;
 	}
 
 }

@@ -41,4 +41,54 @@ public class DashboardServiceImpl implements DashboardService {
 		return chartUI;
 	}
 
+	@Override
+	public SaleChartView findTotalCostSummary() throws Exception {
+
+		List<SaleChartView> list = coreRepositoryDao.findTotalCostSummary();
+		if (list != null && list.size() == 1) {
+
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	@Override
+	public SaleChartUI findPurSellCostData() throws Exception {
+
+		List<SaleChartView> list = coreRepositoryDao.findPurSellCostData();
+		SaleChartUI chartUI = null;
+		if (list != null && list.size() > 0) {
+			chartUI = new SaleChartUI(list.size());
+			int index = 0;
+			for (SaleChartView element : list) {
+				chartUI.addLabel(index, element.getPurchaseYear() + "-" + element.getPurchaseMonth());
+				chartUI.addPurchaseCost(index, element.getPurchaseAmount());
+				chartUI.addSellCost(index, element.getSellCost());
+				index += 1;
+			}
+		}
+
+		return chartUI;
+	}
+
+	@Override
+	public SaleChartUI findManufSellCostData() throws Exception {
+
+		List<SaleChartView> list = coreRepositoryDao.findManufSellCostData();
+		SaleChartUI chartUI = null;
+		if (list != null && list.size() > 0) {
+			chartUI = new SaleChartUI(list.size());
+			int index = 0;
+			for (SaleChartView element : list) {
+				chartUI.addLabel(index, element.getManufactureYear() + "-" + element.getManufactureMonth());
+				chartUI.addManufactureCost(index, element.getManufactureCost());
+				chartUI.addSellCost(index, element.getSellCost());
+				index += 1;
+			}
+		}
+
+		return chartUI;
+	}
+
 }

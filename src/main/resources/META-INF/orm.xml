@@ -6,8 +6,7 @@
                                      http://xmlns.jcp.org/xml/ns/persistence/orm_2_0.xsd"
 	version="2.1">
 
-	<named-native-query
-		name="ProPurchase.findAllWithProduct">
+	<named-native-query name="ProPurchase.findAllWithProduct">
 		<query>
 			SELECT pd.product_name, pu.*
 			FROM pro_purchases pu, pro_products pd WHERE 
@@ -116,11 +115,23 @@
 		<query>
 SELECT
 	dataset1.purchase_amount,
-	dataset1.purchase_month,
-	dataset1.purchase_year,
+	CASE WHEN
+		dataset1.purchase_month IS NULL
+		THEN dataset2.manufacture_month
+		ELSE dataset1.purchase_month END AS purchase_month,
+	CASE WHEN
+		dataset1.purchase_year IS NULL
+		THEN dataset2.manufacture_year
+		ELSE dataset1.purchase_year END AS purchase_year,
 	dataset2.manufacture_cost,
-	dataset2.manufacture_month,
-	dataset2.manufacture_year
+	CASE when
+		dataset2.manufacture_month IS NULL
+		THEN dataset1.purchase_month
+		ELSE dataset2.manufacture_month END AS manufacture_month,
+	CASE when
+		dataset2.manufacture_year IS null
+		THEN dataset1.purchase_year
+		ELSE dataset2.manufacture_year END AS manufacture_year
 FROM
 	(SELECT
 	sum(pur.payable_amount) purchase_amount,
@@ -133,18 +144,30 @@ FROM
 	strftime('%m', datetime(manuf.manufacture_date/1000, 'unixepoch')) AS manufacture_month,
 	strftime('%Y', datetime(manuf.manufacture_date/1000, 'unixepoch')) AS manufacture_year
 	FROM pro_manufactures manuf GROUP BY manufacture_year,manufacture_month) AS dataset2
-ON dataset1.purchase_month = dataset2.manufacture_month
-AND dataset1.purchase_year = dataset2.manufacture_year
+	ON dataset1.purchase_month = dataset2.manufacture_month
+	AND dataset1.purchase_year = dataset2.manufacture_year
 
 UNION
 
 SELECT
 	dataset1.purchase_amount,
-	dataset1.purchase_month,
-	dataset1.purchase_year,
+	CASE WHEN
+		dataset1.purchase_month IS NULL
+		THEN dataset2.manufacture_month
+		ELSE dataset1.purchase_month END AS purchase_month,
+	CASE WHEN
+		dataset1.purchase_year IS NULL
+		THEN dataset2.manufacture_year
+		ELSE dataset1.purchase_year END AS purchase_year,
 	dataset2.manufacture_cost,
-	dataset2.manufacture_month,
-	dataset2.manufacture_year
+	CASE when
+		dataset2.manufacture_month IS NULL
+		THEN dataset1.purchase_month
+		ELSE dataset2.manufacture_month END AS manufacture_month,
+	CASE when
+		dataset2.manufacture_year IS null
+		THEN dataset1.purchase_year
+		ELSE dataset2.manufacture_year END AS manufacture_year
 FROM
 	(SELECT
 	sum(manuf.manufacture_cost) manufacture_cost,
@@ -157,10 +180,177 @@ FROM
 	strftime('%m', datetime(pur.purchase_date/1000, 'unixepoch')) AS purchase_month,
 	strftime('%Y', datetime(pur.purchase_date/1000, 'unixepoch')) AS purchase_year
 	FROM pro_purchases pur GROUP BY purchase_year,purchase_month ) AS dataset1
-ON dataset1.purchase_month = dataset2.manufacture_month
-AND dataset1.purchase_year = dataset2.manufacture_year
+	ON dataset1.purchase_month = dataset2.manufacture_month
+	AND dataset1.purchase_year = dataset2.manufacture_year
 
-ORDER BY purchase_year asc, purchase_month asc
+ORDER BY purchase_year asc, purchase_month ASC
+		</query>
+	</named-native-query>
+		<named-native-query name="findPurSellCostData">
+		<query>
+SELECT
+	dataset1.purchase_amount,
+	CASE WHEN
+		dataset1.purchase_month IS NULL
+		THEN dataset2.sell_month
+		ELSE dataset1.purchase_month END AS purchase_month,
+	CASE WHEN
+		dataset1.purchase_year IS NULL
+		THEN dataset2.sell_year
+		ELSE dataset1.purchase_year END AS purchase_year,
+	dataset2.sell_cost,
+		CASE when
+		dataset2.sell_month IS NULL
+		THEN dataset1.purchase_month
+		ELSE dataset2.sell_month END AS sell_month,
+	CASE when
+		dataset2.sell_year IS null
+		THEN dataset1.purchase_year
+		ELSE dataset2.sell_year END AS sell_year
+FROM
+	(SELECT
+	sum(pur.payable_amount) purchase_amount,
+	strftime('%m', datetime(pur.purchase_date/1000, 'unixepoch')) AS purchase_month,
+	strftime('%Y', datetime(pur.purchase_date/1000, 'unixepoch')) AS purchase_year
+	FROM pro_purchases pur GROUP BY purchase_year,purchase_month) AS dataset1
+	LEFT OUTER JOIN
+	(SELECT
+	sum(sell.sell_cost) sell_cost,
+	strftime('%m', datetime(sell.sell_date/1000, 'unixepoch')) AS sell_month,
+	strftime('%Y', datetime(sell.sell_date/1000, 'unixepoch')) AS sell_year
+	FROM pro_sells sell GROUP BY sell_year,sell_month) AS dataset2
+	ON dataset1.purchase_month = dataset2.sell_month
+	AND dataset1.purchase_year = dataset2.sell_year
+
+UNION
+
+SELECT
+	dataset1.purchase_amount,
+	CASE WHEN
+		dataset1.purchase_month IS NULL
+		THEN dataset2.sell_month
+		ELSE dataset1.purchase_month END AS purchase_month,
+	CASE WHEN
+		dataset1.purchase_year IS NULL
+		THEN dataset2.sell_year
+		ELSE dataset1.purchase_year END AS purchase_year,
+	dataset2.sell_cost,
+	CASE when
+		dataset2.sell_month IS NULL
+		THEN dataset1.purchase_month
+		ELSE dataset2.sell_month END AS sell_month,
+	CASE when
+		dataset2.sell_year IS null
+		THEN dataset1.purchase_year
+		ELSE dataset2.sell_year END AS sell_year
+FROM
+	(SELECT
+	sum(sell.sell_cost) sell_cost,
+	strftime('%m', datetime(sell.sell_date/1000, 'unixepoch')) AS sell_month,
+	strftime('%Y', datetime(sell.sell_date/1000, 'unixepoch')) AS sell_year
+	FROM pro_sells sell GROUP BY sell_year,sell_month ) AS dataset2
+	LEFT OUTER JOIN
+	(SELECT
+	sum(pur.payable_amount) purchase_amount,
+	strftime('%m', datetime(pur.purchase_date/1000, 'unixepoch')) AS purchase_month,
+	strftime('%Y', datetime(pur.purchase_date/1000, 'unixepoch')) AS purchase_year
+	FROM pro_purchases pur GROUP BY purchase_year,purchase_month ) AS dataset1
+	ON dataset1.purchase_month = dataset2.sell_month
+	AND dataset1.purchase_year = dataset2.sell_year
+
+ORDER BY purchase_year asc, purchase_month ASC
+		</query>
+	</named-native-query>
+	<named-native-query name="findManufSellCostData">
+		<query>
+SELECT
+	dataset1.manufacture_cost,
+	CASE WHEN
+		dataset1.manufacture_month IS NULL
+		THEN dataset2.sell_month
+		ELSE dataset1.manufacture_month END AS manufacture_month,
+	CASE WHEN
+		dataset1.manufacture_year IS NULL
+		THEN dataset2.sell_year
+		ELSE dataset1.manufacture_year END AS manufacture_year,
+	dataset2.sell_cost,
+	CASE when
+		dataset2.sell_month IS NULL
+		THEN dataset1.manufacture_month
+		ELSE dataset2.sell_month END AS sell_month,
+	CASE when
+		dataset2.sell_year IS null
+		THEN dataset1.manufacture_year
+		ELSE dataset2.sell_year END AS sell_year
+FROM
+	(SELECT
+	sum(manuf.manufacture_cost) manufacture_cost,
+	strftime('%m', datetime(manuf.manufacture_date/1000, 'unixepoch')) AS manufacture_month,
+	strftime('%Y', datetime(manuf.manufacture_date/1000, 'unixepoch')) AS manufacture_year
+	FROM pro_manufactures manuf GROUP BY manufacture_year,manufacture_month) AS dataset1
+	LEFT OUTER JOIN
+	(SELECT
+	sum(sell.sell_cost) sell_cost,
+	strftime('%m', datetime(sell.sell_date/1000, 'unixepoch')) AS sell_month,
+	strftime('%Y', datetime(sell.sell_date/1000, 'unixepoch')) AS sell_year
+	FROM pro_sells sell GROUP BY sell_year,sell_month) AS dataset2
+	ON dataset1.manufacture_month = dataset2.sell_month
+	AND dataset1.manufacture_year = dataset2.sell_year
+
+UNION
+
+	SELECT
+	dataset1.manufacture_cost,
+	CASE WHEN
+		dataset1.manufacture_month IS NULL
+		THEN dataset2.sell_month
+		ELSE dataset1.manufacture_month END AS manufacture_month,
+	CASE WHEN
+		dataset1.manufacture_year IS NULL
+		THEN dataset2.sell_year
+		ELSE dataset1.manufacture_year END AS manufacture_year,
+	dataset2.sell_cost,
+	CASE when
+		dataset2.sell_month IS NULL
+		THEN dataset1.manufacture_month
+		ELSE dataset2.sell_month END AS sell_month,
+	CASE when
+		dataset2.sell_year IS null
+		THEN dataset1.manufacture_year
+		ELSE dataset2.sell_year END AS sell_year
+FROM
+	(SELECT
+	sum(sell.sell_cost) sell_cost,
+	strftime('%m', datetime(sell.sell_date/1000, 'unixepoch')) AS sell_month,
+	strftime('%Y', datetime(sell.sell_date/1000, 'unixepoch')) AS sell_year
+	FROM pro_sells sell GROUP BY sell_year,sell_month ) AS dataset2
+	LEFT OUTER JOIN
+	(SELECT
+	sum(manuf.manufacture_cost) manufacture_cost,
+	strftime('%m', datetime(manuf.manufacture_date/1000, 'unixepoch')) AS manufacture_month,
+	strftime('%Y', datetime(manuf.manufacture_date/1000, 'unixepoch')) AS manufacture_year
+	FROM pro_manufactures manuf GROUP BY manufacture_year,manufacture_month ) AS dataset1
+	ON dataset1.manufacture_month = dataset2.sell_month
+	AND dataset1.manufacture_year = dataset2.sell_year
+
+ORDER BY manufacture_year asc, manufacture_month ASC
+		</query>
+	</named-native-query>
+	<named-native-query name="findTotalCostSummary">
+		<query>
+SELECT *FROM 
+	(
+		SELECT coalesce(sum(pur.payable_amount), 0) AS purchase_amount 
+		FROM pro_purchases pur
+	),
+	(
+		SELECT coalesce(sum(manuf.manufacture_cost), 0) AS manufacture_cost
+		FROM pro_manufactures AS manuf
+	),
+	(
+		SELECT coalesce(sum(sell.sell_cost), 0) AS sell_cost
+		FROM pro_sells AS sell
+	)
 		</query>
 	</named-native-query>
 </entity-mappings>

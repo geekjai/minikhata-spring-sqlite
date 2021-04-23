@@ -16,11 +16,11 @@
 							<i class="fas fa-wrench"></i>
 						</button>
 						<div class="dropdown-menu dropdown-menu-right" role="menu">
-							<a href="#" class="dropdown-item">Action</a> <a href="#"
-								class="dropdown-item">Another action</a> <a href="#"
-								class="dropdown-item">Something else here</a> <a
-								class="dropdown-divider"></a> <a href="#" class="dropdown-item">Separated
-								link</a>
+							<a class="dropdown-item" id="purManufChart" style="cursor: pointer;">Purchase / Manufacture Report</a> 
+							<!--  -->
+							<a class="dropdown-item" id="purSellChart" style="cursor: pointer;">Purchase / Sell Report</a>
+							<!--  -->
+							<a class="dropdown-item" id="manufSellChart" style="cursor: pointer;">Manufacture / Sell Report</a> 
 						</div>
 					</div>
 				</div>
@@ -89,7 +89,7 @@
 						<div class="description-block border-right">
 							<!-- <span class="description-percentage text-success"><i
 								class="fas fa-caret-up"></i> 17%</span> -->
-							<h5 class="description-header" id="totalPurchaseCost"></h5>
+							<h5 class="description-header" id="totalPurchaseCost" th:text="'Rs ' + ${ui.saleChartView.purchaseAmount}"></h5>
 							<span class="description-text">TOTAL PURCHASE</span>
 						</div>
 						<!-- /.description-block -->
@@ -99,7 +99,7 @@
 						<div class="description-block border-right">
 							<!-- <span class="description-percentage text-warning"><i
 								class="fas fa-caret-left"></i> 0%</span> -->
-							<h5 class="description-header" id="totalManufactureCost"></h5>
+							<h5 class="description-header" id="totalManufactureCost" th:text="'Rs ' + ${ui.saleChartView.manufactureCost}"></h5>
 							<span class="description-text">TOTAL MANUFACTURE</span>
 						</div>
 						<!-- /.description-block -->
@@ -107,10 +107,10 @@
 					<!-- /.col -->
 					<div class="col-sm-3 col-6">
 						<div class="description-block border-right">
-							<span class="description-percentage text-success"><i
-								class="fas fa-caret-up"></i> 20%</span>
-							<h5 class="description-header">$24,813.53</h5>
-							<span class="description-text">TOTAL PROFIT</span>
+							<!-- <span class="description-percentage text-success"><i
+								class="fas fa-caret-up"></i> 20%</span> -->
+							<h5 class="description-header" th:text="'Rs ' + ${ui.saleChartView.sellCost}"></h5>
+							<span class="description-text">TOTAL Sell</span>
 						</div>
 						<!-- /.description-block -->
 					</div>
@@ -141,7 +141,7 @@ $(document).ready(function() {
 	  labels  : [],
 	  datasets: [
 	    {
-	      label               : 'Purchase',
+	      label               : '',
 	      backgroundColor     : 'rgba(60,141,188,0.9)',
 	      borderColor         : 'rgba(60,141,188,0.8)',
 	      pointRadius          : false,
@@ -152,7 +152,7 @@ $(document).ready(function() {
 	      data                : []
 	    },
 	    {
-	      label               : 'Manufacture',
+	      label               : '',
 	      backgroundColor     : 'rgba(210, 214, 222, 1)',
 	      borderColor         : 'rgba(210, 214, 222, 1)',
 	      pointRadius         : false,
@@ -190,22 +190,70 @@ $(document).ready(function() {
 	    options: salesChartOptions
 	  }
 	)
-
-	ajax_chart(salesChart);
+	
+	$("#purManufChart").click(function() {
+		findPurManufCostData(salesChart);
+	});
+	$("#purSellChart").click(function() {
+		findPurSellCostData(salesChart);
+	});
+	$("#manufSellChart").click(function() {
+		findManufSellCostData(salesChart);
+	});
+	
+	findPurManufCostData(salesChart);
 	// function to update our chart
-	function ajax_chart(chart) {
+	function findPurManufCostData(chart) {
 	    $.ajax({
 			type: 'get',
-			url: '/api/dashboard/saleRecord',
+			url: '/api/dashboard/findPurManufCostData',
 			contentType: "application/json; charset=utf-8",
 			traditional: true,
 			success: function(response) {
 				chart.data.labels = response.labels;
+				chart.data.datasets[0].label='Purchase';
 		        chart.data.datasets[0].data = response.purchaseCosts; 
+		        chart.data.datasets[1].label='Manufacture';
 		        chart.data.datasets[1].data = response.manufactureCosts;
 		        chart.update();
-		        $("#totalPurchaseCost").text('Rs ' + response.totalPurchaseCost);
-		        $("#totalManufactureCost").text('Rs ' + response.totalManufactureCost);
+		        $("#reportTitle").text('Report: ' + response.labels[0] + ' - ' + response.labels[response.labels.length-1]);
+		        //
+			}
+		});
+	}
+	
+	function findPurSellCostData(chart) {
+	    $.ajax({
+			type: 'get',
+			url: '/api/dashboard/findPurSellCostData',
+			contentType: "application/json; charset=utf-8",
+			traditional: true,
+			success: function(response) {
+				chart.data.labels = response.labels;
+				chart.data.datasets[0].label='Purchase';
+		        chart.data.datasets[0].data = response.purchaseCosts; 
+		        chart.data.datasets[1].label='Sell';
+		        chart.data.datasets[1].data = response.sellCosts;
+		        chart.update();
+		        $("#reportTitle").text('Report: ' + response.labels[0] + ' - ' + response.labels[response.labels.length-1]);
+		        //
+			}
+		});
+	}
+	
+	function findManufSellCostData(chart) {
+	    $.ajax({
+			type: 'get',
+			url: '/api/dashboard/findManufSellCostData',
+			contentType: "application/json; charset=utf-8",
+			traditional: true,
+			success: function(response) {
+				chart.data.labels = response.labels;
+				chart.data.datasets[0].label='Manufacture';
+		        chart.data.datasets[0].data = response.manufactureCosts; 
+		        chart.data.datasets[1].label='Sell';
+		        chart.data.datasets[1].data = response.sellCosts;
+		        chart.update();
 		        $("#reportTitle").text('Report: ' + response.labels[0] + ' - ' + response.labels[response.labels.length-1]);
 		        //
 			}
