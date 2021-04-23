@@ -3,7 +3,7 @@
 	<div class="col-md-12">
 		<div class="card">
 			<div class="card-header">
-				<h5 class="card-title">Monthly Recap Report</h5>
+				<h5 class="card-title">Statistics Report</h5>
 
 				<div class="card-tools">
 					<button type="button" class="btn btn-tool"
@@ -30,7 +30,7 @@
 				<div class="row">
 					<div class="col-md-8">
 						<p class="text-center">
-							<strong>Sales: 1 Jan, 2014 - 30 Jul, 2014</strong>
+							<strong id="reportTitle"></strong>
 						</p>
 
 						<div class="chart">
@@ -87,20 +87,20 @@
 				<div class="row">
 					<div class="col-sm-3 col-6">
 						<div class="description-block border-right">
-							<span class="description-percentage text-success"><i
-								class="fas fa-caret-up"></i> 17%</span>
-							<h5 class="description-header">$35,210.43</h5>
-							<span class="description-text">TOTAL REVENUE</span>
+							<!-- <span class="description-percentage text-success"><i
+								class="fas fa-caret-up"></i> 17%</span> -->
+							<h5 class="description-header" id="totalPurchaseCost"></h5>
+							<span class="description-text">TOTAL PURCHASE</span>
 						</div>
 						<!-- /.description-block -->
 					</div>
 					<!-- /.col -->
 					<div class="col-sm-3 col-6">
 						<div class="description-block border-right">
-							<span class="description-percentage text-warning"><i
-								class="fas fa-caret-left"></i> 0%</span>
-							<h5 class="description-header">$10,390.90</h5>
-							<span class="description-text">TOTAL COST</span>
+							<!-- <span class="description-percentage text-warning"><i
+								class="fas fa-caret-left"></i> 0%</span> -->
+							<h5 class="description-header" id="totalManufactureCost"></h5>
+							<span class="description-text">TOTAL MANUFACTURE</span>
 						</div>
 						<!-- /.description-block -->
 					</div>
@@ -185,7 +185,7 @@ $(document).ready(function() {
 	}
 	// This will get the first returned node in the jQuery collection.
 	var salesChart = new Chart(salesChartCanvas, { 
-	    type: 'line', 
+	    type: 'bar', 
 	    data: salesChartData, 
 	    options: salesChartOptions
 	  }
@@ -204,6 +204,10 @@ $(document).ready(function() {
 		        chart.data.datasets[0].data = response.purchaseCosts; 
 		        chart.data.datasets[1].data = response.manufactureCosts;
 		        chart.update();
+		        $("#totalPurchaseCost").text('Rs ' + response.totalPurchaseCost);
+		        $("#totalManufactureCost").text('Rs ' + response.totalManufactureCost);
+		        $("#reportTitle").text('Report: ' + response.labels[0] + ' - ' + response.labels[response.labels.length-1]);
+		        //
 			}
 		});
 	}

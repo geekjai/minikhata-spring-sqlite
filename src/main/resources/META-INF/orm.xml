@@ -134,6 +134,7 @@ FROM
 	strftime('%Y', datetime(manuf.manufacture_date/1000, 'unixepoch')) AS manufacture_year
 	FROM pro_manufactures manuf GROUP BY manufacture_year,manufacture_month) AS dataset2
 ON dataset1.purchase_month = dataset2.manufacture_month
+AND dataset1.purchase_year = dataset2.manufacture_year
 
 UNION
 
@@ -157,6 +158,9 @@ FROM
 	strftime('%Y', datetime(pur.purchase_date/1000, 'unixepoch')) AS purchase_year
 	FROM pro_purchases pur GROUP BY purchase_year,purchase_month ) AS dataset1
 ON dataset1.purchase_month = dataset2.manufacture_month
+AND dataset1.purchase_year = dataset2.manufacture_year
+
+ORDER BY purchase_year asc, purchase_month asc
 		</query>
 	</named-native-query>
 </entity-mappings>

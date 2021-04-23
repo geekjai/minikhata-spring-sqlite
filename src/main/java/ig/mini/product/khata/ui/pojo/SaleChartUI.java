@@ -6,11 +6,16 @@ public class SaleChartUI {
 	private Double[] purchaseCosts;
 	private Double[] manufactureCosts;
 
+	private Double totalPurchaseCost;
+	private Double totalManufactureCost;
+
 	public SaleChartUI(int size) {
 
 		labels = new String[size];
 		purchaseCosts = new Double[size];
 		manufactureCosts = new Double[size];
+		this.totalPurchaseCost = 0.0;
+		this.totalManufactureCost = 0.0;
 	}
 
 	public String[] getLabels() {
@@ -27,6 +32,8 @@ public class SaleChartUI {
 
 	public void addPurchaseCost(int index, Double purchaseCost) {
 		purchaseCost = purchaseCost == null ? 0.0 : purchaseCost;
+
+		this.totalPurchaseCost += purchaseCost;
 		this.purchaseCosts[index] = purchaseCost;
 	}
 
@@ -36,7 +43,16 @@ public class SaleChartUI {
 
 	public void addManufactureCost(int index, Double manufactureCost) {
 		manufactureCost = manufactureCost == null ? 0.0 : manufactureCost;
+		this.totalManufactureCost += manufactureCost;
 		this.manufactureCosts[index] = manufactureCost;
+	}
+
+	public Double getTotalPurchaseCost() {
+		return totalPurchaseCost;
+	}
+
+	public Double getTotalManufactureCost() {
+		return totalManufactureCost;
 	}
 
 }
