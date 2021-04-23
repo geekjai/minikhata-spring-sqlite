@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.Column;
+import javax.persistence.Transient;
 
 import ig.central.library.annotation.UpdateCacheEntityColumn;
 import ig.central.library.constant.WhoColumnDataConstant;
@@ -18,12 +19,23 @@ public class FrameworkEntity {
 	@EntityState
 	private String entityState;
 
+	@Transient
+	private Boolean isSeedData;
+
 	public final String getEntityState() {
 		return entityState;
 	}
 
 	public final void setEntityState(String entityState) {
 		this.entityState = entityState;
+	}
+
+	public Boolean getIsSeedData() {
+		return isSeedData;
+	}
+
+	public void setIsSeedData(Boolean isSeedData) {
+		this.isSeedData = isSeedData;
 	}
 
 	/**
@@ -199,7 +211,9 @@ public class FrameworkEntity {
 		if (entity == null) {
 			return;
 		}
-
+		if (entity.getIsSeedData() == null) {
+			entity.setIsSeedData(false);
+		}
 		// Using [javax.persistence.Column] JPA and Reflection
 		for (Field field : entity.getClass().getDeclaredFields()) {
 			Column column = field.getAnnotation(Column.class);

@@ -99,6 +99,7 @@ CREATE TABLE IF NOT EXISTS pro_sells (
 	sell_id integer not null primary key autoincrement, 
 	customer_id bigint not null,   
 	sell_date date, 
+	sell_cost double not null,
 	sell_notes varchar, 
 	is_amount_settled varchar(3) default 'N' not null,
 	is_delete_allowed varchar(3) default 'Y' not null,

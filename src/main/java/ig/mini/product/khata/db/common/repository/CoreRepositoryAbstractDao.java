@@ -11,6 +11,7 @@ import ig.mini.product.khata.db.prime.entity.ProPurchaseManufactureMap;
 import ig.mini.product.khata.db.prime.view.DashboardView;
 import ig.mini.product.khata.db.prime.view.ProductPurchaseManufacture;
 import ig.mini.product.khata.db.prime.view.ProductPurchaseQuantity;
+import ig.mini.product.khata.db.prime.view.SaleChartView;
 import ig.mini.product.khata.db.prime.view.StockQuantity;
 
 @SuppressWarnings("deprecation")
@@ -144,6 +145,25 @@ public abstract class CoreRepositoryAbstractDao {
 
 				Map row = (Map) object;
 				DashboardView entity = (DashboardView) entityClass.newInstance();
+				FrameworkEntity.setFrameworkEntityData(entity, row);
+				entityList.add(entity);
+			}
+		}
+
+		return entityList;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected final List<SaleChartView> populateSaleChartViewList(Class<SaleChartView> entityClass, List<Object> data)
+			throws InstantiationException, IllegalAccessException {
+
+		List<SaleChartView> entityList = null;
+		if (data != null) {
+			entityList = new ArrayList<>();
+			for (Object object : data) {
+
+				Map row = (Map) object;
+				SaleChartView entity = (SaleChartView) entityClass.newInstance();
 				FrameworkEntity.setFrameworkEntityData(entity, row);
 				entityList.add(entity);
 			}

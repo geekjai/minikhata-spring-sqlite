@@ -13,14 +13,32 @@ import org.springframework.web.bind.annotation.RestController;
 import ig.mini.product.khata.db.prime.entity.ProManufacture;
 import ig.mini.product.khata.db.prime.entity.ProPurchase;
 import ig.mini.product.khata.db.prime.entity.ProSell;
+import ig.mini.product.khata.service.common.DashboardService;
 import ig.mini.product.khata.service.common.ProCommonService;
 import ig.mini.product.khata.ui.pojo.CommonResponseEntity;
+import ig.mini.product.khata.ui.pojo.SaleChartUI;
 
 @RestController
 public class CoreRestController {
 
 	@Autowired
 	private ProCommonService proCommonService;
+	@Autowired
+	private DashboardService dashboardService;
+
+	@RequestMapping(value = "/api/dashboard/saleRecord")
+	public ResponseEntity<Object> findPurManufCostData() {
+
+		SaleChartUI saleChartUI = null;
+		try {
+			saleChartUI = dashboardService.findPurManufCostData();
+			return new ResponseEntity<>(saleChartUI, HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 
 	@RequestMapping(value = "/api/purchases/purchaseRecords")
 	public ResponseEntity<Object> purchaseRecords() {

@@ -17,6 +17,7 @@ import ig.mini.product.khata.db.prime.entity.ProPurchase;
 import ig.mini.product.khata.db.prime.view.DashboardView;
 import ig.mini.product.khata.db.prime.view.ProductPurchaseManufacture;
 import ig.mini.product.khata.db.prime.view.ProductPurchaseQuantity;
+import ig.mini.product.khata.db.prime.view.SaleChartView;
 import ig.mini.product.khata.db.prime.view.StockQuantity;
 
 @Repository("coreRepositoryDao")
@@ -144,6 +145,19 @@ public class CoreRepositoryDaoImpl extends CoreRepositoryAbstractDao implements 
 		}
 
 		return null;
+	}
+
+	@Override
+	public List<SaleChartView> findPurManufCostData() throws Exception {
+
+		Query query = entityManager.createNamedQuery("findPurManufCostData").unwrap(org.hibernate.query.Query.class)
+				.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+
+		@SuppressWarnings("unchecked")
+		List<Object> objResults = query.getResultList();
+		List<SaleChartView> results = populateSaleChartViewList(SaleChartView.class, objResults);
+
+		return results;
 	}
 
 }

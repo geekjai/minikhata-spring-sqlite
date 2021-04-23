@@ -493,10 +493,22 @@ public class ProCommonServiceImpl implements ProCommonService {
 		if (sell == null) {
 			return;
 		}
-		if (sell.getIsSeedData() == null) {
-			sell.setIsSeedData(false);
+
+		Double totalPayableAmount = 0.0;
+		for (ProSellProductMap element : sellProductMaps) {
+			if (element.getProductId() != null && element.getSellQuantity() != null && element.getSellQuantity() > 0) {
+				Double amountBeforeTax = element.getAmountBeforeTax() != null ? element.getAmountBeforeTax() : 0.0;
+				Double gstAmount = element.getGstAmount() != null ? element.getGstAmount() : 0.0;
+				Double discountAmount = element.getDiscountAmount() != null ? element.getDiscountAmount() : 0.0;
+
+				Double payableAmount = (amountBeforeTax + gstAmount) - discountAmount;
+				totalPayableAmount += payableAmount;
+				element.setPayableAmount(payableAmount);
+			}
 		}
+
 		FrameworkEntity.createWhoColumnData(sell, sell.getIsSeedData());
+		sell.setSellCost(totalPayableAmount);
 		sell = sellRepository.save(sell);
 
 		// 2. Create entry inside ProManufactureProductMap...product-manufacture mapping

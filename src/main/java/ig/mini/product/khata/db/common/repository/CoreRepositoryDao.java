@@ -8,6 +8,7 @@ import ig.mini.product.khata.db.prime.entity.ProPurchase;
 import ig.mini.product.khata.db.prime.view.DashboardView;
 import ig.mini.product.khata.db.prime.view.ProductPurchaseManufacture;
 import ig.mini.product.khata.db.prime.view.ProductPurchaseQuantity;
+import ig.mini.product.khata.db.prime.view.SaleChartView;
 import ig.mini.product.khata.db.prime.view.StockQuantity;
 
 public interface CoreRepositoryDao {
@@ -26,5 +27,7 @@ public interface CoreRepositoryDao {
 	public Map<Long, List<StockQuantity>> findStockQuantityProductIdMap(List<Long> bindProducts) throws Exception;
 
 	public DashboardView populateDashboardView() throws Exception;
+
+	public List<SaleChartView> findPurManufCostData() throws Exception;
 
 }

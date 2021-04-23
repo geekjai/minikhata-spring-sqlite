@@ -112,4 +112,51 @@
 				  GROUP BY prod.product_id) ) available_product
 		</query>
 	</named-native-query>
+	<named-native-query name="findPurManufCostData">
+		<query>
+SELECT
+	dataset1.purchase_amount,
+	dataset1.purchase_month,
+	dataset1.purchase_year,
+	dataset2.manufacture_cost,
+	dataset2.manufacture_month,
+	dataset2.manufacture_year
+FROM
+	(SELECT
+	sum(pur.payable_amount) purchase_amount,
+	strftime('%m', datetime(pur.purchase_date/1000, 'unixepoch')) AS purchase_month,
+	strftime('%Y', datetime(pur.purchase_date/1000, 'unixepoch')) AS purchase_year
+	FROM pro_purchases pur GROUP BY purchase_year,purchase_month) AS dataset1
+	LEFT OUTER JOIN
+	(SELECT
+	sum(manuf.manufacture_cost) manufacture_cost,
+	strftime('%m', datetime(manuf.manufacture_date/1000, 'unixepoch')) AS manufacture_month,
+	strftime('%Y', datetime(manuf.manufacture_date/1000, 'unixepoch')) AS manufacture_year
+	FROM pro_manufactures manuf GROUP BY manufacture_year,manufacture_month) AS dataset2
+ON dataset1.purchase_month = dataset2.manufacture_month
+
+UNION
+
+SELECT
+	dataset1.purchase_amount,
+	dataset1.purchase_month,
+	dataset1.purchase_year,
+	dataset2.manufacture_cost,
+	dataset2.manufacture_month,
+	dataset2.manufacture_year
+FROM
+	(SELECT
+	sum(manuf.manufacture_cost) manufacture_cost,
+	strftime('%m', datetime(manuf.manufacture_date/1000, 'unixepoch')) AS manufacture_month,
+	strftime('%Y', datetime(manuf.manufacture_date/1000, 'unixepoch')) AS manufacture_year
+	FROM pro_manufactures manuf GROUP BY manufacture_year,manufacture_month ) AS dataset2
+	LEFT OUTER JOIN
+	(SELECT
+	sum(pur.payable_amount) purchase_amount,
+	strftime('%m', datetime(pur.purchase_date/1000, 'unixepoch')) AS purchase_month,
+	strftime('%Y', datetime(pur.purchase_date/1000, 'unixepoch')) AS purchase_year
+	FROM pro_purchases pur GROUP BY purchase_year,purchase_month ) AS dataset1
+ON dataset1.purchase_month = dataset2.manufacture_month
+		</query>
+	</named-native-query>
 </entity-mappings>

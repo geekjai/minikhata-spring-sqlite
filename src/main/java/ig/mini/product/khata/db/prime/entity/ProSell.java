@@ -37,6 +37,10 @@ public class ProSell extends FrameworkEntity implements Serializable {
 	@Column(name = "sell_date")
 	private Date sellDate;
 
+	@UpdateCacheEntityColumn
+	@Column(name = "sell_cost")
+	private Double sellCost;
+
 	@Column(name = "sell_notes")
 	private String sellNotes;
 
@@ -74,9 +78,6 @@ public class ProSell extends FrameworkEntity implements Serializable {
 	@TransientColumn(name = "sell_date")
 	private java.util.Date sellDateUi;
 
-	@Transient
-	private Boolean isSeedData;
-
 	public Long getSellId() {
 		return sellId;
 	}
@@ -99,6 +100,14 @@ public class ProSell extends FrameworkEntity implements Serializable {
 
 	public void setSellDate(Date sellDate) {
 		this.sellDate = sellDate;
+	}
+
+	public Double getSellCost() {
+		return sellCost;
+	}
+
+	public void setSellCost(Double sellCost) {
+		this.sellCost = sellCost;
 	}
 
 	public String getSellNotes() {
@@ -177,14 +186,6 @@ public class ProSell extends FrameworkEntity implements Serializable {
 
 	public void setSellDateUi(java.util.Date sellDateUi) {
 		this.sellDateUi = sellDateUi;
-	}
-
-	public Boolean getIsSeedData() {
-		return isSeedData;
-	}
-
-	public void setIsSeedData(Boolean isSeedData) {
-		this.isSeedData = isSeedData;
 	}
 
 	public void processSellDate() {
