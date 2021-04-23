@@ -340,6 +340,10 @@ ORDER BY manufacture_year asc, manufacture_month ASC
 		<query>
 SELECT *FROM 
 	(
+		SELECT coalesce(sum(pur.payable_amount), 0) AS actual_purchase_amount 
+		FROM pro_purchases pur WHERE pur.purchase_type_id = 1
+	),
+	(
 		SELECT coalesce(sum(pur.payable_amount), 0) AS purchase_amount 
 		FROM pro_purchases pur
 	),

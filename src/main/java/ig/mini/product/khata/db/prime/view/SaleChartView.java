@@ -5,6 +5,10 @@ import ig.central.library.TransientColumn;
 
 public class SaleChartView extends FrameworkEntity {
 
+	// purchase_type_id = 1
+	@TransientColumn(name = "actual_purchase_amount")
+	private Double actualPurchaseAmount;
+
 	@TransientColumn(name = "purchase_amount")
 	private Double purchaseAmount;
 
@@ -31,6 +35,14 @@ public class SaleChartView extends FrameworkEntity {
 
 	@TransientColumn(name = "sell_year")
 	private String sellYear;
+
+	public Double getActualPurchaseAmount() {
+		return actualPurchaseAmount;
+	}
+
+	public void setActualPurchaseAmount(Double actualPurchaseAmount) {
+		this.actualPurchaseAmount = actualPurchaseAmount;
+	}
 
 	public Double getPurchaseAmount() {
 		return purchaseAmount;

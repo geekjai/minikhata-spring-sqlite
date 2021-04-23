@@ -1,9 +1,9 @@
-<div class="row" th:fragment="sale"
+<div class="row" th:fragment="finance"
 	xmlns:th="http://www.w3.org/1999/xhtml">
 	<div class="col-md-12">
 		<div class="card">
 			<div class="card-header">
-				<h5 class="card-title">Statistics Report</h5>
+				<h5 class="card-title">Finance Report</h5>
 
 				<div class="card-tools">
 					<button type="button" class="btn btn-tool"
@@ -42,41 +42,9 @@
 					<!-- /.col -->
 					<div class="col-md-4">
 						<p class="text-center">
-							<strong>Goal Completion</strong>
+							<strong>Comparison</strong>
 						</p>
-
-						<div class="progress-group">
-							Add Products to Cart <span class="float-right"><b>160</b>/200</span>
-							<div class="progress progress-sm">
-								<div class="progress-bar bg-primary" style="width: 80%"></div>
-							</div>
-						</div>
-						<!-- /.progress-group -->
-
-						<div class="progress-group">
-							Complete Purchase <span class="float-right"><b>310</b>/400</span>
-							<div class="progress progress-sm">
-								<div class="progress-bar bg-danger" style="width: 75%"></div>
-							</div>
-						</div>
-
-						<!-- /.progress-group -->
-						<div class="progress-group">
-							<span class="progress-text">Visit Premium Page</span> <span
-								class="float-right"><b>480</b>/800</span>
-							<div class="progress progress-sm">
-								<div class="progress-bar bg-success" style="width: 60%"></div>
-							</div>
-						</div>
-
-						<!-- /.progress-group -->
-						<div class="progress-group">
-							Send Inquiries <span class="float-right"><b>250</b>/500</span>
-							<div class="progress progress-sm">
-								<div class="progress-bar bg-warning" style="width: 50%"></div>
-							</div>
-						</div>
-						<!-- /.progress-group -->
+						<canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
 					</div>
 					<!-- /.col -->
 				</div>
@@ -89,8 +57,8 @@
 						<div class="description-block border-right">
 							<!-- <span class="description-percentage text-success"><i
 								class="fas fa-caret-up"></i> 17%</span> -->
-							<h5 class="description-header" id="totalPurchaseCost" th:text="'Rs ' + ${ui.saleChartView.purchaseAmount}"></h5>
-							<span class="description-text">TOTAL PURCHASE</span>
+							<h5 class="description-header" th:text="'Rs ' + ${ui.saleChartView.actualPurchaseAmount}"></h5>
+							<span class="description-text">ACTUAL PURCHASE</span>
 						</div>
 						<!-- /.description-block -->
 					</div>
@@ -117,10 +85,10 @@
 					<!-- /.col -->
 					<div class="col-sm-3 col-6">
 						<div class="description-block">
-							<span class="description-percentage text-danger"><i
-								class="fas fa-caret-down"></i> 18%</span>
-							<h5 class="description-header">1200</h5>
-							<span class="description-text">GOAL COMPLETIONS</span>
+							<!-- <span class="description-percentage text-danger"><i
+								class="fas fa-caret-down"></i> 18%</span> -->
+							<h5 class="description-header" th:text="'Rs ' + ${ui.saleChartView.purchaseAmount}"></h5>
+							<span class="description-text">TOTAL PURCHASE</span>
 						</div>
 						<!-- /.description-block -->
 					</div>
@@ -259,6 +227,43 @@ $(document).ready(function() {
 			}
 		});
 	}
+	
+	 //-------------
+    //- PIE CHART -
+    //-------------
+    // Get context with jQuery - using jQuery's .get() method.
+    var servData = [];
+    servData.push(/*[[${ui.saleChartView.actualPurchaseAmount}]]*/ );
+    servData.push(/*[[${ui.saleChartView.manufactureCost}]]*/ );
+    servData.push(/*[[${ui.saleChartView.sellCost}]]*/ );
+    servData.push(/*[[${ui.saleChartView.purchaseAmount}]]*/ );
+    var donutData        = {
+      labels: [
+          'Actual Purchase', 
+          'Manufacture Cost',
+          'Sell Cost', 
+          'Overall Purchase'
+      ],
+      datasets: [
+        {
+          data: servData,
+          backgroundColor : ['#f56954', '#f39c12', '#00a65a', '#3c8dbc'],
+        }
+      ]
+    }
+    var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+    var pieData        = donutData;
+    var pieOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    var pieChart = new Chart(pieChartCanvas, {
+      type: 'pie',
+      data: pieData,
+      options: pieOptions      
+    })
 	
 });
 		/*]]>*/
