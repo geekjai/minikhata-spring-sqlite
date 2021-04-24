@@ -17,6 +17,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.Version;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -44,9 +46,12 @@ public class ProPurchase extends FrameworkEntity implements Serializable {
 	@Column(name = "product_id", nullable = false, updatable = false)
 	private Long productId;
 
+	@NotEmpty(message = "Bill Number can't be empty")
+	@NotNull(message = "Bill Number can't be null!")
 	@Column(name = "bill_number", nullable = false)
 	private String billNumber;
 
+	@NotNull(message = "Purchase Quantity can't be null!")
 	@UpdateCacheEntityColumn
 	@Column(name = "purchase_quantity")
 	private Double purchaseQuantity;
@@ -70,6 +75,7 @@ public class ProPurchase extends FrameworkEntity implements Serializable {
 	@Column(name = "payable_amount")
 	private Double payableAmount;
 
+	@NotNull(message = "Purchase Date can't be null!")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	@Column(name = "purchase_date")

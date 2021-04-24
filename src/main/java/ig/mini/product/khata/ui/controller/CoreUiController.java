@@ -1,5 +1,10 @@
 package ig.mini.product.khata.ui.controller;
 
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -44,27 +49,52 @@ public class CoreUiController {
 		return modelAndView;
 	}
 
-	@RequestMapping("/purchases/createPurchase")
-	public ModelAndView createPurchase() {
+	private ModelAndView createPurchaseModelAndView() {
+
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("purchase");
 		modelAndView.addObject("fragment", "createPurchase");
 		modelAndView.addObject("formTitle", "Create Purchase");
 		modelAndView.addObject("products", proCommonService.findAllProduct());
-		modelAndView.addObject("form", new PurchaseForm());
 		modelAndView.addObject("isPurchaseQuantityUpdateable", true);
 		return modelAndView;
 	}
 
+	@RequestMapping("/purchases/createPurchase")
+	public ModelAndView createPurchase() {
+		ModelAndView modelAndView = createPurchaseModelAndView();
+		modelAndView.addObject("form", new PurchaseForm());
+		return modelAndView;
+	}
+
 	@RequestMapping(value = "/purchase/createPurchase/submit", method = RequestMethod.POST)
-	public String createPurchaseSubmit(@ModelAttribute PurchaseForm purchaseForm) {
+	public ModelAndView createPurchaseSubmit(@ModelAttribute PurchaseForm purchaseForm) {
 		try {
 			proCommonService.createProductPurchase(purchaseForm.getPurchase());
-			return "redirect:/purchases/viewPurchases";
+			return new ModelAndView("redirect:/purchases/viewPurchases");
+		} catch (ConstraintViolationException e) {
+			Set<ConstraintViolation<?>> constraintViolations = e.getConstraintViolations();
+			StringBuilder builder = new StringBuilder();
+			for (ConstraintViolation<?> violation : constraintViolations) {
+
+				/*
+				 * builder.append(String.format("%s value '%s' %s", violation.getPropertyPath(),
+				 * violation.getInvalidValue(), violation.getMessage()));
+				 */
+				builder.append(String.format("%s", violation.getMessage()));
+				builder.append("<br/>");
+			}
+
+			ModelAndView modelAndView = createPurchaseModelAndView();
+			modelAndView.addObject("form", purchaseForm);
+			modelAndView.addObject("error", builder.toString());
+
+			return modelAndView;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "redirect:/purchases/createPurchase";
+			ModelAndView modelAndView = createPurchaseModelAndView();
+			modelAndView.addObject("form", purchaseForm);
+			modelAndView.addObject("error", e.getMessage());
+			return modelAndView;
 		}
 	}
 
