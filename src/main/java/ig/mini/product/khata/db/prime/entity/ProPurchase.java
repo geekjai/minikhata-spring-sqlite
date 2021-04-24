@@ -87,6 +87,18 @@ public class ProPurchase extends FrameworkEntity implements Serializable {
 	@TransientColumn(name = "product_name")
 	private String productName;
 
+	@Transient
+	@TransientColumn(name = "amount_before_tax_per")
+	private Double amountBeforeTaxPer;
+
+	@Transient
+	@TransientColumn(name = "gst_amount_per")
+	private Double gstAmountPer;
+
+	@Transient
+	@TransientColumn(name = "discount_amount_per")
+	private Double discountAmountPer;
+
 	@Version
 	@UpdateCacheEntityColumn
 	@Column(name = "version_id")
@@ -210,6 +222,24 @@ public class ProPurchase extends FrameworkEntity implements Serializable {
 
 	public void setVersionId(int versionId) {
 		this.versionId = versionId;
+	}
+
+	public Double getAmountBeforeTaxPer() {
+		amountBeforeTax = amountBeforeTax == null ? 0.0 : amountBeforeTax;
+		amountBeforeTaxPer = (amountBeforeTax / payableAmount) * 100;
+		return amountBeforeTaxPer;
+	}
+
+	public Double getGstAmountPer() {
+		gstAmount = gstAmount == null ? 0.0 : gstAmount;
+		gstAmountPer = (gstAmount / payableAmount) * 100;
+		return gstAmountPer;
+	}
+
+	public Double getDiscountAmountPer() {
+		discountAmount = discountAmount == null ? 0.0 : discountAmount;
+		discountAmountPer = (discountAmount / payableAmount) * 100;
+		return discountAmountPer;
 	}
 
 	public static ProPurchase getInstanceFromMap(Map<String, Object> map) {

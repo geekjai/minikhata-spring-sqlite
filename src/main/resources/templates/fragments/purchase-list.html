@@ -1,7 +1,7 @@
 <div th:fragment="purchase-list" xmlns:th="http://www.w3.org/1999/xhtml"
 	class="col-md-12">
 	<!-- general form elements-->
-	<div class="card card-primary">
+	<div class="card">
 		<div class="card-header">
 			<h3 class="card-title">Purchase History</h3>
 		</div>
@@ -11,14 +11,15 @@
 				id="tblPurchaseList">
 				<thead>
 					<tr>
-						<th>Purchase Id</th>
+						<th style="width: 150px;">Purchase Id</th>
 						<th>Product Name</th>
 						<th>Bill Number</th>
-						<th>Purchase Quantity</th>
-						<th>Amount Before Tax</th>
-						<th>Gst Amount</th>
-						<th>Discount Amount</th>
-						<th>Payable Amount</th>
+						<th style="width: 150px;">Purchase Quantity</th>
+						<!-- <th>Amount Before Tax</th> -->
+						<!-- <th>Gst Amount</th> -->
+						<!-- <th>Discount Amount</th> -->
+						<th>Amount Graph</th>
+						<th>Total Amount</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -45,9 +46,10 @@ $(document).ready(function() {
 			{ "data": "productName" },
 			{ "data": "billNumber" },
 			{ "data": "purchaseQuantity" },
-			{ "data": "amountBeforeTax" },
-			{ "data": "gstAmount" },
-			{ "data": "discountAmount" },
+			/* { "data": "amountBeforeTax" }, */
+			/* { "data": "gstAmount" }, */
+			/* { "data": "discountAmount" }, */
+			{ "data": "payableAmount" },
 			{ "data": "payableAmount" },
 			{
 				data: null,
@@ -56,9 +58,37 @@ $(document).ready(function() {
 				orderable: false
 			}
 		],
+		columnDefs: [
+			{ orderable: false, targets: 2 },
+			{ orderable: false, targets: 3 },
+			{ orderable: false, targets: 5 },
+			{
+	        'targets': 4,
+	        'orderable': false,
+	        'render': function (data, type, row, meta) {
+	          if (type === 'display') {
+	        	  var amountBeforeTax = row.payableAmount;
+	        	  console.log(row.amountBeforeTax);
+	            data = '<div class="progress progress-bar-striped bg-primary" style="width: 100%"> ' +
+	            			'<div class="progress-bar  progress-bar-striped bg-info" role="progressbar" style="width:25%" aria-valuenow="'+row.amountBeforeTax+'" aria-valuemin="0" aria-valuemax="'+row.payableAmount+'">'+row.amountBeforeTax+'</div>' +
+	            	  		'<div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width:25%" aria-valuenow="'+row.gstAmount+'" aria-valuemin="0" aria-valuemax="'+row.payableAmount+'">'+row.gstAmount+'</div>'+
+	            	  		'<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width:25%" aria-valuenow="'+row.discountAmount+'" aria-valuemin="0" aria-valuemax="'+row.payableAmount+'">'+row.discountAmount+'</div>'+
+	            	  		'<span style="margin: 0 auto;float: none !important;">'+row.payableAmount+'<span></div>';
+	          }
+
+	          return data;
+	        }
+	      }
+	    ],
 		"dom": '<"toolbar">frtip'
 	});
-	$("div.toolbar").html('<button id="createPur" type="button" class="btn btn-block btn-info" style="width:80px;">Create</button>');
+	$("div.toolbar").html('<div class="row"><div class="col-sm-3"><button id="createPur" type="button" class="btn btn-block btn-info" style="width:80px;">Create</button></div>'
+		+'<div class="col-sm-9"><div class="progress float-right" style="width:450px; margin-top:20px; margin-right:3px;">'
+		+'<div class="progress-bar  progress-bar-striped bg-info" role="progressbar" style="width:25%">Amount Before Tax</div>'
+		+'<div class="progress-bar  progress-bar-striped bg-danger" role="progressbar" style="width:25%">GST Amount</div>'
+		+'<div class="progress-bar  progress-bar-striped bg-success" role="progressbar" style="width:25%">Discount Amount</div>'
+		+'<div class="progress-bar  progress-bar-striped bg-primary" role="progressbar" style="width:25%">Payable Amount</div>'
+		+'</div></div></div>');
 	// Edit record
 	$('#tblPurchaseList').on('click', 'td.editor-edit', function(e) {
 		e.preventDefault();
