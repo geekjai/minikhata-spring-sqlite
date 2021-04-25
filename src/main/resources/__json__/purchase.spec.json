@@ -46,5 +46,27 @@
 		"payableAmount": "80",
 		"purchaseDate": "2021-03-25",
 		"isAmountSettled": "N"
+	},
+	{
+		"productId": "1",
+		"billNumber": "TESTBILL04",
+		"purchaseQuantity": "15.0",
+		"purchaseNotes": "Test Data",
+		"amountBeforeTax": "250",
+		"gstAmount": "25",
+		"discountAmount": "5",
+		"purchaseDate": "2021-04-25",
+		"isAmountSettled": "N"
+	},
+	{
+		"productId": "3",
+		"billNumber": "TESTBILL05",
+		"purchaseQuantity": "50.0",
+		"purchaseNotes": "Test Data",
+		"amountBeforeTax": "290",
+		"gstAmount": "45",
+		"discountAmount": "10",
+		"purchaseDate": "2021-04-20",
+		"isAmountSettled": "N"
 	}
 ]

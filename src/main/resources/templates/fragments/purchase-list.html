@@ -67,8 +67,6 @@ $(document).ready(function() {
 	        'orderable': false,
 	        'render': function (data, type, row, meta) {
 	          if (type === 'display') {
-	        	  var amountBeforeTax = row.payableAmount;
-	        	  console.log(row.amountBeforeTax);
 	            data = '<div class="progress progress-bar-striped bg-primary" style="width: 100%"> ' +
 	            			'<div class="progress-bar  progress-bar-striped bg-info" role="progressbar" style="width:25%" aria-valuenow="'+row.amountBeforeTax+'" aria-valuemin="0" aria-valuemax="'+row.payableAmount+'">'+row.amountBeforeTax+'</div>' +
 	            	  		'<div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width:25%" aria-valuenow="'+row.gstAmount+'" aria-valuemin="0" aria-valuemax="'+row.payableAmount+'">'+row.gstAmount+'</div>'+

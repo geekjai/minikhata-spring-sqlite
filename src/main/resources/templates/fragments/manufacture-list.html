@@ -16,6 +16,7 @@
 						<th>Manufacture Quantity</th>
 						<th>Manufacture Cost</th>
 						<th>Manufacture Date</th>
+						<th>Status</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -43,6 +44,7 @@
 					{ "data": "manufactureQuantity" },
 					{ "data": "manufactureCost" },
 					{ "data": "manufactureDateUi" },
+					{ "data": "relatedPurchaseId" },
 					{
 						data: null,
 						className: "dt-center editor-edit",
@@ -52,7 +54,23 @@
 				],
 				columnDefs: [
 					{ orderable: false, targets: 2 },
-					{ orderable: false, targets: 3 }
+					{ orderable: false, targets: 3 },
+					{
+				        'targets': 5,
+				        'orderable': false,
+				        'render': function (data, type, row, meta) {
+				          if (type === 'display') {
+				        	
+				        	if(row.relatedPurchaseId != null) {
+				        		data = '<span class="badge badge-success">Added to Purchase</span>';
+				        	} else {
+				        		data = '<span class="badge badge-warning">Not Added to Purchase</span>';
+				            }
+				          }
+
+				          return data;
+				        }
+					}
 				],
 				"dom": '<"manuftoolbar">frtip'
 			});
