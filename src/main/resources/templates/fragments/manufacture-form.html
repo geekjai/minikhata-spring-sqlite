@@ -87,39 +87,38 @@
 					</div>
 				</div>
 				<div class="row" style="margin-top: 10px;"></div>
-				<div class="row">
-					<table class="table table-bordered table-striped">
-						<thead>
-							<tr>
-								<th></th>
-								<th>Product Name</th>
-								<th>Quantity</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="map, itemStat : ${form.manufactureProductMaps}">
-								<td><input hidden="true"
-									th:name="|manufactureProductMaps[${itemStat.index}].id|"
-									th:value="${map.getId()}" /></td>
-								<td><input hidden="true"
-									th:name="|manufactureProductMaps[${itemStat.index}].productId|"
-									th:value="${map.getProductId()}" /> <select
-									class="form-control"
-									th:name="|manufactureProductMaps[${itemStat.index}].productId|"
-									th:value="${map.getProductId()}" disabled="disabled">
-										<option th:each="product : ${products}"
-											th:value="${product.productId}"
-											th:text="${product.productName}"
-											th:selected="${product.productId==map.productId}"></option>
-								</select></td>
-								<td><input
-									th:name="|manufactureProductMaps[${itemStat.index}].productQuantity|"
-									th:value="${map.getProductQuantity()}"
-									th:readonly="${fragment == 'editManufacture'}" /></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+				<table class="table table-bordered table-striped"
+					id="tblProductList">
+					<thead>
+						<tr>
+							<th style="width: 3px;"></th>
+							<th>Product Name</th>
+							<th>Quantity</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="map, itemStat : ${form.manufactureProductMaps}">
+							<td><input hidden="true"
+								th:name="|manufactureProductMaps[${itemStat.index}].id|"
+								th:value="${map.getId()}" /></td>
+							<td><input hidden="true"
+								th:name="|manufactureProductMaps[${itemStat.index}].productId|"
+								th:value="${map.getProductId()}" /> <select
+								class="form-control"
+								th:name="|manufactureProductMaps[${itemStat.index}].productId|"
+								th:value="${map.getProductId()}" disabled="disabled">
+									<option th:each="product : ${products}"
+										th:value="${product.productId}"
+										th:text="${product.productName}"
+										th:selected="${product.productId==map.productId}"></option>
+							</select></td>
+							<td><input
+								th:name="|manufactureProductMaps[${itemStat.index}].productQuantity|"
+								th:value="${map.getProductQuantity()}"
+								th:readonly="${fragment == 'editManufacture'}" /></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 			<div class="card-footer">
 				<button th:if="${fragment == 'createManufacture'}" type="submit"
@@ -134,4 +133,56 @@
 			</div>
 		</form>
 	</div>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(document).ready(function() {
+			$("#cacelManufForm").click(function() {
+				window.location.href = '/manufacture/viewManufactures';
+			});
+			$("#calCostManufBtn").click(function() {
+				event.preventDefault();
+				var manufactureId = document.getElementById("manufactureId").value;
+				$.ajax({
+					type: 'get',
+					url: '/api/manufacture/findManufactureCost/' + manufactureId,
+					contentType: "application/json; charset=utf-8",
+					traditional: true,
+					success: function(data) {
+						document.getElementById("manufactureCost").value = data.manufactureCost;
+						var text = data.responseMessage;
+						$('#manufModelText').text(text);
+						$("#manufModel").modal();
+					}
+				});
+			});
+			$("#deleteManufBtn").click(function() {
+				event.preventDefault();
+				var manufactureId = document.getElementById("manufactureId").value;
+				$.ajax({
+					type: 'delete',
+					url: '/api/manufacture/deleteManufacture/' + manufactureId,
+					contentType: "application/json; charset=utf-8",
+					traditional: true,
+					success: function(data) {
+						window.location.href = '/manufacture/viewManufactures';
+					}
+				});
+			});
+			$("#pushToPurBtn").click(function() {
+				event.preventDefault();
+				var manufactureId = document.getElementById("manufactureId").value;
+				$.ajax({
+					type: 'put',
+					url: '/api/manufacture/pushManufactureToPurchase/' + manufactureId,
+					contentType: "application/json; charset=utf-8",
+					traditional: true,
+					success: function(data) {
+						//window.location.href = '/manufacture/viewManufactures';
+						$("#manufModel").modal();
+					}
+				});
+			});
+		});
+		/*]]>*/
+	</script>
 </div>

@@ -37,95 +37,9 @@
 	<div layout:fragment="script">
 		<script th:inline="javascript">
 			/*<![CDATA[*/
-$(document).ready(function () { 
-	$(function() {
-		var datatable = $('#tblManufactureList').DataTable({
-			"paging": true,
-			"lengthChange": false,
-			"searching": false,
-			"ordering": true,
-			"info": true,
-			"autoWidth": false,
-			"responsive": true,
-			"ajax": {
-				"url": "/api/manufacture/manufactureRecords",
-				"dataSrc": ""
-			},
-			"columns": [
-				{ "data": "manufactureId" },
-				{ "data": "productName" },
-				{ "data": "manufactureQuantity" },
-				{ "data": "manufactureCost" },
-				{ "data": "manufactureDateUi" },
-				{
-					data: null,
-					className: "dt-center editor-edit",
-					defaultContent: '<i class="fa fa-eye"/>',
-					orderable: false
-				}
-			],
-			"dom": '<"manuftoolbar">frtip'
-		});
-		$("div.manuftoolbar").html('<button id="incenseManuf" type="button" class="btn btn-block btn-info" style="width:165px;">Incense Manufacture</button>');
-		// Edit record
-		$('#tblManufactureList').on('click', 'td.editor-edit', function(e) {
-			e.preventDefault();
-			var rowData = datatable.rows(this).data();
-			window.location.href = '/manufacture/editManufacture/' + rowData[0].manufactureId;
-			//console.log('You clicked this' + rowData[0].purchaseId);
-			//console.log(rowData[0]);
-		});
-		$("#incenseManuf").click(function() {
-			window.location.href = '/manufacture/createIncense';
-		});
-		$("#cacelManufForm").click(function() {
-			window.location.href = '/manufacture/viewManufactures';
-		});
-		$("#calCostManufBtn").click(function() {
-			event.preventDefault();
-			var manufactureId = document.getElementById("manufactureId").value;
-			$.ajax({
-				type: 'get',
-				url: '/api/manufacture/findManufactureCost/' + manufactureId,
-				contentType: "application/json; charset=utf-8",
-				traditional: true,
-				success: function(data) {
-					document.getElementById("manufactureCost").value = data.manufactureCost;
-					var text = data.responseMessage;
-					$('#manufModelText').text(text);
-					$("#manufModel").modal();
-				}
+			$(document).ready(function() {
+
 			});
-		});
-		$("#deleteManufBtn").click(function() {
-			event.preventDefault();
-			var manufactureId = document.getElementById("manufactureId").value;
-			$.ajax({
-				type: 'delete',
-				url: '/api/manufacture/deleteManufacture/' + manufactureId,
-				contentType: "application/json; charset=utf-8",
-				traditional: true,
-				success: function(data) {
-					window.location.href = '/manufacture/viewManufactures';
-				}
-			});
-		});
-		$("#pushToPurBtn").click(function() {
-			event.preventDefault();
-			var manufactureId = document.getElementById("manufactureId").value;
-			$.ajax({
-				type: 'put',
-				url: '/api/manufacture/pushManufactureToPurchase/' + manufactureId,
-				contentType: "application/json; charset=utf-8",
-				traditional: true,
-				success: function(data) {
-					//window.location.href = '/manufacture/viewManufactures';
-					$("#manufModel").modal();
-				}
-			});
-		});
-	});
-});
 			/*]]>*/
 		</script>
 	</div>

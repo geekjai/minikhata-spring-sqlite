@@ -1,7 +1,7 @@
 <div th:fragment="manufacture-list"
 	xmlns:th="http://www.w3.org/1999/xhtml" class="col-md-12">
 	<!-- general form elements-->
-	<div class="card card-primary">
+	<div class="card">
 		<div class="card-header">
 			<h3 class="card-title">Manufacture History</h3>
 		</div>
@@ -22,4 +22,49 @@
 			</table>
 		</div>
 	</div>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(document).ready(function() {
+			var datatable = $('#tblManufactureList').DataTable({
+				"paging": true,
+				"lengthChange": false,
+				"searching": false,
+				"ordering": true,
+				"info": true,
+				"autoWidth": false,
+				"responsive": true,
+				"ajax": {
+					"url": "/api/manufacture/manufactureRecords",
+					"dataSrc": ""
+				},
+				"columns": [
+					{ "data": "manufactureId" },
+					{ "data": "productName" },
+					{ "data": "manufactureQuantity" },
+					{ "data": "manufactureCost" },
+					{ "data": "manufactureDateUi" },
+					{
+						data: null,
+						className: "dt-center editor-edit",
+						defaultContent: '<i class="fa fa-edit tblRowEdit"/>',
+						orderable: false
+					}
+				],
+				"dom": '<"manuftoolbar">frtip'
+			});
+			$("div.manuftoolbar").html('<button id="incenseManuf" type="button" class="btn btn-block btn-info" style="width:165px;">Incense Manufacture</button>');
+			// Edit record
+			$('#tblManufactureList').on('click', 'td.editor-edit', function(e) {
+				e.preventDefault();
+				var rowData = datatable.rows(this).data();
+				window.location.href = '/manufacture/editManufacture/' + rowData[0].manufactureId;
+				//console.log('You clicked this' + rowData[0].purchaseId);
+				//console.log(rowData[0]);
+			});
+			$("#incenseManuf").click(function() {
+				window.location.href = '/manufacture/createIncense';
+			});
+		});
+		/*]]>*/
+	</script>
 </div>
